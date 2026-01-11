@@ -1,0 +1,141 @@
+# Gradients in TailwindCSS
+
+## Introduzione ai gradienti
+
+TailwindCSS fornisce utility dedicate per creare gradienti CSS in modo dichiarativo, componendo direzione, colori di partenza, intermedi e finali. I gradienti sono basati sulla proprietà CSS `background-image` con funzioni come `linear-gradient`.
+
+## Abilitazione dei gradienti
+
+I gradienti sono disponibili di default in TailwindCSS senza configurazioni aggiuntive. Utilizzano la palette colori definita nel tema (`theme.colors`).
+
+## Tipologie di gradienti supportate
+
+TailwindCSS supporta esclusivamente gradienti lineari tramite utility predefinite. Altri tipi di gradienti (radiali, conici) richiedono estensioni o CSS personalizzato.
+
+## Direzione del gradiente
+
+La direzione del gradiente è definita tramite classi `bg-gradient-to-*`.
+
+### Gradiente verso l’alto
+
+`bg-gradient-to-t`
+
+### Gradiente verso il basso
+
+`bg-gradient-to-b`
+
+### Gradiente verso sinistra
+
+`bg-gradient-to-l`
+
+### Gradiente verso destra
+
+`bg-gradient-to-r`
+
+### Gradiente diagonale
+
+`bg-gradient-to-tr`  
+`bg-gradient-to-tl`  
+`bg-gradient-to-br`  
+`bg-gradient-to-bl`
+
+## Colore di partenza del gradiente
+
+Il colore iniziale è definito tramite `from-*`.
+
+Esempio:
+`from-blue-500`
+
+## Colore finale del gradiente
+
+Il colore finale è definito tramite `to-*`.
+
+Esempio:
+`to-green-500`
+
+## Colore intermedio del gradiente
+
+I colori intermedi sono definiti tramite `via-*` e possono essere utilizzati per creare gradienti più complessi.
+
+Esempio:
+`via-purple-500`
+
+È possibile usare un solo colore intermedio.
+
+## Esempio base di gradiente lineare
+
+Combinazione tipica di direzione, colore iniziale e finale:
+
+`bg-gradient-to-r from-indigo-500 to-pink-500`
+
+## Gradienti con tre colori
+
+Utilizzando `from`, `via` e `to`:
+
+`bg-gradient-to-r from-yellow-400 via-red-500 to-pink-500`
+
+## Utilizzo dei gradienti con colori personalizzati
+
+Se nel file `tailwind.config.js` sono definiti colori personalizzati, possono essere usati direttamente nei gradienti:
+
+`from-brand-primary to-brand-secondary`
+
+## Gradienti e opacità
+
+È possibile controllare l’opacità dei colori del gradiente usando la sintassi slash:
+
+`from-blue-500/50 to-blue-900/100`
+
+L’opacità viene applicata al singolo colore del gradiente.
+
+## Gradienti e varianti responsive
+
+Le utility per gradienti supportano le varianti responsive:
+
+`md:bg-gradient-to-r lg:bg-gradient-to-b`
+
+## Gradienti e stati interattivi
+
+I gradienti possono essere combinati con pseudo-classi come `hover`, `focus` e `active`:
+
+`hover:bg-gradient-to-r hover:from-cyan-500 hover:to-blue-500`
+
+## Animazione dei gradienti
+
+TailwindCSS non fornisce animazioni per gradienti di default, ma è possibile combinarli con utility di transizione:
+
+`transition-all duration-300`
+
+Per animazioni avanzate è necessario usare CSS personalizzato o plugin.
+
+## Sovrascrittura del background
+
+Le classi di gradiente impostano `background-image`. Se usate insieme a `bg-*` per i colori solidi, l’ultima classe applicata avrà la precedenza.
+
+## Gradienti con immagini di sfondo
+
+I gradienti non possono essere combinati direttamente con `bg-[url()]` usando solo utility Tailwind. È necessario usare CSS personalizzato per sovrapporre gradienti e immagini.
+
+## Estensione con gradienti personalizzati
+
+È possibile definire gradienti custom nel tema:
+
+Nel `tailwind.config.js`:
+`backgroundImage: { 'hero-gradient': 'linear-gradient(to right, #4f46e5, #9333ea)' }`
+
+Utilizzo:
+`bg-hero-gradient`
+
+## Buone pratiche
+
+Usare gradienti con contrasto adeguato per garantire leggibilità del testo.  
+Limitare il numero di colori per mantenere coerenza visiva.  
+Preferire gradienti semplici per componenti UI e gradienti complessi per sezioni hero o decorative.
+
+## Riepilogo delle classi principali
+
+`bg-gradient-to-*` definisce la direzione  
+`from-*` definisce il colore iniziale  
+`via-*` definisce il colore intermedio  
+`to-*` definisce il colore finale  
+Supporto completo per responsive, stati e opacità
