@@ -1,0 +1,178 @@
+# Background repeat
+
+La proprietà background-repeat controlla come un’immagine di sfondo viene ripetuta all’interno di un elemento. In TailwindCSS questa funzionalità è esposta tramite utility class dedicate che mappano direttamente il comportamento del CSS standard.
+
+## Concetto di background-repeat
+
+Per impostazione predefinita, un’immagine di background viene ripetuta sia orizzontalmente che verticalmente per riempire l’intera area dell’elemento. La ripetizione avviene a partire dall’angolo in alto a sinistra e continua fino a coprire tutto lo spazio disponibile.
+
+La proprietà background-repeat permette di:
+
+- Ripetere l’immagine su entrambi gli assi
+- Ripeterla solo in orizzontale o solo in verticale
+- Disabilitare completamente la ripetizione
+- Usare modalità di ripetizione avanzate per una distribuzione più controllata
+
+## Utility disponibili in TailwindCSS
+
+TailwindCSS fornisce una serie di classi utility che corrispondono ai valori CSS di background-repeat.
+
+### bg-repeat
+
+Ripete l’immagine di sfondo sia orizzontalmente che verticalmente.
+
+```html
+<div class="bg-repeat bg-[url('/img/pattern.png')]"></div>
+```
+
+Equivale a:
+
+```css
+background-repeat: repeat;
+```
+
+### bg-no-repeat
+
+Disabilita completamente la ripetizione dell’immagine di sfondo. L’immagine viene disegnata una sola volta.
+
+```html
+<div class="bg-no-repeat bg-[url('/img/logo.png')]"></div>
+```
+
+Equivale a:
+
+```css
+background-repeat: no-repeat;
+```
+
+Questa combinazione è molto comune insieme a bg-center e bg-contain o bg-cover.
+
+### bg-repeat-x
+
+Ripete l’immagine solo sull’asse orizzontale (da sinistra a destra).
+
+```html
+<div class="bg-repeat-x bg-[url('/img/line.png')]"></div>
+```
+
+Equivale a:
+
+```css
+background-repeat: repeat-x;
+```
+
+Utile per pattern orizzontali come linee, separatori o texture decorative.
+
+### bg-repeat-y
+
+Ripete l’immagine solo sull’asse verticale (dall’alto verso il basso).
+
+```html
+<div class="bg-repeat-y bg-[url('/img/line-vertical.png')]"></div>
+```
+
+Equivale a:
+
+```css
+background-repeat: repeat-y;
+```
+
+Indicata per pattern verticali o decorazioni laterali.
+
+## Modalità di ripetizione avanzate
+
+TailwindCSS supporta anche modalità di ripetizione meno comuni, utili in layout più sofisticati.
+
+### bg-repeat-round
+
+L’immagine viene ripetuta e ridimensionata automaticamente in modo che si adatti perfettamente allo spazio disponibile, senza tagli.
+
+```html
+<div class="bg-repeat-round bg-[url('/img/pattern.png')]"></div>
+```
+
+Equivale a:
+
+```css
+background-repeat: round;
+```
+
+Questa modalità è utile quando si vogliono evitare spazi vuoti o tagli irregolari nei pattern.
+
+### bg-repeat-space
+
+L’immagine viene ripetuta senza ridimensionamento e lo spazio extra viene distribuito uniformemente tra le ripetizioni.
+
+```html
+<div class="bg-repeat-space bg-[url('/img/pattern.png')]"></div>
+```
+
+Equivale a:
+
+```css
+background-repeat: space;
+```
+
+Ideale quando si vuole mantenere la dimensione originale dell’immagine e ottenere una distribuzione visivamente equilibrata.
+
+## Combinazione con altre utility di background
+
+Le classi di background-repeat vengono quasi sempre usate insieme ad altre utility di TailwindCSS.
+
+### Background position
+
+```html
+<div class="bg-no-repeat bg-center bg-[url('/img/icon.png')]"></div>
+```
+
+### Background size
+
+```html
+<div class="bg-no-repeat bg-cover bg-[url('/img/hero.jpg')]"></div>
+```
+
+### Background attachment
+
+```html
+<div class="bg-repeat bg-fixed bg-[url('/img/pattern.png')]"></div>
+```
+
+## Comportamento responsive
+
+Le utility di background-repeat possono essere rese responsive usando i breakpoint di TailwindCSS.
+
+```html
+<div class="bg-no-repeat md:bg-repeat bg-[url('/img/pattern.png')]"></div>
+```
+
+In questo esempio:
+
+- Su schermi piccoli l’immagine non viene ripetuta
+- Da md in poi l’immagine viene ripetuta su entrambi gli assi
+
+## Personalizzazione tramite configuration file
+
+Se necessario, è possibile estendere o limitare le utility di background-repeat nel file tailwind.config.js.
+
+```js
+module.exports = {
+  theme: {
+    extend: {
+      backgroundRepeat: {
+        "repeat-inherit": "inherit",
+      },
+    },
+  },
+};
+```
+
+Questo permette di introdurre valori personalizzati o di supportare casi specifici di design.
+
+## Casi d’uso comuni
+
+- Pattern decorativi di sfondo
+- Texture leggere per sezioni o card
+- Linee orizzontali o verticali ripetute
+- Sfondo di layout complessi con immagini modulari
+
+La gestione corretta di background-repeat consente di controllare in modo preciso l’aspetto visivo dei background, mantenendo il codice semplice, leggibile e coerente con l’approccio utility-first di TailwindCSS.
