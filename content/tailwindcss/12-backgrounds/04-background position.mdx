@@ -1,0 +1,168 @@
+# Background position
+
+La proprietà background-position controlla il punto di ancoraggio dell’immagine di sfondo all’interno dell’elemento. In TailwindCSS questa funzionalità è esposta tramite utility class semplici, coerenti e facilmente componibili con le altre classi di background.
+
+## Concetto di background position
+
+Il background di un elemento viene disegnato partendo da un punto di riferimento. La posizione definisce dove viene collocata l’immagine rispetto al box dell’elemento, sia sull’asse orizzontale che verticale.
+
+I valori più comuni sono:
+
+- sinistra, centro, destra sull’asse orizzontale
+- alto, centro, basso sull’asse verticale
+
+Combinando questi valori si ottengono tutte le posizioni più utilizzate nei layout moderni.
+
+## Utility principali di TailwindCSS
+
+TailwindCSS fornisce utility predefinite che mappano direttamente i valori più comuni di background-position.
+
+### bg-left
+
+Posiziona l’immagine di sfondo sul lato sinistro dell’elemento, centrata verticalmente.
+
+```html
+<div class="bg-left bg-no-repeat bg-cover"></div>
+```
+
+### bg-right
+
+Posiziona l’immagine di sfondo sul lato destro dell’elemento, centrata verticalmente.
+
+```html
+<div class="bg-right bg-no-repeat bg-cover"></div>
+```
+
+### bg-top
+
+Posiziona l’immagine di sfondo nella parte superiore dell’elemento, centrata orizzontalmente.
+
+```html
+<div class="bg-top bg-no-repeat bg-cover"></div>
+```
+
+### bg-bottom
+
+Posiziona l’immagine di sfondo nella parte inferiore dell’elemento, centrata orizzontalmente.
+
+```html
+<div class="bg-bottom bg-no-repeat bg-cover"></div>
+```
+
+### bg-center
+
+Centra l’immagine di sfondo sia orizzontalmente che verticalmente. È l’opzione più utilizzata.
+
+```html
+<div class="bg-center bg-no-repeat bg-cover"></div>
+```
+
+## Posizioni combinate
+
+Alcune utility rappresentano combinazioni di asse orizzontale e verticale, utili per layout più specifici.
+
+### bg-left-top
+
+Allinea l’immagine in alto a sinistra.
+
+```html
+<div class="bg-left-top bg-no-repeat"></div>
+```
+
+### bg-left-bottom
+
+Allinea l’immagine in basso a sinistra.
+
+```html
+<div class="bg-left-bottom bg-no-repeat"></div>
+```
+
+### bg-right-top
+
+Allinea l’immagine in alto a destra.
+
+```html
+<div class="bg-right-top bg-no-repeat"></div>
+```
+
+### bg-right-bottom
+
+Allinea l’immagine in basso a destra.
+
+```html
+<div class="bg-right-bottom bg-no-repeat"></div>
+```
+
+## Utilizzo con background-size
+
+La posizione del background è quasi sempre utilizzata insieme a background-size per ottenere il risultato desiderato.
+
+### bg-cover
+
+L’immagine copre interamente l’elemento, mantenendo le proporzioni. La posizione determina quale parte dell’immagine rimane visibile.
+
+```html
+<div class="bg-cover bg-center"></div>
+```
+
+### bg-contain
+
+L’immagine viene contenuta interamente nell’elemento. La posizione definisce dove viene allineata se rimane spazio vuoto.
+
+```html
+<div class="bg-contain bg-top"></div>
+```
+
+## Comportamento responsivo
+
+Le utility di background-position possono essere applicate in modo responsivo utilizzando i breakpoint di TailwindCSS.
+
+```html
+<div class="bg-center md:bg-left lg:bg-right"></div>
+```
+
+In questo esempio:
+
+- su mobile l’immagine è centrata
+- su schermi medi è allineata a sinistra
+- su schermi grandi è allineata a destra
+
+## Uso con immagini decorative e hero section
+
+La background-position è fondamentale nelle hero section, dove spesso si vuole dare priorità a una parte specifica dell’immagine.
+
+```html
+<section class="bg-[url('/hero.jpg')] bg-cover bg-right-top h-screen"></section>
+```
+
+Questo approccio permette di mantenere visibili soggetti o dettagli importanti anche su schermi di dimensioni diverse.
+
+## Personalizzazione tramite configuration file
+
+Se servono valori personalizzati di background-position, è possibile estendere il tema di TailwindCSS nel file di configurazione.
+
+```js
+module.exports = {
+  theme: {
+    extend: {
+      backgroundPosition: {
+        "center-top": "center top",
+        "center-bottom": "center bottom",
+      },
+    },
+  },
+};
+```
+
+Utilizzo:
+
+```html
+<div class="bg-center-top"></div>
+```
+
+## Best practice
+
+Usare sempre background-position insieme a bg-no-repeat per evitare duplicazioni indesiderate dell’immagine.
+Preferire bg-center come valore di default e modificarlo solo quando necessario.
+Testare il risultato su più dimensioni di schermo, soprattutto quando si utilizza bg-cover.
+Combinare le utility responsive per adattare il focus dell’immagine ai diversi breakpoint.
