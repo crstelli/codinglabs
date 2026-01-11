@@ -114,14 +114,17 @@ Le classi di gradiente impostano `background-image`. Se usate insieme a `bg-*` p
 
 ## Gradienti con immagini di sfondo
 
-I gradienti non possono essere combinati direttamente con `bg-[url()]` usando solo utility Tailwind. È necessario usare CSS personalizzato per sovrapporre gradienti e immagini.
+I gradienti non possono essere combinati direttamente con `bg-url()` usando solo utility Tailwind. È necessario usare CSS personalizzato per sovrapporre gradienti e immagini.
 
 ## Estensione con gradienti personalizzati
 
 È possibile definire gradienti custom nel tema:
 
 Nel `tailwind.config.js`:
-`backgroundImage: { 'hero-gradient': 'linear-gradient(to right, #4f46e5, #9333ea)' }`
+
+```js
+backgroundImage: { 'hero-gradient': 'linear-gradient(to right, #4f46e5, #9333ea)' };
+```
 
 Utilizzo:
 `bg-hero-gradient`

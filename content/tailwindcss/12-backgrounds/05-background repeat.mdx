@@ -22,7 +22,7 @@ TailwindCSS fornisce una serie di classi utility che corrispondono ai valori CSS
 Ripete l’immagine di sfondo sia orizzontalmente che verticalmente.
 
 ```html
-<div class="bg-repeat bg-[url('/img/pattern.png')]"></div>
+<div class="bg-repeat bg-url('/img/pattern.png')"></div>
 ```
 
 Equivale a:
@@ -36,7 +36,7 @@ background-repeat: repeat;
 Disabilita completamente la ripetizione dell’immagine di sfondo. L’immagine viene disegnata una sola volta.
 
 ```html
-<div class="bg-no-repeat bg-[url('/img/logo.png')]"></div>
+<div class="bg-no-repeat bg-url('/img/logo.png')"></div>
 ```
 
 Equivale a:
@@ -52,7 +52,7 @@ Questa combinazione è molto comune insieme a bg-center e bg-contain o bg-cover.
 Ripete l’immagine solo sull’asse orizzontale (da sinistra a destra).
 
 ```html
-<div class="bg-repeat-x bg-[url('/img/line.png')]"></div>
+<div class="bg-repeat-x bg-url('/img/line.png')"></div>
 ```
 
 Equivale a:
@@ -68,7 +68,7 @@ Utile per pattern orizzontali come linee, separatori o texture decorative.
 Ripete l’immagine solo sull’asse verticale (dall’alto verso il basso).
 
 ```html
-<div class="bg-repeat-y bg-[url('/img/line-vertical.png')]"></div>
+<div class="bg-repeat-y bg-url('/img/line-vertical.png')"></div>
 ```
 
 Equivale a:
@@ -88,7 +88,7 @@ TailwindCSS supporta anche modalità di ripetizione meno comuni, utili in layout
 L’immagine viene ripetuta e ridimensionata automaticamente in modo che si adatti perfettamente allo spazio disponibile, senza tagli.
 
 ```html
-<div class="bg-repeat-round bg-[url('/img/pattern.png')]"></div>
+<div class="bg-repeat-round bg-url('/img/pattern.png')"></div>
 ```
 
 Equivale a:
@@ -104,7 +104,7 @@ Questa modalità è utile quando si vogliono evitare spazi vuoti o tagli irregol
 L’immagine viene ripetuta senza ridimensionamento e lo spazio extra viene distribuito uniformemente tra le ripetizioni.
 
 ```html
-<div class="bg-repeat-space bg-[url('/img/pattern.png')]"></div>
+<div class="bg-repeat-space bg-url('/img/pattern.png')"></div>
 ```
 
 Equivale a:
@@ -122,19 +122,19 @@ Le classi di background-repeat vengono quasi sempre usate insieme ad altre utili
 ### Background position
 
 ```html
-<div class="bg-no-repeat bg-center bg-[url('/img/icon.png')]"></div>
+<div class="bg-no-repeat bg-center bg-url('/img/icon.png')"></div>
 ```
 
 ### Background size
 
 ```html
-<div class="bg-no-repeat bg-cover bg-[url('/img/hero.jpg')]"></div>
+<div class="bg-no-repeat bg-cover bg-url('/img/hero.jpg')"></div>
 ```
 
 ### Background attachment
 
 ```html
-<div class="bg-repeat bg-fixed bg-[url('/img/pattern.png')]"></div>
+<div class="bg-repeat bg-fixed bg-url('/img/pattern.png')"></div>
 ```
 
 ## Comportamento responsive
@@ -142,7 +142,7 @@ Le classi di background-repeat vengono quasi sempre usate insieme ad altre utili
 Le utility di background-repeat possono essere rese responsive usando i breakpoint di TailwindCSS.
 
 ```html
-<div class="bg-no-repeat md:bg-repeat bg-[url('/img/pattern.png')]"></div>
+<div class="bg-no-repeat md:bg-repeat bg-url('/img/pattern.png')"></div>
 ```
 
 In questo esempio:
