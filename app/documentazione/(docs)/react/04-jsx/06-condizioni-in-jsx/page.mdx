@@ -1,3 +1,210 @@
 # Condizioni in JSX
 
-In arrivo
+In React, **JSX non supporta direttamente le istruzioni di controllo classiche** come `if`, `else` o `switch` all’interno del markup. Tuttavia, esistono diversi pattern consolidati per **gestire il rendering condizionale** in modo chiaro, leggibile ed efficiente.
+
+Comprendere questi approcci è fondamentale per scrivere componenti React puliti, manutenibili e coerenti con la filosofia dichiarativa del framework.
+
+---
+
+## Rendering condizionale: concetto base
+
+Il rendering condizionale in JSX consiste nel **decidere cosa visualizzare in base a una condizione**, solitamente uno stato (`state`), una prop (`props`) o una variabile.
+
+React non fa nulla di speciale in questo senso: utilizza semplicemente **le regole standard di JavaScript**, adattate al contesto JSX.
+
+---
+
+## Operatore ternario (`condition ? A : B`)
+
+Il metodo più comune per gestire condizioni in JSX è l’**operatore ternario**.
+
+### Esempio base
+
+```jsx
+function Greeting({ isLogged }) {
+  return <h1>{isLogged ? "Bentornato!" : "Effettua il login"}</h1>;
+}
+```
+
+### Quando usarlo
+
+- Condizioni semplici
+- Quando esiste sempre un’alternativa
+- Quando il markup rimane leggibile
+
+### Attenzione alla leggibilità
+
+Evitare ternari annidati complessi:
+
+```jsx
+// Sconsigliato
+{
+  isAdmin ? (isLogged ? "Admin" : "Accesso negato") : "Utente";
+}
+```
+
+In questi casi è preferibile estrarre la logica.
+
+---
+
+## Operatore logico AND (`&&`)
+
+L’operatore `&&` è molto usato quando si vuole **renderizzare qualcosa solo se una condizione è vera**, senza un ramo `else`.
+
+### Esempio
+
+```jsx
+function Notification({ hasMessages }) {
+  return <>{hasMessages && <p>Hai nuovi messaggi</p>}</>;
+}
+```
+
+### Come funziona
+
+In JavaScript:
+
+- Se la condizione è `true`, viene restituito l’elemento JSX
+- Se è `false`, React ignora il risultato
+
+### Caso particolare: valori falsy
+
+Prestare attenzione a valori numerici:
+
+```jsx
+{
+  items.length && <p>Lista non vuota</p>;
+}
+```
+
+Se `items.length` è `0`, React renderizzerà `0`.
+Soluzione consigliata:
+
+```jsx
+{
+  items.length > 0 && <p>Lista non vuota</p>;
+}
+```
+
+---
+
+## Condizioni tramite `if` fuori dal JSX
+
+Quando la logica diventa più articolata, la soluzione migliore è **spostare la condizione fuori dal return**.
+
+### Esempio
+
+```jsx
+function Status({ status }) {
+  let message;
+
+  if (status === "loading") {
+    message = <p>Caricamento...</p>;
+  } else if (status === "error") {
+    message = <p>Errore</p>;
+  } else {
+    message = <p>Operazione completata</p>;
+  }
+
+  return <div>{message}</div>;
+}
+```
+
+### Vantaggi
+
+- Migliore leggibilità
+- Logica più chiara
+- Facile manutenzione e test
+
+---
+
+## Funzioni di rendering
+
+Un pattern molto usato consiste nel **delegare il rendering condizionale a una funzione**.
+
+### Esempio
+
+```jsx
+function UserInfo({ user }) {
+  const renderContent = () => {
+    if (!user) {
+      return <p>Nessun utente</p>;
+    }
+
+    return <p>Ciao {user.name}</p>;
+  };
+
+  return <div>{renderContent()}</div>;
+}
+```
+
+Questo approccio è particolarmente utile in componenti complessi.
+
+---
+
+## Uso di `switch` per condizioni multiple
+
+Per molteplici stati mutuamente esclusivi, `switch` migliora la chiarezza.
+
+```jsx
+function StatusMessage({ status }) {
+  switch (status) {
+    case "loading":
+      return <p>Caricamento...</p>;
+    case "error":
+      return <p>Errore</p>;
+    case "success":
+      return <p>Successo</p>;
+    default:
+      return null;
+  }
+}
+```
+
+Il componente ritorna direttamente JSX, evitando condizioni nel markup.
+
+---
+
+## Rendering condizionale di componenti
+
+È possibile usare le stesse tecniche per **mostrare o nascondere interi componenti**.
+
+```jsx
+{
+  isModalOpen && <Modal />;
+}
+```
+
+Oppure:
+
+```jsx
+{
+  isLogged ? <Dashboard /> : <Login />;
+}
+```
+
+Questo è uno dei punti di forza di React: la composizione dei componenti rende il rendering condizionale naturale e intuitivo.
+
+---
+
+## Cosa evitare
+
+- Logica complessa direttamente nel JSX
+- Ternari annidati difficili da leggere
+- Condizioni implicite non chiare
+- Uso improprio di valori falsy
+
+Un JSX leggibile è più importante di un JSX “compatto”.
+
+---
+
+## Best practice da sviluppatore senior
+
+- Mantieni il JSX dichiarativo e semplice
+- Sposta la logica complessa fuori dal markup
+- Preferisci chiarezza a micro-ottimizzazioni
+- Usa il pattern più semplice che risolve il problema
+- Tratta il rendering condizionale come parte della UI, non come logica di business
+
+---
+
+Il rendering condizionale in JSX è uno strumento potente che, se usato correttamente, rende i componenti React espressivi, modulari e facili da manutenere.

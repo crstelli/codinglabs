@@ -1,3 +1,129 @@
 # Commenti in JSX
 
-In arrivo
+In React, JSX non è una semplice stringa HTML, ma una sintassi che viene trasformata in JavaScript. Questo ha un impatto diretto su come i commenti devono essere scritti: **i commenti HTML tradizionali non funzionano in JSX**. Per questo motivo, React adotta le regole dei commenti JavaScript, con alcune differenze a seconda del contesto.
+
+Comprendere correttamente come commentare il codice JSX è fondamentale per mantenere componenti leggibili, manutenibili e ben documentati, soprattutto in progetti di media e grande dimensione.
+
+---
+
+## Commenti all’interno di JSX
+
+Quando si scrive JSX all’interno del `return` di un componente, i commenti devono essere racchiusi tra parentesi graffe `{}` e utilizzare la sintassi dei commenti JavaScript multilinea.
+
+Esempio corretto:
+
+```jsx
+function App() {
+  return (
+    <div>
+      {/* Questo è un commento in JSX */}
+      <h1>Ciao React</h1>
+    </div>
+  );
+}
+```
+
+In questo caso:
+
+- `{}` indicano a JSX che stiamo inserendo JavaScript
+- `/* ... */` è il commento JavaScript vero e proprio
+- Il commento non viene renderizzato nel DOM
+
+---
+
+## Commenti fuori dal JSX
+
+Al di fuori del JSX (ad esempio prima del `return` o fuori dal componente), è possibile usare normalmente i commenti JavaScript standard.
+
+```jsx
+// Questo è un commento JavaScript
+
+function App() {
+  /*
+    Questo è un commento
+    multilinea JavaScript
+  */
+  return <h1>Ciao React</h1>;
+}
+```
+
+Questi commenti funzionano come in qualsiasi file JavaScript e non hanno limitazioni particolari.
+
+---
+
+## Commentare singoli elementi JSX
+
+È possibile commentare interi elementi JSX utilizzando la stessa sintassi.
+
+```jsx
+function App() {
+  return (
+    <div>
+      {/* <Header /> */}
+      <Main />
+    </div>
+  );
+}
+```
+
+Questo approccio è utile per:
+
+- Disabilitare temporaneamente componenti
+- Testare layout alternativi
+- Isolare problemi durante il debug
+
+---
+
+## Commenti inline in JSX
+
+I commenti possono essere inseriti anche inline, purché rispettino la sintassi corretta.
+
+```jsx
+function App() {
+  return (
+    <p>
+      Testo visibile
+      {/* commento inline */}
+      altro testo visibile
+    </p>
+  );
+}
+```
+
+È importante ricordare che i commenti **non occupano spazio nel DOM**, quindi non influenzano il rendering visivo.
+
+---
+
+## Errori comuni da evitare
+
+### Commenti HTML
+
+La sintassi HTML non è valida in JSX:
+
+```jsx
+<!-- Questo NON funziona -->
+<h1>Ciao</h1>
+```
+
+Questo codice genera un errore perché JSX non riconosce i commenti HTML.
+
+---
+
+### Commenti JavaScript senza parentesi graffe
+
+```jsx
+<div>// Questo genera un errore</div>
+```
+
+All’interno del JSX, i commenti devono sempre essere racchiusi tra `{}`.
+
+---
+
+## Buone pratiche
+
+- Usare i commenti JSX solo quando aggiungono reale valore alla comprensione del codice
+- Evitare commenti ovvi o ridondanti
+- Preferire nomi di componenti e funzioni chiari invece di commenti esplicativi
+- Utilizzare i commenti per spiegare logiche complesse o decisioni architetturali
+
+Un codice JSX ben commentato migliora la collaborazione tra sviluppatori e riduce il tempo necessario per comprendere e manutenere un progetto React nel lungo periodo.

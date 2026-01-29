@@ -1,3 +1,95 @@
 # Cos'è JSX
 
-In arrivo
+JSX (JavaScript XML) è una **estensione della sintassi di JavaScript** utilizzata principalmente in React per descrivere la struttura dell’interfaccia utente. A prima vista può sembrare HTML scritto dentro JavaScript, ma in realtà **JSX non è HTML**: è una sintassi che viene trasformata in puro JavaScript.
+
+L’obiettivo di JSX è rendere la scrittura dei componenti React **più leggibile, espressiva e dichiarativa**, permettendo allo sviluppatore di descrivere come deve apparire l’interfaccia in base allo stato dell’applicazione.
+
+---
+
+## JSX in React
+
+In React, l’interfaccia utente è composta da **componenti**. Ogni componente restituisce una descrizione di ciò che deve essere renderizzato a schermo. JSX è il linguaggio utilizzato per scrivere questa descrizione.
+
+Esempio di JSX:
+
+```jsx
+const App = () => {
+  return <h1>Ciao React</h1>;
+};
+```
+
+Questo codice definisce un componente React che restituisce un elemento JSX. Anche se sembra HTML, quello che viene restituito è un **oggetto JavaScript** che React utilizza per costruire il DOM.
+
+---
+
+## JSX non è obbligatorio
+
+È importante sottolineare che **React può essere usato anche senza JSX**. Lo stesso esempio precedente, senza JSX, sarebbe:
+
+```js
+const App = () => {
+  return React.createElement("h1", null, "Ciao React");
+};
+```
+
+JSX è quindi una **scorciatoia sintattica** per `React.createElement`. Viene utilizzato perché rende il codice più chiaro, soprattutto quando l’interfaccia diventa complessa.
+
+---
+
+## Come funziona JSX dietro le quinte
+
+Il browser non è in grado di interpretare JSX. Per questo motivo, il codice JSX viene **compilato** (di solito tramite Babel) e trasformato in JavaScript standard prima di essere eseguito.
+
+Questo significa che:
+
+- JSX esiste solo in fase di sviluppo
+- In produzione arriva al browser solo JavaScript puro
+- Non ha alcun impatto diretto sulle performance a runtime
+
+---
+
+## Perché usare JSX
+
+JSX è stato progettato per risolvere alcuni problemi comuni nello sviluppo di interfacce:
+
+- **Unisce struttura e logica**: markup e comportamento convivono nello stesso file, seguendo il modello dei componenti
+- **Migliora la leggibilità**: la struttura dell’interfaccia è immediatamente comprensibile
+- **Riduce errori**: la sintassi è tipizzata e validata in fase di compilazione
+- **Favorisce componenti riutilizzabili**: JSX si integra perfettamente con il modello a componenti di React
+
+---
+
+## JSX e separazione delle responsabilità
+
+Tradizionalmente, lo sviluppo web separa HTML, CSS e JavaScript. React adotta un approccio diverso: la separazione non avviene per tecnologia, ma per **responsabilità**.
+
+Un componente React contiene:
+
+- la logica (JavaScript)
+- la struttura (JSX)
+- lo stile (CSS o soluzioni equivalenti)
+
+JSX è quindi parte integrante di questo approccio e contribuisce a rendere i componenti **autonomi e autosufficienti**.
+
+---
+
+## JSX come espressione, non come template
+
+Un concetto fondamentale da comprendere è che **JSX è un’espressione JavaScript**, non un sistema di template.
+
+Questo significa che:
+
+- Può essere assegnato a variabili
+- Può essere restituito da funzioni
+- Può essere passato come argomento
+- Può essere composto e manipolato come qualsiasi altro valore JavaScript
+
+Questa caratteristica rende JSX estremamente potente e flessibile, soprattutto in applicazioni complesse.
+
+---
+
+## Conclusione
+
+JSX è una sintassi che permette di scrivere interfacce React in modo chiaro, dichiarativo e mantenibile. Non è HTML, non è obbligatorio, ma è uno strumento centrale nell’ecosistema React.
+
+Capire cos’è JSX e come funziona è il primo passo per padroneggiare React, perché rappresenta il punto di incontro tra **logica applicativa e interfaccia utente**.

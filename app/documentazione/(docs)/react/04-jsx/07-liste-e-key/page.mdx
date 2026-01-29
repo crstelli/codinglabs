@@ -1,3 +1,202 @@
 # Liste e key
 
-In arrivo
+In React è molto comune dover renderizzare una lista di elementi: una serie di componenti, un elenco di dati provenienti da un’API, una tabella, un menu o una lista di card. JSX fornisce un modo semplice ed espressivo per gestire questi casi, ma è fondamentale comprendere correttamente il concetto di **key** per evitare bug, problemi di performance e comportamenti inattesi dell’interfaccia.
+
+---
+
+## Renderizzare liste in JSX
+
+In JSX non esistono costrutti dedicati alle liste. Si utilizza JavaScript puro, in particolare il metodo `map`, per trasformare un array di dati in un array di elementi JSX.
+
+Esempio base:
+
+```jsx
+const numeri = [1, 2, 3, 4, 5];
+
+function ListaNumeri() {
+  return (
+    <ul>
+      {numeri.map((numero) => (
+        <li>{numero}</li>
+      ))}
+    </ul>
+  );
+}
+```
+
+In questo esempio:
+
+- `numeri` è un array JavaScript
+- `map` viene usato per creare un `<li>` per ogni elemento
+- l’espressione JSX è racchiusa tra `{}`
+
+Questo approccio è valido per qualsiasi tipo di dato: stringhe, oggetti o risultati di chiamate API.
+
+---
+
+## Perché React richiede le key
+
+Quando si renderizza una lista, React deve sapere **quale elemento corrisponde a quale componente** tra un render e l’altro. Per farlo in modo efficiente, React utilizza una proprietà speciale chiamata `key`.
+
+La `key`:
+
+- identifica in modo univoco un elemento nella lista
+- aiuta React a capire quali elementi sono stati aggiunti, rimossi o modificati
+- migliora le performance del processo di riconciliazione (reconciliation)
+
+Senza una `key`, React mostra un warning e può aggiornare il DOM in modo non ottimale.
+
+---
+
+## Uso corretto della key
+
+La `key` va passata come attributo al **primo elemento JSX** restituito dal `map`.
+
+Esempio corretto:
+
+```jsx
+const utenti = [
+  { id: 1, nome: "Mario" },
+  { id: 2, nome: "Luigi" },
+  { id: 3, nome: "Peach" },
+];
+
+function ListaUtenti() {
+  return (
+    <ul>
+      {utenti.map((utente) => (
+        <li key={utente.id}>{utente.nome}</li>
+      ))}
+    </ul>
+  );
+}
+```
+
+In questo caso:
+
+- `id` è un valore stabile e univoco
+- ogni `<li>` ha una `key` diversa
+- React può tracciare correttamente ogni elemento
+
+---
+
+## Quali valori usare come key
+
+Una buona `key` deve essere:
+
+- **univoca** all’interno della lista
+- **stabile nel tempo**
+- **prevedibile**
+
+### Valori consigliati
+
+- ID del database
+- UUID
+- Identificatori univoci generati lato backend
+
+### Valori da evitare
+
+- Indice dell’array (nella maggior parte dei casi)
+- Valori calcolati dinamicamente ad ogni render
+- Math.random()
+
+Esempio **da evitare**:
+
+```jsx
+{
+  utenti.map((utente, index) => <li key={index}>{utente.nome}</li>);
+}
+```
+
+Usare l’indice come `key` può causare problemi quando:
+
+- la lista cambia ordine
+- vengono inseriti o rimossi elementi
+- lo stato interno dei componenti deve essere preservato
+
+L’indice può essere accettabile solo per liste statiche che non cambiano mai.
+
+---
+
+## Key e componenti personalizzati
+
+Quando si renderizza una lista di componenti personalizzati, la `key` va passata **sul componente**, non all’interno di esso.
+
+Esempio:
+
+```jsx
+function Utente({ nome }) {
+  return <li>{nome}</li>;
+}
+
+function ListaUtenti() {
+  return (
+    <ul>
+      {utenti.map((utente) => (
+        <Utente key={utente.id} nome={utente.nome} />
+      ))}
+    </ul>
+  );
+}
+```
+
+La `key` non è accessibile come `props` all’interno del componente. È una proprietà riservata a React per la gestione del rendering.
+
+---
+
+## Liste condizionali e key
+
+Anche quando una lista viene renderizzata in modo condizionale, le `key` restano fondamentali.
+
+Esempio:
+
+```jsx
+{
+  utenti.length > 0 && (
+    <ul>
+      {utenti.map((utente) => (
+        <li key={utente.id}>{utente.nome}</li>
+      ))}
+    </ul>
+  );
+}
+```
+
+La presenza o meno della lista non cambia il fatto che ogni elemento deve avere una `key` coerente.
+
+---
+
+## Fragment e key
+
+Quando si utilizza `Fragment` per evitare nodi HTML extra, è comunque possibile (e spesso necessario) usare la `key`.
+
+Sintassi estesa:
+
+```jsx
+import { Fragment } from "react";
+
+{
+  utenti.map((utente) => (
+    <Fragment key={utente.id}>
+      <h3>{utente.nome}</h3>
+      <p>Utente registrato</p>
+    </Fragment>
+  ));
+}
+```
+
+La sintassi corta `<>...</>` **non supporta** le `key`, quindi in questi casi è obbligatorio usare `Fragment` esplicito.
+
+---
+
+## Riassunto
+
+- Le liste in JSX si renderizzano usando `map`
+- Ogni elemento di una lista deve avere una `key`
+- La `key` serve a React per aggiornare il DOM in modo efficiente
+- Usa sempre valori univoci e stabili
+- Evita l’indice dell’array se la lista può cambiare
+- La `key` va applicata al primo elemento JSX restituito dal `map`
+- Nei `Fragment`, la `key` è supportata solo nella sintassi estesa
+
+Comprendere e usare correttamente le `key` è essenziale per scrivere componenti React affidabili, performanti e privi di comportamenti inattesi.

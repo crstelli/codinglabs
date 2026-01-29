@@ -1,3 +1,191 @@
 # Sintassi JSX
 
-In arrivo
+JSX è una sintassi estesa di JavaScript utilizzata in React per descrivere la struttura dell’interfaccia utente. A prima vista può sembrare HTML scritto dentro JavaScript, ma in realtà è una sintassi che viene trasformata in chiamate a funzioni JavaScript (`React.createElement`) durante il processo di compilazione.
+
+Comprendere a fondo la sintassi JSX è fondamentale per scrivere componenti React chiari, manutenibili ed efficienti.
+
+---
+
+## JSX come estensione di JavaScript
+
+JSX non è valido JavaScript puro. Il browser non è in grado di interpretarlo direttamente: per questo motivo viene sempre trasformato tramite strumenti come Babel.
+
+Un esempio di JSX:
+
+```jsx
+const element = <h1>Ciao mondo</h1>;
+```
+
+Dopo la trasformazione, il codice diventa concettualmente simile a:
+
+```js
+const element = React.createElement("h1", null, "Ciao mondo");
+```
+
+Questo significa che ogni espressione JSX rappresenta un oggetto JavaScript che descrive un nodo dell’interfaccia.
+
+---
+
+## Regole fondamentali della sintassi JSX
+
+### Un solo elemento radice
+
+Ogni espressione JSX deve restituire **un solo elemento radice**. Questo è un vincolo sintattico importante.
+
+Non valido:
+
+```jsx
+return (
+  <h1>Titolo</h1>
+  <p>Paragrafo</p>
+);
+```
+
+Valido:
+
+```jsx
+return (
+  <div>
+    <h1>Titolo</h1>
+    <p>Paragrafo</p>
+  </div>
+);
+```
+
+In alternativa, è possibile utilizzare i Fragment, che verranno trattati in una sezione dedicata.
+
+---
+
+### Tag di apertura e chiusura
+
+In JSX **tutti i tag devono essere chiusi**.
+
+- I tag con contenuto usano apertura e chiusura:
+
+  ```jsx
+  <div></div>
+  ```
+
+- I tag senza contenuto devono essere auto-chiusi:
+
+  ```jsx
+  <img />
+  <input />
+  <br />
+  ```
+
+Questa regola vale anche per elementi che in HTML non richiederebbero la chiusura.
+
+---
+
+## JSX e componenti React
+
+In JSX, la distinzione tra elementi HTML e componenti React è basata sulla **capitalizzazione**.
+
+- Tag in minuscolo → elementi HTML nativi
+
+  ```jsx
+  <div></div>
+  ```
+
+- Tag con iniziale maiuscola → componenti React
+
+  ```jsx
+  <Header />
+  ```
+
+React utilizza questa convenzione per capire se deve creare un nodo DOM o invocare una funzione/componente personalizzato.
+
+---
+
+## Annidamento degli elementi
+
+JSX supporta l’annidamento degli elementi in modo simile all’HTML, ma con una sintassi più rigorosa.
+
+```jsx
+const layout = (
+  <section>
+    <header>
+      <h1>Titolo</h1>
+    </header>
+    <main>
+      <p>Contenuto principale</p>
+    </main>
+  </section>
+);
+```
+
+L’annidamento deve essere sempre ben bilanciato: ogni tag aperto deve essere chiuso correttamente.
+
+---
+
+## JSX come espressione
+
+Una caratteristica chiave della sintassi JSX è che **può essere usata come una normale espressione JavaScript**.
+
+Questo significa che JSX può essere:
+
+- assegnato a una variabile
+- passato come argomento a una funzione
+- restituito da una funzione o da un componente
+
+Esempio:
+
+```jsx
+function renderTitle() {
+  return <h1>Titolo dinamico</h1>;
+}
+```
+
+Questa natura espressiva rende JSX estremamente flessibile e integrabile con la logica applicativa.
+
+---
+
+## Spazi e formattazione
+
+JSX ignora gli spazi e le nuove righe in modo simile all’HTML. Tuttavia, la formattazione del codice è importante per la leggibilità.
+
+```jsx
+<h1>Ciao mondo</h1>
+```
+
+Il risultato renderizzato sarà:
+
+```
+Ciao mondo
+```
+
+Per questo motivo, è buona pratica gestire consapevolmente spazi e ritorni a capo, soprattutto quando si lavora con testo dinamico.
+
+---
+
+## Parentesi e ritorno di JSX
+
+Quando un’espressione JSX occupa più righe, è **fortemente consigliato racchiuderla tra parentesi tonde**. Questo evita errori legati al ritorno automatico di JavaScript (`automatic semicolon insertion`).
+
+```jsx
+return (
+  <div>
+    <h1>Titolo</h1>
+    <p>Descrizione</p>
+  </div>
+);
+```
+
+Questa convenzione è ormai uno standard de facto nello sviluppo React.
+
+---
+
+## JSX non è HTML
+
+Anche se la sintassi è simile, è importante ricordare che JSX **non è HTML**:
+
+- Viene compilato, non interpretato dal browser
+- Segue regole JavaScript
+- Usa oggetti e funzioni sotto il cofano
+
+Pensare JSX come una “sintassi dichiarativa per creare elementi React” aiuta a evitare fraintendimenti e a scrivere codice più corretto e consapevole.
+
+---
+
+La sintassi JSX è progettata per essere leggibile, espressiva e fortemente integrata con JavaScript. Padroneggiarla è un passaggio essenziale per sfruttare appieno il modello a componenti di React e scrivere interfacce moderne, scalabili e manutenibili.

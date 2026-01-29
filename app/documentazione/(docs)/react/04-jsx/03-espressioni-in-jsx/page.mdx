@@ -1,3 +1,182 @@
 # Espressioni in JSX
 
-In arrivo
+In JSX è possibile inserire **espressioni JavaScript** direttamente all’interno del markup. Questo è uno degli aspetti fondamentali di React, perché permette di creare interfacce dinamiche in modo dichiarativo, mantenendo la logica e la struttura dell’interfaccia nello stesso punto.
+
+## Cosa sono le espressioni in JSX
+
+Un’espressione è qualsiasi codice JavaScript che **restituisce un valore**. In JSX, le espressioni vengono inserite utilizzando le **parentesi graffe `{}`**.
+
+Esempio base:
+
+```jsx
+const nome = "Mario";
+
+return <h1>Ciao {nome}</h1>;
+```
+
+In questo caso:
+
+- `nome` è una variabile JavaScript
+- `{nome}` è un’espressione JSX
+- Il valore restituito viene renderizzato nel DOM
+
+## Quali espressioni sono consentite
+
+All’interno delle parentesi graffe puoi usare **qualsiasi espressione JavaScript valida**, purché restituisca un valore.
+
+### Variabili
+
+```jsx
+const eta = 30;
+
+<p>Età: {eta}</p>;
+```
+
+### Operazioni matematiche
+
+```jsx
+<p>Risultato: {10 + 5}</p>
+```
+
+### Stringhe e concatenazioni
+
+```jsx
+const nome = "Luca";
+const cognome = "Rossi";
+
+<p>{nome + " " + cognome}</p>;
+```
+
+### Template literal
+
+```jsx
+<p>{`${nome} ${cognome}`}</p>
+```
+
+### Funzioni che restituiscono un valore
+
+```jsx
+function saluto(nome) {
+  return `Ciao ${nome}`;
+}
+
+<p>{saluto("Anna")}</p>;
+```
+
+### Metodi sugli array o sulle stringhe
+
+```jsx
+const messaggio = "react";
+
+<p>{messaggio.toUpperCase()}</p>;
+```
+
+## Espressioni vs istruzioni
+
+In JSX **non sono consentite istruzioni**, ma solo espressioni.
+
+❌ Esempio non valido:
+
+```jsx
+{
+  if (isLogged) {
+    return "Benvenuto";
+  }
+}
+```
+
+✅ Esempio valido:
+
+```jsx
+{
+  isLogged ? "Benvenuto" : "Accedi";
+}
+```
+
+Motivo:
+
+- `if`, `for`, `while` sono **istruzioni**
+- L’operatore ternario, le funzioni e i metodi sono **espressioni**
+
+## Espressioni booleane
+
+I valori `true`, `false`, `null` e `undefined` **non vengono renderizzati** in JSX.
+
+```jsx
+<p>{false}</p>
+```
+
+Non produrrà alcun output visibile.
+
+Questo comportamento è spesso usato per il rendering condizionale:
+
+```jsx
+{
+  isAdmin && <p>Sezione amministratore</p>;
+}
+```
+
+Se `isAdmin` è `true`, l’elemento viene renderizzato, altrimenti no.
+
+## Espressioni complesse e leggibilità
+
+È possibile inserire espressioni complesse, ma **è buona pratica mantenere JSX leggibile**.
+
+❌ Poco leggibile:
+
+```jsx
+<p>{user && user.profile && user.profile.name}</p>
+```
+
+✅ Migliore:
+
+```jsx
+const nome = user?.profile?.name;
+
+<p>{nome}</p>;
+```
+
+Oppure spostare la logica fuori dal JSX:
+
+```jsx
+const messaggio = isOnline ? "Online" : "Offline";
+
+<p>{messaggio}</p>;
+```
+
+Un JSX pulito migliora la manutenibilità del codice, soprattutto in progetti di grandi dimensioni.
+
+## Espressioni e componenti
+
+Un’espressione JSX può restituire anche un **componente React**:
+
+```jsx
+{
+  isLoading && <Loader />;
+}
+```
+
+Oppure una funzione che restituisce JSX:
+
+```jsx
+function renderMessaggio() {
+  return <p>Operazione completata</p>;
+}
+
+{
+  renderMessaggio();
+}
+```
+
+Questo approccio è molto usato per separare logica e presentazione.
+
+## Limitazioni da ricordare
+
+- Non è possibile usare istruzioni di controllo direttamente nel JSX
+- Le espressioni devono restituire un valore renderizzabile
+- Evitare logica complessa inline
+- Preferire variabili o funzioni esterne per mantenere chiarezza
+
+## Conclusione
+
+Le espressioni in JSX sono il ponte tra JavaScript e interfaccia utente. Consentono di rendere dinamici i componenti React in modo naturale e dichiarativo. Usarle correttamente significa scrivere codice più leggibile, manutenibile e scalabile, qualità fondamentali sia per chi sta iniziando sia per sviluppatori esperti.

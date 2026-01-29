@@ -1,3 +1,163 @@
 # JSX e sicurezza (XSS)
 
-In arrivo
+La sicurezza è un aspetto fondamentale nello sviluppo di applicazioni web. Quando si lavora con React e JSX, uno dei temi più importanti è la prevenzione degli attacchi **XSS (Cross-Site Scripting)**. In questa sezione analizziamo come JSX gestisce automaticamente la sicurezza e quali accorgimenti deve comunque adottare uno sviluppatore.
+
+---
+
+## Cos’è un attacco XSS
+
+Un attacco **Cross-Site Scripting (XSS)** avviene quando un utente malintenzionato riesce a iniettare codice JavaScript dannoso all’interno di una pagina web, che verrà poi eseguito nel browser di altri utenti.
+
+Esempi di conseguenze di un attacco XSS:
+
+- Furto di cookie e token di autenticazione
+- Manipolazione del DOM
+- Reindirizzamenti verso siti malevoli
+- Accesso non autorizzato ai dati dell’utente
+
+Questi attacchi sfruttano quasi sempre **input non sanitizzati** provenienti dall’utente.
+
+---
+
+## Perché JSX è sicuro di default
+
+JSX è progettato per essere **sicuro per impostazione predefinita**. Quando si inseriscono valori dinamici all’interno del JSX usando le parentesi graffe `{}`, React **escapa automaticamente** i contenuti prima di renderizzarli nel DOM.
+
+Esempio:
+
+```jsx
+const userInput = "<script>alert('XSS')</script>";
+
+function App() {
+  return <p>{userInput}</p>;
+}
+```
+
+In questo caso:
+
+- Il contenuto non viene interpretato come HTML
+- Il browser visualizzerà il testo letterale
+- Lo script **non verrà eseguito**
+
+Questo comportamento impedisce la maggior parte degli attacchi XSS più comuni.
+
+---
+
+## Escaping automatico dei valori
+
+React converte automaticamente i valori inseriti in JSX in stringhe sicure, sostituendo i caratteri pericolosi come:
+
+- `<` → `&lt;`
+- `>` → `&gt;`
+- `"` → `&quot;`
+
+Questo vale per:
+
+- Testo
+- Attributi
+- Contenuti dinamici
+
+Finché si utilizzano le espressioni JSX standard, **React protegge l’applicazione**.
+
+---
+
+## Il caso speciale: `dangerouslySetInnerHTML`
+
+L’unico modo per bypassare la protezione automatica di JSX è l’uso di:
+
+```jsx
+dangerouslySetInnerHTML;
+```
+
+Esempio:
+
+```jsx
+function App() {
+  return (
+    <div
+      dangerouslySetInnerHTML={{
+        __html: "<strong>Test</strong>",
+      }}
+    />
+  );
+}
+```
+
+Il nome non è casuale: **è pericoloso**. Questo metodo dice esplicitamente a React di:
+
+- Non eseguire escaping
+- Inserire HTML grezzo nel DOM
+
+Se il contenuto proviene da una fonte non affidabile, si introduce un **grave rischio XSS**.
+
+---
+
+## Quando (e quando non) usare `dangerouslySetInnerHTML`
+
+### Usarlo solo se:
+
+- Il contenuto HTML è **completamente controllato**
+- Proviene da una fonte affidabile
+- È stato **sanitizzato** lato server o client
+
+### Evitarlo quando:
+
+- L’HTML proviene da input utente
+- Il contenuto arriva da API esterne non verificate
+- Esistono alternative basate su JSX standard
+
+In molti casi, una struttura JSX ben progettata rende `dangerouslySetInnerHTML` inutile.
+
+---
+
+## Sanitizzazione dei contenuti
+
+Se è davvero necessario renderizzare HTML dinamico, è obbligatorio **sanitizzare il contenuto** prima di passarlo a React.
+
+La sanitizzazione consiste nel:
+
+- Rimuovere tag pericolosi (`script`, `iframe`, ecc.)
+- Eliminare attributi dannosi (`onClick`, `onError`, ecc.)
+
+Questa operazione dovrebbe idealmente avvenire:
+
+- **Lato server**, come prima linea di difesa
+- Oppure **lato client**, usando librerie dedicate
+
+React **non sanitizza** il contenuto passato a `dangerouslySetInnerHTML`.
+
+---
+
+## Attributi JSX e sicurezza
+
+Anche gli attributi JSX sono sicuri di default:
+
+```jsx
+<img src={userInput} />
+```
+
+React impedisce l’iniezione diretta di JavaScript negli attributi HTML. Tuttavia, lo sviluppatore deve comunque:
+
+- Validare URL e dati
+- Evitare di fidarsi ciecamente dell’input utente
+
+La sicurezza non è mai completamente automatica.
+
+---
+
+## Best practice per evitare XSS in JSX
+
+- Non usare `dangerouslySetInnerHTML` se non strettamente necessario
+- Non renderizzare HTML proveniente direttamente dagli utenti
+- Validare e sanitizzare i dati esterni
+- Preferire sempre JSX dichiarativo
+- Mantenere aggiornate dipendenze e librerie
+- Separare logica e presentazione
+
+---
+
+## Conclusione
+
+JSX offre un alto livello di protezione contro gli attacchi XSS grazie all’escaping automatico dei contenuti. Questo lo rende una scelta sicura per lo sviluppo di interfacce moderne. Tuttavia, la sicurezza dipende anche dalle decisioni dello sviluppatore: l’uso improprio di strumenti come `dangerouslySetInnerHTML` può annullare tutte le protezioni offerte da React.
+
+Un approccio consapevole, unito a buone pratiche di validazione e sanitizzazione, è essenziale per costruire applicazioni React robuste e sicure.

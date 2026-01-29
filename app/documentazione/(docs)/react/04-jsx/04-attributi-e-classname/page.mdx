@@ -1,3 +1,187 @@
 # Attributi e className
 
-In arrivo
+In JSX, gli attributi permettono di passare informazioni agli elementi HTML o ai componenti React, in modo simile a quanto avviene nell’HTML tradizionale. Tuttavia, esistono alcune differenze importanti dovute al fatto che JSX non è HTML puro, ma una sintassi che viene trasformata in JavaScript.
+
+Comprendere correttamente come funzionano gli attributi e l’uso di `className` è fondamentale per scrivere codice React pulito, leggibile e coerente con le best practice.
+
+---
+
+## Attributi in JSX
+
+Gli attributi in JSX vengono scritti all’interno del tag di apertura di un elemento o di un componente, seguendo una sintassi molto simile all’HTML:
+
+```jsx
+<input type="text" placeholder="Inserisci il nome" />
+```
+
+La differenza principale è che JSX utilizza **JavaScript**, quindi:
+
+- Gli attributi seguono la **convenzione camelCase**
+- I valori possono essere **stringhe** o **espressioni JavaScript**
+
+Esempio con espressione JavaScript:
+
+```jsx
+<input type="text" disabled={isDisabled} />
+```
+
+In questo caso, `isDisabled` è una variabile JavaScript booleana.
+
+---
+
+## Attributi booleani
+
+Gli attributi booleani in JSX funzionano in modo esplicito. Se un attributo è impostato a `true`, può essere scritto in forma abbreviata:
+
+```jsx
+<input required />
+```
+
+È equivalente a:
+
+```jsx
+<input required={true} />
+```
+
+Se il valore è `false`, l’attributo non viene applicato:
+
+```jsx
+<input required={false} />
+```
+
+---
+
+## Attributi HTML e differenze con JSX
+
+Alcuni attributi HTML hanno nomi diversi in JSX, perché JSX utilizza nomi di proprietà JavaScript anziché parole riservate o nomi non validi.
+
+Alcuni esempi comuni:
+
+| HTML     | JSX       |
+| -------- | --------- |
+| class    | className |
+| for      | htmlFor   |
+| tabindex | tabIndex  |
+| readonly | readOnly  |
+
+Esempio:
+
+```jsx
+<label htmlFor="email">Email</label>
+<input id="email" type="email" />
+```
+
+---
+
+## className: gestire le classi CSS
+
+In JSX non si usa l’attributo `class`, perché è una parola riservata in JavaScript. Al suo posto si utilizza `className`.
+
+Esempio base:
+
+```jsx
+<div className="container">Contenuto</div>
+```
+
+Questo codice genera correttamente una classe CSS `container` sull’elemento `div`.
+
+---
+
+## className con più classi
+
+Per applicare più classi, si utilizza una stringa come in HTML:
+
+```jsx
+<div className="container active highlighted">Contenuto</div>
+```
+
+---
+
+## className dinamico
+
+Uno dei principali vantaggi di JSX è la possibilità di rendere dinamico il valore di `className` usando espressioni JavaScript.
+
+Esempio con condizione semplice:
+
+```jsx
+<div className={isActive ? "box active" : "box"}>Contenuto</div>
+```
+
+Oppure utilizzando template literal:
+
+```jsx
+<div className={`box ${isActive ? "active" : ""}`}>Contenuto</div>
+```
+
+Questo approccio è molto comune quando si gestiscono stati, animazioni o varianti di stile.
+
+---
+
+## className e oggetti JavaScript
+
+In alcuni casi può essere utile costruire le classi in modo più strutturato:
+
+```jsx
+const classes = {
+  base: "button",
+  primary: isPrimary ? "button-primary" : "",
+};
+
+<button className={`${classes.base} ${classes.primary}`}>Click</button>;
+```
+
+Questo migliora la leggibilità quando il numero di classi cresce.
+
+---
+
+## Attributi personalizzati (data-\*)
+
+JSX supporta senza problemi gli attributi personalizzati HTML, come i `data-*`:
+
+```jsx
+<div data-id="123" data-role="card">
+  Contenuto
+</div>
+```
+
+Questi attributi sono spesso utilizzati per integrazioni con librerie esterne o per test automatici.
+
+---
+
+## Attributi nei componenti React
+
+Quando si utilizzano componenti personalizzati, gli attributi diventano **props**:
+
+```jsx
+<Button type="submit" disabled={true} />
+```
+
+All’interno del componente:
+
+```jsx
+function Button(props) {
+  return (
+    <button type={props.type} disabled={props.disabled}>
+      Invia
+    </button>
+  );
+}
+```
+
+Questo rende `className` e gli altri attributi strumenti fondamentali per la composizione dei componenti.
+
+---
+
+## Best practice
+
+- Usare sempre `className` al posto di `class`
+- Preferire espressioni chiare e leggibili per le classi dinamiche
+- Evitare logica complessa direttamente dentro `className`
+- Mantenere coerenza nei nomi delle classi CSS
+- Utilizzare camelCase per tutti gli attributi JSX
+
+---
+
+## Conclusione
+
+Gli attributi in JSX rappresentano il punto di incontro tra HTML e JavaScript. L’uso corretto di `className` e degli altri attributi consente di sfruttare appieno la potenza di React, mantenendo il codice leggibile, scalabile e facilmente manutenibile. Una buona padronanza di questi concetti è essenziale per qualsiasi sviluppatore React, dal principiante al professionista esperto.
