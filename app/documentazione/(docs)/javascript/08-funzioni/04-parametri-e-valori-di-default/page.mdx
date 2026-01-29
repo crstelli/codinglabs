@@ -1,3 +1,167 @@
 # Parametri e valori di default
 
-In arrivo
+In JavaScript, le funzioni possono ricevere **parametri**, ovvero variabili che permettono di passare dati dall’esterno all’interno della funzione. I **valori di default** consentono invece di definire un valore predefinito per un parametro nel caso in cui non venga fornito alcun argomento o venga passato `undefined`.
+
+Questi concetti sono fondamentali per scrivere funzioni flessibili, riutilizzabili e robuste.
+
+---
+
+## Parametri di una funzione
+
+Un parametro è una variabile dichiarata nella firma della funzione. Quando la funzione viene invocata, i valori passati sono chiamati **argomenti**.
+
+```js
+function somma(a, b) {
+  return a + b;
+}
+
+somma(2, 3); // 5
+```
+
+- `a` e `b` sono parametri
+- `2` e `3` sono argomenti
+
+JavaScript **non impone** il numero di argomenti passati:
+
+- se ne mancano, i parametri assumeranno valore `undefined`
+- se ce ne sono di più, quelli in eccesso vengono ignorati (salvo uso di rest parameters)
+
+```js
+somma(2); // NaN (2 + undefined)
+somma(2, 3, 4); // 5
+```
+
+---
+
+## Valori di default
+
+A partire da ES6 (ES2015), è possibile assegnare un **valore di default** a un parametro direttamente nella dichiarazione della funzione.
+
+```js
+function saluta(nome = "Utente") {
+  return `Ciao ${nome}`;
+}
+
+saluta(); // "Ciao Utente"
+saluta("Marco"); // "Ciao Marco"
+```
+
+Il valore di default viene utilizzato **solo se l’argomento è `undefined`**.
+
+```js
+function esempio(x = 10) {
+  return x;
+}
+
+esempio(undefined); // 10
+esempio(null); // null
+esempio(0); // 0
+```
+
+Questo comportamento è intenzionale e va tenuto presente per evitare ambiguità logiche.
+
+---
+
+## Valori di default con espressioni
+
+Il valore di default può essere una qualsiasi espressione valida, incluse operazioni, chiamate di funzione o riferimenti ad altri parametri precedenti.
+
+```js
+function calcolaArea(base, altezza = base * 2) {
+  return base * altezza;
+}
+
+calcolaArea(5); // 50
+```
+
+Attenzione: Un parametro può usare **solo parametri definiti prima di lui**.
+
+```js
+function errore(a = b, b = 2) {
+  // ReferenceError
+}
+```
+
+---
+
+## Valori di default e function expression / arrow function
+
+I valori di default funzionano allo stesso modo con tutte le tipologie di funzioni.
+
+```js
+const moltiplica = function (a, b = 1) {
+  return a * b;
+};
+
+const dividi = (a, b = 1) => a / b;
+```
+
+---
+
+## Parametri opzionali
+
+In JavaScript non esistono parametri “obbligatori” o “opzionali” in modo formale. I valori di default sono il modo più chiaro e moderno per gestire parametri opzionali.
+
+```js
+function creaUtente(nome, ruolo = "user", attivo = true) {
+  return { nome, ruolo, attivo };
+}
+```
+
+Questo approccio migliora:
+
+- leggibilità
+- manutenibilità
+- chiarezza dell’API della funzione
+
+---
+
+## Pattern tradizionale (pre-ES6)
+
+Prima dell’introduzione dei valori di default, si usavano controlli manuali:
+
+```js
+function saluta(nome) {
+  nome = nome || "Utente";
+  return `Ciao ${nome}`;
+}
+```
+
+Questo pattern è **meno affidabile**, perché valori come `""`, `0` o `false` vengono sovrascritti.
+
+```js
+saluta(""); // "Ciao Utente" (comportamento indesiderato)
+```
+
+I valori di default risolvono questo problema in modo corretto.
+
+---
+
+## Parametri di default e oggetti
+
+Quando una funzione accetta un oggetto come parametro, è comune fornire un valore di default per evitare errori.
+
+```js
+function configuraApp(opzioni = {}) {
+  const { tema = "light", debug = false } = opzioni;
+
+  return { tema, debug };
+}
+```
+
+Questo pattern è molto utilizzato nelle API moderne e nei framework.
+
+---
+
+## Best practice
+
+- Usa sempre i valori di default per i parametri opzionali
+- Evita controlli manuali con `||` se il valore può essere falsy
+- Mantieni i valori di default semplici e prevedibili
+- Usa parametri di default per rendere l’interfaccia della funzione autoesplicativa
+
+---
+
+## Conclusione
+
+I parametri e i valori di default sono uno strumento essenziale per scrivere funzioni più sicure, leggibili e flessibili. Il loro utilizzo corretto riduce i bug legati a valori `undefined`, migliora l’esperienza di chi utilizza la funzione e rende il codice più espressivo, sia per chi inizia sia per sviluppatori esperti.

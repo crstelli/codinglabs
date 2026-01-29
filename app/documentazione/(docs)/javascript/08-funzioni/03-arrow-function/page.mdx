@@ -1,3 +1,213 @@
 # Arrow function
 
-In arrivo
+Le **arrow function** (funzioni freccia) sono una sintassi introdotta con **ES6 (ECMAScript 2015)** che permette di scrivere funzioni in modo più compatto e leggibile. Oltre alla sintassi semplificata, introducono differenze importanti nel comportamento di `this`, `arguments` e nello scope, rendendole particolarmente utili nello sviluppo web moderno.
+
+---
+
+## Cos’è un’arrow function
+
+Un’arrow function è una funzione anonima definita utilizzando l’operatore `=>`.
+
+```js
+const somma = (a, b) => {
+  return a + b;
+};
+```
+
+È equivalente a una function expression tradizionale:
+
+```js
+const somma = function (a, b) {
+  return a + b;
+};
+```
+
+La differenza principale non è solo sintattica, ma anche **concettuale e funzionale**, soprattutto per quanto riguarda il contesto di esecuzione.
+
+---
+
+## Sintassi di base
+
+### Forma completa
+
+```js
+const funzione = (param1, param2) => {
+  // corpo della funzione
+};
+```
+
+### Un solo parametro
+
+Se la funzione ha **un solo parametro**, le parentesi possono essere omesse:
+
+```js
+const quadrato = (x) => {
+  return x * x;
+};
+```
+
+### Nessun parametro
+
+Se non ci sono parametri, le parentesi sono obbligatorie:
+
+```js
+const saluta = () => {
+  console.log("Ciao");
+};
+```
+
+---
+
+## Return implicito
+
+Se il corpo della funzione è composto da **una sola espressione**, è possibile omettere le parentesi graffe e la keyword `return`. Il valore dell’espressione viene restituito automaticamente.
+
+```js
+const somma = (a, b) => a + b;
+```
+
+Questo stile è molto usato in:
+
+- funzioni di utilità
+- callback
+- programmazione funzionale
+
+### Attenzione agli oggetti
+
+Per restituire un oggetto con il return implicito, è necessario racchiuderlo tra parentesi tonde:
+
+```js
+const creaUtente = (nome, eta) => ({ nome, eta });
+```
+
+Senza parentesi, JavaScript interpretarebbe `{}` come un blocco di codice.
+
+---
+
+## Arrow function e `this`
+
+Una delle caratteristiche più importanti delle arrow function è che **non hanno un proprio `this`**.
+
+Il valore di `this` viene **ereditato lessicalmente** dal contesto in cui la funzione è definita, non da quello in cui viene chiamata.
+
+### Esempio con function tradizionale
+
+```js
+function Timer() {
+  this.secondi = 0;
+
+  setInterval(function () {
+    this.secondi++;
+  }, 1000);
+}
+```
+
+In questo caso `this` **non fa riferimento all’oggetto `Timer`**, ma al contesto globale o a `undefined` (in strict mode).
+
+### Stesso esempio con arrow function
+
+```js
+function Timer() {
+  this.secondi = 0;
+
+  setInterval(() => {
+    this.secondi++;
+  }, 1000);
+}
+```
+
+Qui l’arrow function **eredita il `this` di `Timer`**, rendendo il codice corretto e più leggibile.
+
+---
+
+## Differenze principali rispetto alle function tradizionali
+
+### 1. Nessun `this` proprio
+
+- `this` è lessicale
+- non può essere modificato con `call`, `apply` o `bind`
+
+```js
+const fn = () => {
+  console.log(this);
+};
+```
+
+### 2. Nessun oggetto `arguments`
+
+Le arrow function **non hanno `arguments`**. Se serve gestire un numero variabile di parametri, bisogna usare i **rest parameters**.
+
+```js
+const somma = (...numeri) => {
+  return numeri.reduce((acc, n) => acc + n, 0);
+};
+```
+
+### 3. Non possono essere usate come costruttori
+
+Non è possibile usare `new` con un’arrow function:
+
+```js
+const Persona = () => {};
+new Persona(); // Errore
+```
+
+### 4. Non hanno `prototype`
+
+Essendo funzioni non costruttive, non espongono la proprietà `prototype`.
+
+---
+
+## Uso comune delle arrow function
+
+### Callback
+
+Sono ideali per callback concise e leggibili:
+
+```js
+const numeri = [1, 2, 3, 4];
+
+const doppi = numeri.map((n) => n * 2);
+```
+
+### Event listener (con attenzione)
+
+```js
+button.addEventListener("click", () => {
+  console.log("Click");
+});
+```
+
+In questo caso va ricordato che `this` **non** farà riferimento all’elemento DOM, ma al contesto esterno. Se serve `this` legato all’elemento, è preferibile una function tradizionale.
+
+---
+
+## Quando usare le arrow function
+
+Usa le arrow function quando:
+
+- vuoi una sintassi più compatta
+- stai scrivendo callback
+- vuoi preservare il `this` del contesto esterno
+- lavori con funzioni pure e logica funzionale
+
+Evita le arrow function quando:
+
+- devi usare `this` dinamico
+- stai definendo metodi di oggetti che dipendono dal contesto
+- devi creare costruttori
+
+---
+
+## Best practice
+
+- Usale per funzioni brevi e dichiarative
+- Evita arrow function troppo complesse o annidate
+- Non abusare del return implicito se riduce la leggibilità
+- Sii consapevole del comportamento di `this`
+
+---
+
+## Conclusione
+
+Le arrow function rappresentano uno strumento fondamentale nel JavaScript moderno. Offrono una sintassi più espressiva e risolvono problemi storici legati al contesto di `this`, migliorando chiarezza e manutenibilità del codice. Tuttavia, come ogni strumento, vanno utilizzate con consapevolezza, scegliendo la soluzione più adatta al contesto e agli obiettivi dell’applicazione.

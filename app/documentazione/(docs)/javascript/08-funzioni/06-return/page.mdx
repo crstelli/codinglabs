@@ -1,3 +1,217 @@
 # Return
 
-In arrivo
+In JavaScript, la parola chiave `return` viene utilizzata all’interno di una funzione per **restituire un valore** al punto in cui la funzione è stata chiamata e **interrompere l’esecuzione** della funzione stessa.
+
+Comprendere a fondo `return` è fondamentale per scrivere codice chiaro, prevedibile e riutilizzabile.
+
+---
+
+## Cos’è `return`
+
+Quando una funzione viene eseguita, può:
+
+- eseguire delle operazioni
+- produrre un risultato
+
+Il risultato viene restituito tramite `return`.
+
+```js
+function somma(a, b) {
+  return a + b;
+}
+
+const risultato = somma(2, 3); // 5
+```
+
+In questo esempio:
+
+- la funzione `somma` calcola `a + b`
+- `return` restituisce il valore
+- il valore restituito viene assegnato alla variabile `risultato`
+
+---
+
+## Interruzione dell’esecuzione della funzione
+
+Quando JavaScript incontra un `return`, **la funzione termina immediatamente**. Qualsiasi codice scritto dopo non verrà eseguito.
+
+```js
+function esempio() {
+  return "fine";
+  console.log("Questo non verrà mai eseguito");
+}
+```
+
+Questo comportamento è spesso utilizzato per:
+
+- uscire anticipatamente da una funzione
+- gestire condizioni particolari o errori
+
+```js
+function dividi(a, b) {
+  if (b === 0) {
+    return null;
+  }
+  return a / b;
+}
+```
+
+---
+
+## Valori restituiti
+
+Una funzione può restituire **qualsiasi tipo di valore**:
+
+### Valori primitivi
+
+```js
+return 42;
+return "test";
+return true;
+```
+
+### Oggetti e array
+
+```js
+return { nome: "Mario", età: 30 };
+return [1, 2, 3];
+```
+
+### Funzioni
+
+```js
+function creaMoltiplicatore(x) {
+  return function (y) {
+    return x * y;
+  };
+}
+
+const perDue = creaMoltiplicatore(2);
+perDue(5); // 10
+```
+
+---
+
+## `return` senza valore
+
+Se `return` viene usato senza specificare un valore, la funzione restituisce `undefined`.
+
+```js
+function test() {
+  return;
+}
+
+test(); // undefined
+```
+
+Lo stesso accade se una funzione **non contiene alcun `return`**.
+
+```js
+function test() {}
+
+test(); // undefined
+```
+
+---
+
+## Uso di `return` nelle espressioni
+
+Il valore restituito da una funzione può essere:
+
+- assegnato a una variabile
+- passato come argomento
+- utilizzato in un’espressione
+
+```js
+const totale = somma(10, 20) * 2;
+```
+
+Questo rende le funzioni componibili e riutilizzabili.
+
+---
+
+## `return` e funzioni arrow
+
+Nelle arrow function, `return` può essere:
+
+- **esplicito**
+- **implicito**
+
+### Return esplicito
+
+```js
+const somma = (a, b) => {
+  return a + b;
+};
+```
+
+### Return implicito
+
+Se il corpo della funzione è una singola espressione, il valore viene restituito automaticamente.
+
+```js
+const somma = (a, b) => a + b;
+```
+
+Attenzione con gli oggetti:
+
+```js
+const creaUtente = () => ({ nome: "Luca" });
+```
+
+---
+
+## Buone pratiche
+
+- Una funzione dovrebbe avere **un solo scopo chiaro** e restituire un valore coerente
+- Evitare `return` con tipi di valore diversi in base alle condizioni, se non strettamente necessario
+- Usare `return` anticipati per semplificare la logica ed evitare annidamenti eccessivi
+
+```js
+function validaUtente(utente) {
+  if (!utente) return false;
+  if (!utente.email) return false;
+  return true;
+}
+```
+
+---
+
+## Errori comuni
+
+### Dimenticare `return`
+
+```js
+function somma(a, b) {
+  a + b;
+}
+
+somma(2, 3); // undefined
+```
+
+### Aspettarsi che `return` stampi un valore
+
+`return` **non stampa nulla**. Serve solo a restituire un valore.
+
+```js
+return "ciao"; // non viene mostrato a schermo
+```
+
+Per visualizzare un valore serve `console.log`.
+
+---
+
+## Conclusione
+
+`return` è uno degli elementi più importanti delle funzioni in JavaScript.
+Permette di:
+
+- produrre risultati
+- controllare il flusso di esecuzione
+- costruire codice modulare e riutilizzabile
+
+Una comprensione solida di `return` è essenziale per passare da un codice imperativo a uno più funzionale e manutenibile.
+
+```
+
+```

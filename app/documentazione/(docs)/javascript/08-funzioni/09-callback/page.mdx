@@ -1,3 +1,203 @@
 # Callback
 
-In arrivo
+Una **callback** è una funzione passata come argomento a un’altra funzione, che verrà eseguita **in un secondo momento**, solitamente al termine di un’operazione.
+In JavaScript le funzioni sono _first-class citizens_, cioè possono essere assegnate a variabili, passate come parametri e restituite come valori: questo rende possibile e naturale l’uso delle callback.
+
+## Concetto di base
+
+Una callback non viene eseguita immediatamente, ma **viene richiamata (called back)** dalla funzione che la riceve, quando decide che è il momento giusto.
+
+Esempio semplice:
+
+```javascript
+function saluta(nome) {
+  console.log("Ciao " + nome);
+}
+
+function eseguiCallback(callback) {
+  callback("Mario");
+}
+
+eseguiCallback(saluta);
+```
+
+In questo caso:
+
+- `saluta` è la callback
+- `eseguiCallback` riceve una funzione come parametro
+- la callback viene eseguita all’interno di `eseguiCallback`
+
+## Perché usare le callback
+
+Le callback sono fondamentali per:
+
+- gestire **operazioni asincrone**
+- rendere il codice **più flessibile e riutilizzabile**
+- separare la **logica** dal **comportamento**
+
+Senza callback, molte funzionalità di JavaScript non esisterebbero (eventi, timer, richieste HTTP, array methods).
+
+## Callback e asincronia
+
+JavaScript è single-threaded, ma gestisce operazioni asincrone tramite callback (oggi spesso affiancate da Promise e async/await).
+
+Esempio con `setTimeout`:
+
+```javascript
+setTimeout(function () {
+  console.log("Eseguito dopo 2 secondi");
+}, 2000);
+```
+
+Qui la funzione anonima è una callback:
+
+- viene passata a `setTimeout`
+- viene eseguita solo dopo 2000 millisecondi
+
+Il codice **non si blocca** in attesa.
+
+## Callback come funzioni anonime e arrow function
+
+Le callback vengono spesso scritte direttamente come funzioni anonime o arrow function:
+
+```javascript
+setTimeout(() => {
+  console.log("Callback con arrow function");
+}, 1000);
+```
+
+Questo approccio è molto comune quando la funzione:
+
+- è semplice
+- viene usata una sola volta
+
+## Callback negli array methods
+
+Molti metodi degli array accettano callback per definire il comportamento:
+
+```javascript
+const numeri = [1, 2, 3, 4];
+
+const doppi = numeri.map(function (numero) {
+  return numero * 2;
+});
+```
+
+Oppure con arrow function:
+
+```javascript
+const doppi = numeri.map((numero) => numero * 2);
+```
+
+In questo contesto la callback:
+
+- viene eseguita una volta per ogni elemento
+- riceve parametri come valore, indice e array
+
+## Callback e parametri
+
+Una callback può ricevere dati dalla funzione che la esegue:
+
+```javascript
+function operazione(a, b, callback) {
+  const risultato = a + b;
+  callback(risultato);
+}
+
+operazione(5, 3, function (ris) {
+  console.log("Risultato:", ris);
+});
+```
+
+Questo permette di:
+
+- delegare la gestione del risultato
+- rendere la funzione principale più generica
+
+## Callback sincrone vs asincrone
+
+Non tutte le callback sono asincrone.
+
+**Callback sincrona**:
+
+```javascript
+[1, 2, 3].forEach((n) => console.log(n));
+```
+
+**Callback asincrona**:
+
+```javascript
+setTimeout(() => console.log("Async"), 1000);
+```
+
+La differenza non è la callback in sé, ma **quando viene eseguita**.
+
+## Callback annidate e Callback Hell
+
+Quando più operazioni asincrone dipendono l’una dall’altra, le callback possono diventare annidate:
+
+```javascript
+setTimeout(() => {
+  console.log("Step 1");
+  setTimeout(() => {
+    console.log("Step 2");
+    setTimeout(() => {
+      console.log("Step 3");
+    }, 1000);
+  }, 1000);
+}, 1000);
+```
+
+Questo problema è noto come **Callback Hell**:
+
+- codice difficile da leggere
+- difficile da mantenere
+- difficile da gestire in caso di errori
+
+Per questo motivo oggi si preferiscono **Promise** e **async/await**, ma è fondamentale capire le callback per comprendere le basi dell’asincronia in JavaScript.
+
+## Callback ed error handling
+
+Un pattern classico prevede una callback con due parametri:
+
+```javascript
+function operazione(callback) {
+  const errore = false;
+
+  if (errore) {
+    callback("Errore", null);
+  } else {
+    callback(null, "Successo");
+  }
+}
+
+operazione((err, risultato) => {
+  if (err) {
+    console.error(err);
+    return;
+  }
+  console.log(risultato);
+});
+```
+
+Questo schema è stato molto usato soprattutto in Node.js.
+
+## Quando usare una callback
+
+Usa una callback quando:
+
+- vuoi rendere una funzione estendibile
+- devi reagire a un evento o a un risultato
+- lavori con API che le utilizzano
+
+Evita callback annidate profonde e preferisci strutture più moderne quando il flusso diventa complesso.
+
+## Conclusione
+
+Le callback sono un concetto fondamentale di JavaScript:
+
+- permettono l’asincronia
+- rendono il codice flessibile
+- sono alla base di eventi, timer e metodi avanzati
+
+Anche se oggi esistono alternative più moderne, comprendere bene le callback è essenziale per padroneggiare JavaScript a livello professionale.

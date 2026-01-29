@@ -1,3 +1,225 @@
 # Rest parameters
 
-In arrivo
+I **rest parameters** permettono di gestire un numero variabile di argomenti all’interno di una funzione. Sono uno strumento fondamentale in JavaScript moderno per scrivere funzioni flessibili, leggibili e facilmente manutenibili.
+
+Introdotti con **ES6 (ECMAScript 2015)**, i rest parameters risolvono in modo elegante molte limitazioni presenti nelle versioni precedenti del linguaggio.
+
+---
+
+## Cos’è un rest parameter
+
+Un **rest parameter** consente di raccogliere tutti gli argomenti “in eccesso” passati a una funzione in un **array**.
+
+Si definisce anteponendo **tre puntini (`...`)** al nome del parametro.
+
+```js
+function somma(...numeri) {
+  console.log(numeri);
+}
+```
+
+Se la funzione viene chiamata così:
+
+```js
+somma(1, 2, 3, 4);
+```
+
+Il valore di `numeri` sarà:
+
+```js
+[1, 2, 3, 4];
+```
+
+---
+
+## Perché usare i rest parameters
+
+I principali vantaggi sono:
+
+- Gestione semplice di un numero variabile di argomenti
+- Codice più pulito e leggibile
+- Utilizzo diretto dei metodi degli array
+- Superamento dei limiti dell’oggetto `arguments`
+
+---
+
+## Differenza tra rest parameters e arguments
+
+Prima di ES6, per accedere a tutti gli argomenti di una funzione si utilizzava l’oggetto **`arguments`**.
+
+```js
+function esempio() {
+  console.log(arguments);
+}
+```
+
+Tuttavia `arguments` presenta diversi svantaggi:
+
+- Non è un vero array
+- Non supporta direttamente i metodi degli array (`map`, `filter`, `reduce`)
+- Non è disponibile nelle arrow function
+- È meno esplicito e meno leggibile
+
+I rest parameters risolvono questi problemi:
+
+```js
+function esempio(...args) {
+  console.log(args); // vero array
+}
+```
+
+---
+
+## Sintassi e regole fondamentali
+
+### Un solo rest parameter
+
+Una funzione può avere **un solo rest parameter**.
+
+```js
+function esempio(...args, altro) {} // ❌ Errore
+```
+
+---
+
+### Deve essere l’ultimo parametro
+
+Il rest parameter **deve sempre essere l’ultimo** nella lista dei parametri.
+
+```js
+function esempio(a, b, ...resto) {
+  console.log(a, b, resto);
+}
+```
+
+Chiamata:
+
+```js
+esempio(1, 2, 3, 4, 5);
+```
+
+Risultato:
+
+```js
+a = 1;
+b = 2;
+resto = [3, 4, 5];
+```
+
+---
+
+## Rest parameters con parametri normali
+
+È possibile combinare parametri standard e rest parameters.
+
+```js
+function saluta(nome, ...messaggi) {
+  console.log(`Ciao ${nome}`);
+  console.log(messaggi);
+}
+
+saluta("Luca", "come va?", "tutto bene?");
+```
+
+Output:
+
+```js
+Ciao Luca
+["come va?", "tutto bene?"]
+```
+
+---
+
+## Utilizzo pratico dei rest parameters
+
+### Sommare un numero indefinito di valori
+
+```js
+function somma(...numeri) {
+  return numeri.reduce((totale, n) => totale + n, 0);
+}
+
+somma(1, 2, 3, 4); // 10
+```
+
+---
+
+### Funzioni di utilità generiche
+
+```js
+function unisciArray(...array) {
+  return array.flat();
+}
+
+unisciArray([1, 2], [3, 4], [5]);
+// [1, 2, 3, 4, 5]
+```
+
+---
+
+### Wrapper di funzioni
+
+I rest parameters sono molto usati per creare funzioni che delegano il lavoro ad altre funzioni.
+
+```js
+function logWrapper(fn, ...args) {
+  console.log("Funzione chiamata con:", args);
+  return fn(...args);
+}
+```
+
+---
+
+## Rest parameters e arrow function
+
+I rest parameters funzionano perfettamente con le **arrow function**, a differenza di `arguments`.
+
+```js
+const stampa = (...valori) => {
+  console.log(valori);
+};
+
+stampa(1, 2, 3);
+```
+
+---
+
+## Differenza tra rest parameters e spread operator
+
+La sintassi è la stessa (`...`), ma il significato cambia in base al contesto.
+
+### Rest parameter (raccolta)
+
+Usato nella definizione della funzione per **raccogliere** argomenti.
+
+```js
+function esempio(...args) {}
+```
+
+---
+
+### Spread operator (espansione)
+
+Usato nella chiamata o nella creazione di array/oggetti per **espandere** valori.
+
+```js
+const numeri = [1, 2, 3];
+somma(...numeri);
+```
+
+---
+
+## Buone pratiche
+
+- Usa nomi chiari e descrittivi (`args`, `valori`, `items`)
+- Evita di abusarne se il numero di parametri è noto e limitato
+- Preferiscili a `arguments` nel codice moderno
+- Mantieni la firma della funzione leggibile
+
+---
+
+## Considerazioni finali
+
+I rest parameters sono uno strumento essenziale per scrivere funzioni moderne, flessibili e robuste in JavaScript. Rendono il codice più espressivo, semplificano la gestione degli argomenti e migliorano la compatibilità con le funzionalità avanzate del linguaggio.
+
+Ogni sviluppatore web dovrebbe padroneggiarli, sia per scrivere utility generiche sia per comprendere e mantenere codice professionale.

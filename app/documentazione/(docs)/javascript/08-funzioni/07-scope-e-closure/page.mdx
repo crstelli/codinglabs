@@ -1,3 +1,255 @@
 # Scope e closure
 
-In arrivo
+Quando si parla di funzioni in JavaScript, **scope** e **closure** sono concetti fondamentali per capire come il linguaggio gestisce le variabili, la loro visibilità e il loro ciclo di vita. Una comprensione solida di questi meccanismi è essenziale sia per scrivere codice corretto sia per evitare bug difficili da individuare.
+
+---
+
+## Cos’è lo scope
+
+Lo **scope** (ambito) definisce **dove una variabile è accessibile** all’interno del codice. In JavaScript, lo scope stabilisce da quali parti del programma una variabile può essere letta o modificata.
+
+JavaScript utilizza principalmente uno **scope lessicale** (o statico): significa che lo scope di una variabile è determinato **dal punto in cui è dichiarata nel codice**, non da dove viene utilizzata.
+
+---
+
+## Tipi di scope in JavaScript
+
+### Global scope
+
+Una variabile dichiarata fuori da qualsiasi funzione o blocco ha **scope globale** ed è accessibile ovunque nel codice.
+
+```js
+let language = "JavaScript";
+
+function printLanguage() {
+  console.log(language);
+}
+```
+
+L’uso eccessivo dello scope globale è sconsigliato perché aumenta il rischio di conflitti tra nomi e rende il codice meno manutenibile.
+
+---
+
+### Function scope
+
+Le variabili dichiarate all’interno di una funzione sono accessibili **solo all’interno di quella funzione**.
+
+```js
+function example() {
+  let message = "Ciao";
+  console.log(message);
+}
+
+example();
+// console.log(message); // Errore
+```
+
+Le variabili dichiarate con `var` rispettano solo lo scope di funzione, non quello di blocco.
+
+---
+
+### Block scope
+
+Le variabili dichiarate con `let` e `const` rispettano anche lo **scope di blocco**, cioè sono limitate a `{}` come quelli di `if`, `for`, `while`.
+
+```js
+if (true) {
+  let x = 10;
+  const y = 20;
+}
+
+// x e y non sono accessibili qui
+```
+
+Questo comportamento riduce errori e rende il codice più prevedibile.
+
+---
+
+## Scope chain
+
+Quando JavaScript cerca una variabile, segue una **catena di scope**:
+
+1. Cerca nello scope corrente
+2. Se non la trova, risale allo scope esterno
+3. Continua fino allo scope globale
+4. Se non la trova, genera un errore
+
+```js
+let a = 1;
+
+function outer() {
+  let b = 2;
+
+  function inner() {
+    let c = 3;
+    console.log(a, b, c);
+  }
+
+  inner();
+}
+```
+
+Questa catena è alla base del funzionamento delle closure.
+
+---
+
+## Cos’è una closure
+
+Una **closure** è una funzione che **mantiene l’accesso alle variabili del proprio scope esterno anche dopo che quello scope ha terminato la sua esecuzione**.
+
+In altre parole: una funzione “ricorda” l’ambiente in cui è stata creata.
+
+---
+
+## Closure in pratica
+
+```js
+function createCounter() {
+  let count = 0;
+
+  return function () {
+    count++;
+    return count;
+  };
+}
+
+const counter = createCounter();
+
+counter(); // 1
+counter(); // 2
+counter(); // 3
+```
+
+In questo esempio:
+
+- `createCounter` termina la sua esecuzione
+- la variabile `count` **non viene distrutta**
+- la funzione interna continua ad accedervi grazie alla closure
+
+---
+
+## Perché le closure funzionano
+
+JavaScript non elimina una variabile finché esiste almeno una funzione che la referenzia.
+Le closure sfruttano questo comportamento per **preservare lo stato**.
+
+Questo meccanismo è legato al modello di gestione della memoria e al garbage collector.
+
+---
+
+## Usi comuni delle closure
+
+### Incapsulamento dei dati
+
+Le closure permettono di simulare variabili “private”.
+
+```js
+function createUser(name) {
+  let password = "secret";
+
+  return {
+    getName() {
+      return name;
+    },
+  };
+}
+```
+
+`password` non è accessibile dall’esterno, ma continua a esistere.
+
+---
+
+### Stato persistente
+
+Utili quando serve mantenere uno stato tra più chiamate senza usare variabili globali.
+
+---
+
+### Callback e funzioni asincrone
+
+Le closure sono fondamentali in:
+
+- event listener
+- `setTimeout` / `setInterval`
+- promise
+- async/await
+
+```js
+function delayedLog(message) {
+  setTimeout(function () {
+    console.log(message);
+  }, 1000);
+}
+```
+
+---
+
+## Attenzione alle closure
+
+### Consumo di memoria
+
+Le closure possono trattenere riferimenti a oggetti non più necessari.
+
+```js
+function heavyClosure() {
+  let bigData = new Array(1000000);
+  return function () {
+    console.log("Closure attiva");
+  };
+}
+```
+
+Se non serve più la funzione restituita, è buona pratica rimuovere i riferimenti.
+
+---
+
+### Loop e closure
+
+Errore comune con `var`:
+
+```js
+for (var i = 0; i < 3; i++) {
+  setTimeout(function () {
+    console.log(i);
+  }, 1000);
+}
+```
+
+Output:
+
+```
+3
+3
+3
+```
+
+Soluzione con `let` (block scope):
+
+```js
+for (let i = 0; i < 3; i++) {
+  setTimeout(function () {
+    console.log(i);
+  }, 1000);
+}
+```
+
+---
+
+## Scope vs Closure: differenza chiave
+
+- **Scope**: regola di visibilità delle variabili
+- **Closure**: comportamento che permette a una funzione di mantenere accesso allo scope in cui è nata
+
+Le closure **esistono perché JavaScript è basato su scope lessicale**.
+
+---
+
+## Conclusione
+
+Scope e closure sono concetti centrali in JavaScript:
+
+- influenzano l’architettura del codice
+- permettono incapsulamento e gestione dello stato
+- sono alla base di pattern avanzati e della programmazione asincrona
+
+Comprenderli a fondo consente di scrivere codice più pulito, sicuro e manutenibile, evitando comportamenti inattesi e sfruttando appieno le potenzialità del linguaggio.

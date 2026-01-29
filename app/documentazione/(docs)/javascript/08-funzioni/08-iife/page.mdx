@@ -1,3 +1,207 @@
 # IIFE
 
-In arrivo
+Una **IIFE** (Immediately Invoked Function Expression) è una funzione JavaScript che viene **definita ed eseguita immediatamente** nel momento stesso in cui viene creata.
+
+Questo pattern è molto usato per **creare uno scope isolato**, evitando di inquinare lo scope globale e proteggendo variabili e logica interna.
+
+---
+
+## Cos’è una IIFE
+
+In JavaScript, una funzione può essere:
+
+- **dichiarata**
+- **espressa**
+- **eseguita**
+
+Una IIFE combina **espressione ed esecuzione immediata**.
+
+Esempio base:
+
+```javascript
+(function () {
+  console.log("Questa funzione viene eseguita subito");
+})();
+```
+
+La funzione:
+
+1. È racchiusa tra parentesi per essere interpretata come **espressione**
+2. Viene immediatamente invocata con `()`
+
+---
+
+## Perché usare una IIFE
+
+Le IIFE nascono per risolvere alcuni problemi storici e concettuali di JavaScript:
+
+- Evitare **collisioni di nomi** nello scope globale
+- Creare **variabili private**
+- Incapsulare logica
+- Simulare un **modulo** (prima dell’introduzione dei moduli ES)
+
+In ambienti complessi o legacy, questo pattern è stato fondamentale.
+
+---
+
+## IIFE e scope
+
+Ogni IIFE crea un **nuovo scope locale**.
+
+```javascript
+(function () {
+  const message = "Privato";
+  console.log(message);
+})();
+
+console.log(message); // Errore: message is not defined
+```
+
+La variabile `message`:
+
+- Esiste solo all’interno della funzione
+- Non è accessibile dall’esterno
+
+Questo è uno dei principali vantaggi delle IIFE.
+
+---
+
+## Sintassi alternative
+
+Esistono diverse varianti sintattiche equivalenti:
+
+```javascript
+(function () {
+  // codice
+})();
+```
+
+```javascript
+!(function () {
+  // codice
+})();
+```
+
+```javascript
++(function () {
+  // codice
+})();
+```
+
+Tutte funzionano perché **forzano JavaScript a interpretare la funzione come espressione**, non come dichiarazione.
+
+La forma più leggibile e consigliata rimane:
+
+```javascript
+(function () {
+  // codice
+})();
+```
+
+---
+
+## IIFE con parametri
+
+Una IIFE può ricevere parametri come qualsiasi altra funzione.
+
+```javascript
+(function (name) {
+  console.log("Ciao " + name);
+})("Mario");
+```
+
+Questo permette di:
+
+- Passare valori iniziali
+- Ridurre dipendenze globali
+- Migliorare testabilità e chiarezza
+
+---
+
+## IIFE e return
+
+Una IIFE può restituire un valore.
+
+```javascript
+const result = (function () {
+  return 42;
+})();
+
+console.log(result); // 42
+```
+
+Questo approccio è stato spesso usato per creare **oggetti o configurazioni private**.
+
+---
+
+## IIFE come pattern di incapsulamento
+
+Esempio di modulo semplice:
+
+```javascript
+const counter = (function () {
+  let count = 0;
+
+  return {
+    increment() {
+      count++;
+    },
+    getValue() {
+      return count;
+    },
+  };
+})();
+
+counter.increment();
+counter.increment();
+console.log(counter.getValue()); // 2
+```
+
+In questo caso:
+
+- `count` è privato
+- L’accesso avviene solo tramite i metodi esposti
+- Si ottiene incapsulamento senza classi
+
+---
+
+## IIFE e JavaScript moderno
+
+Con l’introduzione di:
+
+- `let` e `const`
+- moduli ES (`import` / `export`)
+
+l’uso delle IIFE è diminuito nei progetti moderni.
+
+Tuttavia:
+
+- Rimangono comuni in **codice legacy**
+- Sono ancora utili in **script isolati**
+- Aiutano a comprendere concetti chiave come **scope** e **closure**
+
+---
+
+## Quando usare una IIFE oggi
+
+Usa una IIFE quando:
+
+- Scrivi uno script standalone
+- Devi isolare variabili senza moduli
+- Lavori su codice legacy
+- Vuoi inizializzare logica una sola volta
+
+Evitala quando:
+
+- Stai usando moduli ES
+- L’isolamento è già garantito dal contesto
+
+---
+
+## Conclusione
+
+Una IIFE è un pattern semplice ma potente che ha avuto un ruolo centrale nell’evoluzione di JavaScript. Anche se oggi esistono soluzioni più moderne, comprenderla è fondamentale per:
+
+- Leggere codice esistente
+- Capire scope e closure
+- Scrivere JavaScript più consapevole e robusto

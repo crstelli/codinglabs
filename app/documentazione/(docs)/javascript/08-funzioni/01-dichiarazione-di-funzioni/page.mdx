@@ -1,3 +1,177 @@
 # Dichiarazione di funzioni
 
-In arrivo
+La **dichiarazione di funzioni** (Function Declaration) è uno dei modi fondamentali per definire una funzione in JavaScript. È una forma chiara, leggibile e ampiamente utilizzata, adatta sia a chi sta imparando il linguaggio sia a contesti di sviluppo avanzati.
+
+Una funzione dichiarata permette di **incapsulare logica**, **riutilizzare codice** e **rendere il programma più modulare e manutenibile**.
+
+---
+
+## Sintassi di base
+
+La sintassi di una funzione dichiarata è la seguente:
+
+```javascript
+function nomeFunzione(parametro1, parametro2) {
+  // corpo della funzione
+}
+```
+
+Esempio pratico:
+
+```javascript
+function somma(a, b) {
+  return a + b;
+}
+```
+
+In questo esempio:
+
+- `function` è la parola chiave che indica una dichiarazione di funzione
+- `somma` è il nome della funzione
+- `a` e `b` sono i parametri
+- il blocco `{}` contiene il corpo della funzione
+- `return` restituisce un valore
+
+---
+
+## Invocazione della funzione
+
+Una funzione dichiarata viene eseguita quando viene **invocata** (chiamata):
+
+```javascript
+const risultato = somma(3, 5);
+console.log(risultato); // 8
+```
+
+L’invocazione avviene usando il nome della funzione seguito da parentesi tonde, con eventuali argomenti.
+
+---
+
+## Hoisting delle function declaration
+
+Una caratteristica fondamentale delle dichiarazioni di funzione è l’**hoisting**.
+
+In JavaScript, le function declaration vengono **caricate in memoria prima dell’esecuzione del codice**, rendendole disponibili anche prima della loro definizione nel file.
+
+Esempio valido:
+
+```javascript
+saluta();
+
+function saluta() {
+  console.log("Ciao!");
+}
+```
+
+Questo comportamento rende le dichiarazioni di funzione particolarmente utili per:
+
+- organizzare il codice in modo logico
+- definire API interne leggibili
+- separare l’implementazione dall’uso
+
+---
+
+## Differenza tra dichiarazione e chiamata
+
+È importante distinguere tra:
+
+- **dichiarazione della funzione** → definizione della logica
+- **chiamata della funzione** → esecuzione della logica
+
+```javascript
+function moltiplica(x, y) {
+  return x * y;
+}
+
+// Dichiarazione ↑
+// Chiamata ↓
+moltiplica(4, 6);
+```
+
+La dichiarazione da sola non esegue alcun codice.
+
+---
+
+## Parametri formali e argomenti reali
+
+- **Parametri**: variabili definite nella dichiarazione
+- **Argomenti**: valori passati durante la chiamata
+
+```javascript
+function saluta(nome) {
+  console.log("Ciao " + nome);
+}
+
+saluta("Luca");
+```
+
+- `nome` → parametro
+- `"Luca"` → argomento
+
+---
+
+## Funzioni senza parametri
+
+Una funzione può non ricevere parametri:
+
+```javascript
+function mostraData() {
+  console.log(new Date());
+}
+```
+
+---
+
+## Funzioni con valore di ritorno o senza
+
+Una funzione può:
+
+- **restituire un valore** usando `return`
+- **non restituire nulla** (ritorna implicitamente `undefined`)
+
+```javascript
+function esempio() {
+  console.log("Eseguita");
+}
+
+const valore = esempio();
+console.log(valore); // undefined
+```
+
+---
+
+## Buone pratiche nella dichiarazione di funzioni
+
+- Usa **nomi descrittivi e verbali**:
+
+  ```javascript
+  function calcolaTotale() {}
+  function validaEmail() {}
+  ```
+
+- Una funzione dovrebbe fare **una sola cosa**
+- Evita funzioni troppo lunghe o con troppa logica interna
+- Mantieni una firma chiara (numero e significato dei parametri)
+
+---
+
+## Quando usare la dichiarazione di funzioni
+
+La function declaration è particolarmente indicata quando:
+
+- la funzione deve essere disponibile in tutto lo scope
+- vuoi sfruttare l’hoisting
+- stai definendo funzioni principali o di utilità
+- desideri massima leggibilità e chiarezza strutturale
+
+---
+
+## Riepilogo
+
+- Le dichiarazioni di funzione sono definite con la keyword `function`
+- Sono soggette a hoisting
+- Possono avere parametri e valori di ritorno
+- Migliorano organizzazione, riusabilità e leggibilità del codice
+- Sono uno strumento fondamentale nello sviluppo JavaScript
+
+La dichiarazione di funzioni rappresenta una delle basi più solide del linguaggio ed è essenziale padroneggiarla per scrivere codice JavaScript efficace e professionale.

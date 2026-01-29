@@ -1,3 +1,174 @@
 # Function expression
 
-In arrivo
+In JavaScript, una **function expression** è un modo di definire una funzione assegnandola a una variabile. A differenza della dichiarazione di funzione (function declaration), la funzione non viene definita come istruzione autonoma, ma come **valore** di un’espressione.
+
+Questo approccio è molto comune nello sviluppo moderno e permette un maggiore controllo sul flusso del codice, soprattutto in combinazione con callback, funzioni anonime e pattern avanzati.
+
+---
+
+## Cos’è una function expression
+
+Una function expression consiste nell’assegnare una funzione a una variabile:
+
+```javascript
+const somma = function (a, b) {
+  return a + b;
+};
+```
+
+In questo esempio:
+
+- `function (a, b) { ... }` è una funzione
+- la funzione è assegnata alla variabile `somma`
+- la funzione viene eseguita tramite `somma(2, 3)`
+
+```javascript
+somma(2, 3); // 5
+```
+
+La funzione viene trattata come un normale valore JavaScript.
+
+---
+
+## Function expression anonime e con nome
+
+### Function expression anonima
+
+La forma più comune è quella **anonima**, cioè senza nome:
+
+```javascript
+const moltiplica = function (a, b) {
+  return a * b;
+};
+```
+
+La funzione non ha un nome proprio, ma può essere invocata tramite la variabile a cui è assegnata.
+
+### Function expression con nome
+
+È possibile assegnare una funzione con nome a una variabile:
+
+```javascript
+const fattoriale = function calcola(n) {
+  if (n === 0) return 1;
+  return n * calcola(n - 1);
+};
+```
+
+In questo caso:
+
+- `calcola` è visibile **solo all’interno della funzione**
+- il nome è utile per la ricorsione e per il debugging
+
+All’esterno, la funzione è accessibile solo tramite `fattoriale`.
+
+---
+
+## Differenze rispetto alla dichiarazione di funzione
+
+Una delle differenze fondamentali riguarda il **hoisting**.
+
+### Hoisting
+
+Le function expression **non vengono hoistate** come le function declaration.
+
+```javascript
+saluta(); // Errore: saluta is not a function
+
+const saluta = function () {
+  console.log("Ciao");
+};
+```
+
+Il motivo è che:
+
+- la variabile `saluta` viene hoistata
+- il valore (la funzione) viene assegnato solo in fase di esecuzione
+
+Con una function declaration, invece, la funzione sarebbe disponibile anche prima della definizione.
+
+---
+
+## Function expression come valori
+
+Le function expression esistono perché in JavaScript le funzioni sono **first-class citizens**, ovvero possono:
+
+- essere assegnate a variabili
+- essere passate come argomenti
+- essere restituite da altre funzioni
+
+```javascript
+const esegui = function (operazione) {
+  operazione();
+};
+
+esegui(function () {
+  console.log("Funzione eseguita");
+});
+```
+
+Questo concetto è alla base di callback, eventi, promise e programmazione funzionale.
+
+---
+
+## Uso tipico delle function expression
+
+Le function expression sono particolarmente adatte quando:
+
+- la funzione non deve essere accessibile prima della sua definizione
+- la funzione è usata come callback
+- la funzione è assegnata dinamicamente
+- si vuole limitare la visibilità della funzione
+
+Esempio con `addEventListener`:
+
+```javascript
+button.addEventListener("click", function () {
+  console.log("Pulsante cliccato");
+});
+```
+
+---
+
+## Function expression e immutabilità
+
+È buona pratica assegnare function expression a variabili dichiarate con `const`:
+
+```javascript
+const calcolaPrezzo = function (prezzo, iva) {
+  return prezzo + prezzo * iva;
+};
+```
+
+Questo evita riassegnazioni accidentali e rende il codice più prevedibile.
+
+---
+
+## Relazione con le arrow function
+
+Le arrow function sono una forma più compatta di function expression:
+
+```javascript
+const somma = (a, b) => a + b;
+```
+
+Concettualmente, però, restano function expression, con differenze importanti su:
+
+- `this`
+- `arguments`
+- comportamento come costruttori
+
+Queste differenze vengono trattate nella sezione dedicata alle arrow function.
+
+---
+
+## Quando scegliere una function expression
+
+Scegli una function expression quando:
+
+- vuoi un controllo più esplicito sull’ordine di esecuzione
+- stai lavorando con callback o funzioni come argomenti
+- vuoi evitare l’uso del hoisting
+- stai seguendo uno stile di programmazione funzionale o modulare
+
+Le function expression sono uno strumento fondamentale nello sviluppo JavaScript moderno e comprenderle a fondo è essenziale per scrivere codice chiaro, mantenibile e scalabile.

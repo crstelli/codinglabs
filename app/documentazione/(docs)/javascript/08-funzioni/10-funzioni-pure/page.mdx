@@ -1,3 +1,193 @@
 # Funzioni pure
 
-In arrivo
+Le **funzioni pure** sono un concetto fondamentale nella programmazione moderna e costituiscono una base importante della **programmazione funzionale**. In JavaScript non sono obbligatorie, ma il loro utilizzo porta numerosi vantaggi in termini di **leggibilità, prevedibilità, testabilità e manutenzione del codice**.
+
+Una funzione pura è una funzione che, a parità di input, restituisce sempre lo stesso output e non produce effetti collaterali osservabili all’esterno.
+
+---
+
+## Definizione di funzione pura
+
+Una funzione è considerata **pura** se rispetta **entrambe** le seguenti regole:
+
+1. **Determinismo**
+   Dati gli stessi argomenti, restituisce sempre lo stesso risultato.
+
+2. **Assenza di effetti collaterali (side effects)**
+   Non modifica variabili esterne, non altera lo stato globale, non interagisce con il DOM, non esegue operazioni di I/O (console, fetch, localStorage, ecc.).
+
+---
+
+## Esempio di funzione pura
+
+```js
+function somma(a, b) {
+  return a + b;
+}
+```
+
+Questa funzione è pura perché:
+
+- usa solo i parametri ricevuti
+- non dipende da variabili esterne
+- non modifica nulla al di fuori del proprio scope
+- restituisce sempre lo stesso valore per gli stessi input
+
+---
+
+## Esempio di funzione non pura
+
+```js
+let totale = 0;
+
+function aggiungi(valore) {
+  totale += valore;
+  return totale;
+}
+```
+
+Questa funzione **non è pura** perché:
+
+- modifica una variabile esterna (`totale`)
+- il risultato dipende dallo stato precedente
+- chiamandola più volte con lo stesso valore produce risultati diversi
+
+---
+
+## Effetti collaterali comuni
+
+Una funzione non è pura se esegue una o più di queste operazioni:
+
+- modifica variabili globali o esterne
+- modifica oggetti o array ricevuti come parametri
+- scrive su console
+- interagisce con il DOM
+- effettua chiamate HTTP
+- legge o scrive su storage (localStorage, cookie, sessionStorage)
+- utilizza valori non deterministici (`Date.now()`, `Math.random()`)
+
+Esempio:
+
+```js
+function generaId() {
+  return Math.random();
+}
+```
+
+Questa funzione non è pura perché restituisce un valore diverso a ogni chiamata.
+
+---
+
+## Purezza e oggetti/array
+
+Attenzione: anche modificare direttamente un oggetto o array passato come parametro rende una funzione **impura**.
+
+```js
+function aggiungiElemento(array, elemento) {
+  array.push(elemento);
+  return array;
+}
+```
+
+Questa funzione non è pura perché modifica l’array originale.
+
+Versione pura:
+
+```js
+function aggiungiElemento(array, elemento) {
+  return [...array, elemento];
+}
+```
+
+Qui viene restituito un **nuovo array**, lasciando invariato quello originale.
+
+---
+
+## Vantaggi delle funzioni pure
+
+L’utilizzo di funzioni pure porta numerosi benefici:
+
+### Prevedibilità
+
+Il comportamento della funzione è sempre chiaro e ripetibile.
+
+### Facilità di test
+
+Non dipendendo da stato esterno, le funzioni pure sono semplici da testare con unit test.
+
+### Manutenibilità
+
+Il codice è più facile da comprendere, refactorizzare ed estendere.
+
+### Riutilizzabilità
+
+Una funzione pura può essere riutilizzata in contesti diversi senza effetti indesiderati.
+
+### Compatibilità con paradigmi funzionali
+
+Le funzioni pure sono alla base di tecniche come `map`, `filter`, `reduce` e dell’immutabilità.
+
+---
+
+## Funzioni pure e immutabilità
+
+Le funzioni pure lavorano spesso con dati **immutabili**, ovvero dati che non vengono modificati ma copiati.
+
+Esempio:
+
+```js
+function aggiornaNome(utente, nuovoNome) {
+  return {
+    ...utente,
+    nome: nuovoNome,
+  };
+}
+```
+
+In questo modo:
+
+- l’oggetto originale non viene modificato
+- la funzione rimane pura
+- il flusso dei dati è più controllabile
+
+---
+
+## Funzioni pure nel contesto reale
+
+Nel mondo reale non tutto può essere puro. Interazioni con API, DOM e browser sono inevitabilmente impure. La buona pratica è:
+
+- **isolare le parti impure**
+- **mantenere il core logico puro**
+
+Esempio concettuale:
+
+```js
+function calcolaPrezzoTotale(prezzi) {
+  return prezzi.reduce((totale, prezzo) => totale + prezzo, 0);
+}
+
+// parte impura separata
+console.log(calcolaPrezzoTotale([10, 20, 30]));
+```
+
+La logica è pura, l’effetto collaterale è esterno.
+
+---
+
+## Funzioni pure e performance
+
+Le funzioni pure facilitano:
+
+- memoization
+- caching
+- ottimizzazioni automatiche
+
+Poiché l’output dipende solo dagli input, è possibile memorizzare i risultati senza rischi.
+
+---
+
+## Conclusione
+
+Le funzioni pure non sono un vincolo rigido, ma una **linea guida di qualità**. Scrivere codice orientato alla purezza aiuta a costruire applicazioni più robuste, testabili e scalabili.
+
+In JavaScript, adottare funzioni pure dove possibile è una pratica tipica di uno sviluppo moderno, consapevole e professionale.
