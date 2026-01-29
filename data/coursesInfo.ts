@@ -7,7 +7,7 @@ export const coursesInfo: CourseInfo[] = [
       "Corso Completo per diventare uno Sviluppatore Web nel 2026, percorso completo e strutturato mirato a quello che le aziende realmente cercano, non solo codice, ma tutto quello che ti servirá per lavorare in questo settore.",
     length: 12,
     link: "/webdevmastery",
-    buyLink: "https://www.skool.com/web-development-mastery-6843/about",
+    buyLink: "https://www.skool.com/web-development-mastery-9643",
     price: 49.99,
     tags: ["Web Development", "Completo"],
 
@@ -38,8 +38,11 @@ export const coursesInfo: CourseInfo[] = [
         ],
       },
       {
-        title: "Checklist giornaliera + Habit tracker per monitorare i progressi e rimanere costanti e performanti",
-        lessons: ["Checklist giornaliera + Habit tracker per monitorare i progressi e rimanere costanti e performanti"],
+        title:
+          "Checklist giornaliera + Habit tracker per monitorare i progressi e rimanere costanti e performanti",
+        lessons: [
+          "Checklist giornaliera + Habit tracker per monitorare i progressi e rimanere costanti e performanti",
+        ],
       },
     ],
   },
@@ -181,7 +184,11 @@ export const coursesInfo: CourseInfo[] = [
       },
       {
         title: "Sezione 6: Dimensioni (sizing)",
-        lessons: ["Introduzione alla Sezione", "Lavorare con Width ed Height", "Novitá di TailwindCSS v4: Classe Size"],
+        lessons: [
+          "Introduzione alla Sezione",
+          "Lavorare con Width ed Height",
+          "Novitá di TailwindCSS v4: Classe Size",
+        ],
       },
       {
         title: "Sezione 7: Spaziatura (spacing)",
@@ -201,7 +208,11 @@ export const coursesInfo: CourseInfo[] = [
       },
       {
         title: "Sezione 9: Background e Gradients",
-        lessons: ["Introduzione alla Sezione", "Background e Background Color", "Gradients"],
+        lessons: [
+          "Introduzione alla Sezione",
+          "Background e Background Color",
+          "Gradients",
+        ],
       },
       {
         title: "Sezione 10: Borders",
@@ -228,7 +239,11 @@ export const coursesInfo: CourseInfo[] = [
       },
       {
         title: "Sezione 12: Responsive Design",
-        lessons: ["Introduzione al Responsive Design", "Responsive Breakpoints", "Breakpoints in Pratica"],
+        lessons: [
+          "Introduzione al Responsive Design",
+          "Responsive Breakpoints",
+          "Breakpoints in Pratica",
+        ],
       },
       {
         title: "Sezione 13: Progetto Pratico (Card Moderna)",
@@ -282,7 +297,10 @@ export const coursesInfo: CourseInfo[] = [
       },
       {
         title: "Sezione 15: Fine del Corso",
-        lessons: ["Grazie per Aver Seguito il Corso", "Aggiornamenti e Progetti Futuri per il 2026"],
+        lessons: [
+          "Grazie per Aver Seguito il Corso",
+          "Aggiornamenti e Progetti Futuri per il 2026",
+        ],
       },
     ],
   },
