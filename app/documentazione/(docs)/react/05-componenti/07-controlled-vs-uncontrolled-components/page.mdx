@@ -1,3 +1,160 @@
 # Controlled vs Uncontrolled components
 
-In arrivo
+In React, la distinzione tra **Controlled** e **Uncontrolled components** riguarda il modo in cui i dati, in particolare quelli dei form, vengono gestiti e sincronizzati con lo stato dell’applicazione. Comprendere bene questa differenza è fondamentale per progettare componenti chiari, prevedibili e manutenibili.
+
+---
+
+## Il problema di fondo: chi controlla i dati?
+
+Quando un utente interagisce con un input (ad esempio un campo di testo), da qualche parte deve esistere una fonte di verità per quel valore.
+In React, questa fonte può essere:
+
+- **Lo stato di React** → Controlled component
+- **Il DOM stesso** → Uncontrolled component
+
+La scelta tra i due approcci ha implicazioni importanti su architettura, leggibilità del codice, testabilità e gestione della complessità.
+
+---
+
+## Controlled components
+
+Un **Controlled component** è un componente in cui il valore dell’input è completamente controllato da React tramite lo **state**.
+
+### Caratteristiche principali
+
+- Il valore dell’input è legato a una variabile di stato (`useState` o `this.state`)
+- Ogni cambiamento passa da un handler (`onChange`)
+- React è l’unica fonte di verità (single source of truth)
+- Il rendering è sempre coerente con lo stato
+
+### Esempio
+
+```jsx
+import { useState } from "react";
+
+function ControlledInput() {
+  const [value, setValue] = useState("");
+
+  return <input type="text" value={value} onChange={(e) => setValue(e.target.value)} />;
+}
+```
+
+In questo esempio:
+
+- `value` rappresenta lo stato attuale dell’input
+- Ogni modifica aggiorna lo stato
+- Il DOM riflette sempre lo stato di React
+
+### Vantaggi
+
+- Massimo controllo sui dati
+- Validazioni in tempo reale
+- Facile sincronizzazione tra più componenti
+- Stato prevedibile e debuggabile
+- Ideale per form complessi
+
+### Svantaggi
+
+- Più codice da scrivere
+- Maggiore overhead per input semplici
+- Può diventare verboso in form molto grandi se non ben strutturato
+
+---
+
+## Uncontrolled components
+
+Un **Uncontrolled component** delega la gestione del valore direttamente al DOM. React accede al valore solo quando serve, solitamente tramite una **ref**.
+
+### Caratteristiche principali
+
+- Il valore non è legato allo stato di React
+- Si usa `ref` per leggere il valore
+- Il DOM è la fonte di verità
+- Meno re-render
+
+### Esempio
+
+```jsx
+import { useRef } from "react";
+
+function UncontrolledInput() {
+  const inputRef = useRef(null);
+
+  const handleSubmit = () => {
+    console.log(inputRef.current.value);
+  };
+
+  return (
+    <>
+      <input type="text" ref={inputRef} />
+      <button onClick={handleSubmit}>Invia</button>
+    </>
+  );
+}
+```
+
+In questo caso:
+
+- React non conosce il valore finché non lo legge
+- Il DOM gestisce lo stato interno dell’input
+
+### Vantaggi
+
+- Codice più semplice per casi banali
+- Meno re-render
+- Utile per integrazione con librerie non-React
+
+### Svantaggi
+
+- Meno controllo
+- Validazioni più complesse
+- Stato meno prevedibile
+- Difficile sincronizzazione tra componenti
+
+---
+
+## Controlled vs Uncontrolled: confronto diretto
+
+| Aspetto         | Controlled           | Uncontrolled   |
+| --------------- | -------------------- | -------------- |
+| Fonte di verità | Stato React          | DOM            |
+| Gestione input  | `value` + `onChange` | `ref`          |
+| Validazioni     | Immediate e semplici | Più complesse  |
+| Prevedibilità   | Alta                 | Bassa          |
+| Complessità     | Maggiore             | Minore         |
+| Uso consigliato | Form complessi       | Input semplici |
+
+---
+
+## Quale approccio scegliere?
+
+Non esiste una risposta universale, ma alcune linee guida pratiche:
+
+- Usa **Controlled components** quando:
+  - Hai form complessi
+  - Devi validare i dati
+  - Devi reagire ai cambiamenti in tempo reale
+  - I dati devono essere condivisi tra componenti
+
+- Usa **Uncontrolled components** quando:
+  - Hai input molto semplici
+  - Vuoi ridurre il boilerplate
+  - Stai integrando codice legacy o librerie esterne
+  - Ti serve solo leggere il valore al submit
+
+---
+
+## Approccio ibrido
+
+In applicazioni reali, è comune usare entrambi gli approcci nello stesso progetto. React non impone una scelta rigida: l’importante è essere coerenti e consapevoli.
+
+Uno sviluppatore esperto sceglie l’approccio più semplice che risolve il problema senza introdurre complessità inutile.
+
+---
+
+## Conclusione
+
+La distinzione tra Controlled e Uncontrolled components riflette una filosofia centrale di React: **il controllo esplicito dei dati**.
+I Controlled components privilegiano prevedibilità e controllo, mentre gli Uncontrolled offrono semplicità e immediatezza.
+
+Comprendere bene entrambi permette di scrivere componenti più chiari, performanti e adatti al contesto dell’applicazione.

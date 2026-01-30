@@ -1,3 +1,97 @@
-# Cos'è un componente
+# Cos’è un componente
 
-In arrivo
+In React, un **componente** è l’unità fondamentale con cui si costruisce un’interfaccia utente. Un’applicazione React non è altro che un insieme di componenti che collaborano tra loro per definire cosa viene mostrato a schermo e come l’interfaccia reagisce alle interazioni dell’utente.
+
+Dal punto di vista concettuale, un componente può essere visto come una **funzione o una classe** che riceve dei dati in ingresso e restituisce una descrizione dell’interfaccia utente da visualizzare. Questa descrizione è espressa tramite **JSX**, una sintassi che permette di scrivere markup simile all’HTML direttamente all’interno di JavaScript.
+
+---
+
+## Il ruolo dei componenti in React
+
+I componenti servono a:
+
+- Suddividere l’interfaccia in parti piccole, riutilizzabili e indipendenti
+- Rendere il codice più leggibile, manutenibile e scalabile
+- Separare le responsabilità logiche e visive dell’applicazione
+- Gestire dati e stato in modo strutturato
+
+Ogni componente rappresenta una **porzione autonoma dell’interfaccia**, come un pulsante, un form, una card, una navbar o un’intera pagina.
+
+---
+
+## Componenti come astrazione dell’interfaccia
+
+Un componente incapsula:
+
+- **Struttura**: cosa viene renderizzato (markup JSX)
+- **Comportamento**: come reagisce agli eventi (click, input, submit)
+- **Dati**: informazioni ricevute dall’esterno o gestite internamente
+
+Questa incapsulazione permette di ragionare sull’interfaccia a un livello più alto, senza doversi preoccupare continuamente dei dettagli di implementazione.
+
+---
+
+## Componenti e riutilizzabilità
+
+Uno dei principali vantaggi dei componenti è la **riutilizzabilità**.
+Un componente ben progettato può essere utilizzato in più parti dell’applicazione, semplicemente fornendogli dati diversi.
+
+Questo approccio riduce:
+
+- Duplicazione del codice
+- Possibilità di errori
+- Tempo di sviluppo e manutenzione
+
+Inoltre, favorisce la creazione di **design system** e librerie di componenti condivisi.
+
+---
+
+## Componenti come funzioni pure (concettualmente)
+
+Dal punto di vista teorico, un componente React può essere pensato come una **funzione pura**:
+
+- Riceve dati in ingresso
+- Restituisce una rappresentazione dell’interfaccia
+- Non modifica direttamente elementi esterni
+
+In pratica, React gestisce per noi l’aggiornamento del DOM, applicando solo le modifiche necessarie quando i dati cambiano. Questo modello rende il comportamento dell’interfaccia più prevedibile e facile da debuggare.
+
+---
+
+## Componenti e albero dell’interfaccia
+
+Un’applicazione React è organizzata come un **albero di componenti**:
+
+- Un componente principale (root)
+- Componenti figli
+- Componenti annidati a più livelli
+
+Ogni componente può a sua volta contenere altri componenti, creando una struttura gerarchica che rispecchia l’interfaccia utente finale.
+
+Questa struttura ad albero è centrale nel modo in cui React gestisce il rendering e il flusso dei dati.
+
+---
+
+## Componenti e separazione delle responsabilità
+
+In React, la separazione delle responsabilità non avviene più per file HTML, CSS e JavaScript separati, ma per **componenti**.
+Ogni componente raggruppa tutto ciò che serve per una specifica parte dell’interfaccia.
+
+Questo approccio favorisce:
+
+- Coesione del codice
+- Migliore organizzazione del progetto
+- Evoluzione più semplice dell’applicazione nel tempo
+
+---
+
+## In sintesi
+
+Un componente React è:
+
+- Un’unità base dell’interfaccia utente
+- Un blocco riutilizzabile e indipendente
+- Un’astrazione che combina struttura, comportamento e dati
+- Un elemento fondamentale per creare applicazioni moderne, scalabili e manutenibili
+
+Comprendere a fondo cosa sia un componente è essenziale per padroneggiare React, perché ogni altro concetto del framework ruota attorno a questa idea centrale.

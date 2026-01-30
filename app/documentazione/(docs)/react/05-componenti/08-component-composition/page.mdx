@@ -1,3 +1,179 @@
 # Component composition
 
-In arrivo
+La **component composition** (composizione dei componenti) è uno dei concetti fondamentali di React. Consiste nel costruire interfacce complesse combinando componenti più piccoli, semplici e riutilizzabili, invece di creare componenti monolitici e difficili da mantenere.
+
+In React non si “estendono” i componenti come avviene spesso con l’ereditarietà nelle classi, ma si **compongono**: un componente può contenere altri componenti, passare loro dati tramite props e delegare responsabilità specifiche.
+
+---
+
+## Perché la composizione è importante
+
+La composizione permette di:
+
+- Migliorare la **riusabilità** del codice
+- Aumentare la **manutenibilità** dell’applicazione
+- Separare le **responsabilità**
+- Rendere i componenti più **semplici e testabili**
+- Ridurre l’accoppiamento tra le parti dell’interfaccia
+
+React è progettato attorno a questo paradigma: la UI è una funzione che restituisce altre UI più piccole.
+
+---
+
+## Composizione di base
+
+Il caso più semplice di composizione è quando un componente utilizza altri componenti nel proprio JSX.
+
+```jsx
+function Header() {
+  return <h1>Benvenuto</h1>;
+}
+
+function Footer() {
+  return <footer>© 2026</footer>;
+}
+
+function App() {
+  return (
+    <div>
+      <Header />
+      <Footer />
+    </div>
+  );
+}
+```
+
+In questo esempio, `App` è un componente composto da `Header` e `Footer`.
+
+---
+
+## Composizione tramite `props.children`
+
+React fornisce una meccanica nativa per la composizione chiamata `props.children`.
+Qualsiasi contenuto inserito tra i tag di un componente viene automaticamente passato come `children`.
+
+```jsx
+function Card({ children }) {
+  return <div className="card">{children}</div>;
+}
+
+function App() {
+  return (
+    <Card>
+      <h2>Titolo</h2>
+      <p>Contenuto della card</p>
+    </Card>
+  );
+}
+```
+
+In questo caso:
+
+- `Card` non conosce il contenuto interno
+- `Card` si occupa solo del layout e dello stile
+- Il contenuto è completamente flessibile
+
+Questo approccio è molto usato per layout, wrapper, modali, pannelli e componenti UI generici.
+
+---
+
+## Specializzazione tramite props
+
+Un altro modo comune di comporre componenti è tramite **props esplicite** che accettano altri componenti o elementi React.
+
+```jsx
+function Layout({ header, content, footer }) {
+  return (
+    <div>
+      <header>{header}</header>
+      <main>{content}</main>
+      <footer>{footer}</footer>
+    </div>
+  );
+}
+
+function App() {
+  return <Layout header={<h1>Dashboard</h1>} content={<p>Contenuto principale</p>} footer={<span>© 2026</span>} />;
+}
+```
+
+Questo pattern è utile quando la struttura è fissa ma il contenuto varia.
+
+---
+
+## Composizione vs ereditarietà
+
+React scoraggia l’uso dell’ereditarietà per la condivisione della logica tra componenti.
+La composizione è preferita perché:
+
+- È più flessibile
+- Evita gerarchie rigide
+- Riduce le dipendenze implicite
+- È più leggibile nel JSX
+
+In React, quasi tutti i casi d’uso dell’ereditarietà possono essere risolti con composizione e props.
+
+---
+
+## Componenti contenitore e componenti figli
+
+La composizione permette di creare componenti che fungono da **contenitori**, responsabili di:
+
+- Struttura
+- Layout
+- Logica condivisa
+
+E componenti figli che si occupano solo di:
+
+- Visualizzazione
+- Comportamento specifico
+
+```jsx
+function List({ children }) {
+  return <ul>{children}</ul>;
+}
+
+function ListItem({ text }) {
+  return <li>{text}</li>;
+}
+
+function App() {
+  return (
+    <List>
+      <ListItem text="Elemento 1" />
+      <ListItem text="Elemento 2" />
+    </List>
+  );
+}
+```
+
+Qui ogni componente ha una responsabilità chiara e limitata.
+
+---
+
+## Composizione e riusabilità
+
+Un buon componente composto:
+
+- Non assume troppo sul contenuto
+- Espone un’API chiara tramite props
+- È facilmente combinabile con altri componenti
+
+Più un componente è generico e composabile, più sarà riutilizzabile in contesti diversi senza modifiche.
+
+---
+
+## Best practice
+
+- Preferire componenti **piccoli e focalizzati**
+- Usare `children` per contenuti dinamici
+- Evitare componenti troppo “intelligenti” e complessi
+- Non duplicare logica: comporre invece di copiare
+- Pensare ai componenti come **blocchi LEGO**, non come classi da estendere
+
+---
+
+## Conclusione
+
+La component composition è il cuore del modello di sviluppo di React.
+Imparare a progettare componenti composabili significa scrivere codice più pulito, flessibile e scalabile. Un’applicazione React ben strutturata non cresce in complessità, ma in profondità di composizione.

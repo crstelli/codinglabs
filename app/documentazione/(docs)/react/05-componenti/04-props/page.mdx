@@ -1,3 +1,249 @@
 # Props
 
-In arrivo
+Le **props** (abbreviazione di _properties_) sono il principale meccanismo con cui i componenti React ricevono dati dall’esterno. Permettono di passare informazioni da un componente **genitore** a un componente **figlio**, rendendo i componenti riutilizzabili, configurabili e prevedibili.
+
+In React, le props rappresentano **dati in sola lettura**: un componente non deve mai modificarle direttamente.
+
+---
+
+## Cosa sono le props
+
+Le props sono un oggetto che contiene i valori passati a un componente al momento del suo utilizzo.
+
+Esempio:
+
+```jsx
+<Greeting name="Mario" age={30} />
+```
+
+Nel componente `Greeting`, `name` e `age` sono props.
+
+```jsx
+function Greeting(props) {
+  return (
+    <p>
+      Ciao {props.name}, hai {props.age} anni
+    </p>
+  );
+}
+```
+
+In questo esempio:
+
+- `Greeting` è un componente
+- `name` e `age` sono proprietà passate dal genitore
+- `props` è un oggetto che le contiene
+
+---
+
+## Props nei componenti funzionali
+
+Nei componenti funzionali, le props vengono ricevute come parametro della funzione.
+
+```jsx
+function Button(props) {
+  return <button>{props.label}</button>;
+}
+```
+
+È pratica comune utilizzare la **destrutturazione** per rendere il codice più leggibile:
+
+```jsx
+function Button({ label, onClick }) {
+  return <button onClick={onClick}>{label}</button>;
+}
+```
+
+Questo approccio è preferibile soprattutto in componenti complessi.
+
+---
+
+## Props nei componenti di classe
+
+Nei componenti di classe (legacy), le props sono accessibili tramite `this.props`.
+
+```jsx
+class Greeting extends React.Component {
+  render() {
+    return <p>Ciao {this.props.name}</p>;
+  }
+}
+```
+
+Anche qui le props sono immutabili e vengono fornite dal componente genitore.
+
+---
+
+## Props come configurazione del componente
+
+Un componente React dovrebbe essere pensato come una **funzione pura rispetto alle props**: dato un certo insieme di props, il risultato renderizzato dovrebbe essere sempre lo stesso.
+
+Esempio di componente riutilizzabile:
+
+```jsx
+function Alert({ type, message }) {
+  return <div className={`alert alert-${type}`}>{message}</div>;
+}
+```
+
+Utilizzo:
+
+```jsx
+<Alert type="success" message="Operazione completata" />
+<Alert type="error" message="Si è verificato un errore" />
+```
+
+Lo stesso componente viene riutilizzato con comportamenti diversi grazie alle props.
+
+---
+
+## Props children
+
+React fornisce una prop speciale chiamata `children`, che rappresenta il contenuto annidato all’interno del componente.
+
+```jsx
+<Card>
+  <h2>Titolo</h2>
+  <p>Contenuto della card</p>
+</Card>
+```
+
+```jsx
+function Card({ children }) {
+  return <div className="card">{children}</div>;
+}
+```
+
+`children` permette di creare componenti contenitore flessibili e altamente componibili.
+
+---
+
+## Props e funzioni (callback)
+
+Le props non sono limitate a valori primitivi: possono contenere **funzioni**, oggetti e array.
+
+Passare funzioni come props è il modo standard per permettere ai componenti figli di comunicare eventi al genitore.
+
+```jsx
+function Child({ onAction }) {
+  return <button onClick={onAction}>Esegui</button>;
+}
+```
+
+```jsx
+function Parent() {
+  function handleAction() {
+    console.log("Azione eseguita");
+  }
+
+  return <Child onAction={handleAction} />;
+}
+```
+
+In questo modello:
+
+- il genitore controlla la logica
+- il figlio notifica l’evento
+
+---
+
+## Immutabilità delle props
+
+Un principio fondamentale di React è che **le props sono read-only**.
+
+Errato:
+
+```jsx
+props.name = "Luigi";
+```
+
+Corretto:
+
+- Le props possono solo essere lette
+- Per modificare dati dinamici si utilizza lo **state**
+- Le modifiche avvengono sempre nel componente che possiede il dato
+
+Questo approccio rende il flusso dei dati prevedibile e più facile da debuggare.
+
+---
+
+## Props e default values
+
+È possibile definire valori di default per le props, utili quando una prop non viene fornita.
+
+Nei componenti funzionali:
+
+```jsx
+function Button({ label = "Click" }) {
+  return <button>{label}</button>;
+}
+```
+
+Nei componenti di classe:
+
+```jsx
+class Button extends React.Component {
+  static defaultProps = {
+    label: "Click",
+  };
+
+  render() {
+    return <button>{this.props.label}</button>;
+  }
+}
+```
+
+---
+
+## Props e tipizzazione (best practice)
+
+Anche se non obbligatorio, è buona pratica documentare il tipo delle props:
+
+- migliora la leggibilità
+- riduce errori
+- facilita la manutenzione del codice
+
+Tradizionalmente si utilizza `PropTypes`, mentre nei progetti moderni è comune l’uso di **TypeScript**.
+
+Esempio con PropTypes:
+
+```jsx
+import PropTypes from "prop-types";
+
+function User({ name, age }) {
+  return (
+    <p>
+      {name} - {age}
+    </p>
+  );
+}
+
+User.propTypes = {
+  name: PropTypes.string.isRequired,
+  age: PropTypes.number,
+};
+```
+
+---
+
+## Relazione tra props e one-way data flow
+
+Le props sono alla base del **one-way data flow** di React:
+
+- i dati fluiscono dall’alto verso il basso
+- i componenti figli non modificano direttamente i dati ricevuti
+- lo stato vive nel componente che ne è responsabile
+
+Questo modello rende l’applicazione più prevedibile, scalabile e facile da testare.
+
+---
+
+## Conclusione
+
+Le props sono uno dei concetti fondamentali di React:
+
+- permettono la comunicazione tra componenti
+- favoriscono la riusabilità
+- impongono un flusso dei dati chiaro e controllato
+
+Comprendere a fondo come funzionano le props è essenziale per progettare componenti puliti, mantenibili e coerenti con l’architettura di React.

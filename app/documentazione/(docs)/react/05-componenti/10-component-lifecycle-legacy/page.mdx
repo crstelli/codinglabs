@@ -1,3 +1,195 @@
 # Component lifecycle (legacy)
 
-In arrivo
+Nel contesto di React, il **lifecycle di un componente** rappresenta l’insieme delle fasi che un componente attraversa dalla sua creazione alla sua rimozione dal DOM.  
+Questo concetto è particolarmente rilevante per i **componenti di classe**, oggi considerati _legacy_ (superati), ma ancora presenti in molti progetti esistenti.
+
+Comprendere il lifecycle legacy è fondamentale per:
+
+- Manutenere codice React più datato
+- Capire l’evoluzione di React verso i componenti funzionali e gli Hook
+- Migrare correttamente componenti di classe a soluzioni moderne
+
+---
+
+## Cos’è il lifecycle di un componente
+
+Un componente di classe React passa attraverso tre macro-fasi:
+
+1. **Mounting** – il componente viene creato e inserito nel DOM
+2. **Updating** – il componente viene aggiornato a seguito di cambiamenti
+3. **Unmounting** – il componente viene rimosso dal DOM
+
+In ciascuna fase React espone specifici **metodi di lifecycle**, che permettono allo sviluppatore di intercettare questi momenti ed eseguire logica personalizzata.
+
+---
+
+## Mounting (fase di montaggio)
+
+La fase di mounting avviene quando un componente viene istanziato per la prima volta e renderizzato nel DOM.
+
+### Metodi principali
+
+#### `constructor(props)`
+
+- Viene eseguito per primo
+- Serve per inizializzare lo `state` e fare il binding dei metodi
+- Non deve contenere effetti collaterali
+
+```js
+constructor(props) {
+  super(props);
+  this.state = {
+    count: 0
+  };
+}
+```
+
+---
+
+#### `render()`
+
+- Metodo **obbligatorio**
+- Deve essere una funzione pura
+- Ritorna il JSX da renderizzare
+- Non deve modificare lo stato o il DOM
+
+```js
+render() {
+  return <div>{this.state.count}</div>;
+}
+```
+
+---
+
+#### `componentDidMount()`
+
+- Viene eseguito **una sola volta**, dopo il primo render
+- È il posto corretto per:
+  - Fetch di dati
+  - Interazioni con il DOM
+  - Setup di event listener o timer
+
+```js
+componentDidMount() {
+  fetch('/api/data')
+    .then(response => response.json())
+    .then(data => this.setState({ data }));
+}
+```
+
+---
+
+## Updating (fase di aggiornamento)
+
+Un componente entra in fase di aggiornamento quando:
+
+- Cambiano le `props`
+- Cambia lo `state`
+
+### Metodi principali
+
+#### `shouldComponentUpdate(nextProps, nextState)`
+
+- Permette di controllare se il componente deve essere ri-renderizzato
+- Serve per ottimizzazioni di performance
+- Deve restituire un booleano
+
+```js
+shouldComponentUpdate(nextProps, nextState) {
+  return nextState.count !== this.state.count;
+}
+```
+
+---
+
+#### `render()`
+
+- Viene rieseguito ad ogni aggiornamento
+- Continua a rispettare le regole di purezza
+
+---
+
+#### `componentDidUpdate(prevProps, prevState)`
+
+- Viene eseguito **dopo** il render di aggiornamento
+- Ideale per:
+  - Sincronizzare dati esterni
+  - Eseguire effetti basati su cambiamenti specifici
+
+```js
+componentDidUpdate(prevProps, prevState) {
+  if (prevProps.userId !== this.props.userId) {
+    this.fetchUserData();
+  }
+}
+```
+
+Attenzione: chiamare `setState` senza condizioni può causare loop infiniti.
+
+---
+
+## Unmounting (fase di smontaggio)
+
+Questa fase avviene quando il componente viene rimosso dal DOM.
+
+### Metodo principale
+
+#### `componentWillUnmount()`
+
+- Viene eseguito immediatamente prima della rimozione
+- Serve per:
+  - Pulire timer
+  - Rimuovere event listener
+  - Annullare subscription
+
+```js
+componentWillUnmount() {
+  clearInterval(this.timer);
+}
+```
+
+---
+
+## Metodi di lifecycle deprecati
+
+Con l’evoluzione di React, alcuni metodi sono stati **deprecati** perché:
+
+- Ambigui
+- Poco prevedibili
+- Incompatibili con il rendering asincrono
+
+Tra i principali:
+
+- `componentWillMount`
+- `componentWillReceiveProps`
+- `componentWillUpdate`
+
+Questi metodi non dovrebbero essere usati in nuovo codice e sono spesso prefissati con `UNSAFE_` nei progetti moderni.
+
+---
+
+## Considerazioni sul lifecycle legacy
+
+- I componenti di classe sono ancora supportati, ma **non raccomandati** per nuovo sviluppo
+- Il lifecycle legacy è più complesso e verboso rispetto agli Hook
+- Molte responsabilità sono distribuite su più metodi
+- La logica correlata spesso risulta frammentata
+
+La conoscenza del lifecycle legacy rimane comunque essenziale per:
+
+- Debug di applicazioni esistenti
+- Refactoring e migrazione verso componenti funzionali
+- Comprendere a fondo il modello di rendering di React
+
+---
+
+## Sintesi
+
+Il lifecycle legacy dei componenti React:
+
+- Definisce il comportamento del componente nel tempo
+- È basato su metodi specifici delle classi
+- Copre mounting, updating e unmounting
+- È oggi considerato superato, ma ancora rilevante in contesti reali
+
+Capire questi meccanismi permette di lavorare in modo consapevole su qualsiasi codebase React, indipendentemente dalla sua età o architettura.

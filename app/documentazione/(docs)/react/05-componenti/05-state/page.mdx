@@ -1,3 +1,180 @@
 # State
 
-In arrivo
+Lo **state** (stato) è uno dei concetti fondamentali di React. Rappresenta i **dati interni di un componente** che possono **cambiare nel tempo** e che influenzano ciò che il componente renderizza a schermo.
+
+A differenza delle _props_, che vengono passate dall’esterno e sono immutabili dal punto di vista del componente che le riceve, lo **state è gestito direttamente dal componente** e può essere aggiornato in risposta a interazioni dell’utente, eventi, chiamate API o altre logiche applicative.
+
+---
+
+## Cos’è lo State
+
+Lo state è un **oggetto JavaScript** che contiene informazioni rilevanti per il componente e che determinano il suo comportamento e la sua UI.
+
+Quando lo state cambia:
+
+1. React registra l’aggiornamento
+2. Il componente viene **ri-renderizzato**
+3. L’interfaccia utente viene aggiornata per riflettere il nuovo stato
+
+Questo meccanismo è alla base del paradigma **reattivo** di React.
+
+---
+
+## State nei Componenti Funzionali
+
+Nei componenti funzionali, lo state viene gestito tramite l’hook `useState`.
+
+### Esempio base
+
+```jsx
+import { useState } from "react";
+
+function Counter() {
+  const [count, setCount] = useState(0);
+
+  return <button onClick={() => setCount(count + 1)}>Conteggio: {count}</button>;
+}
+```
+
+In questo esempio:
+
+- `count` è il valore corrente dello state
+- `setCount` è la funzione per aggiornarlo
+- `useState(0)` definisce il valore iniziale
+
+---
+
+## Aggiornamento dello State
+
+Lo state **non deve mai essere modificato direttamente**. Ogni aggiornamento deve passare dalla funzione di aggiornamento fornita da React.
+
+### Errato
+
+```jsx
+count = count + 1;
+```
+
+### Corretto
+
+```jsx
+setCount(count + 1);
+```
+
+React utilizza questo approccio per:
+
+- Tracciare le modifiche
+- Ottimizzare il rendering
+- Garantire coerenza tra UI e dati
+
+---
+
+## Aggiornamento Basato sul Valore Precedente
+
+Quando il nuovo state dipende dal valore precedente, è consigliato usare la **forma funzionale** dell’aggiornamento.
+
+```jsx
+setCount((prevCount) => prevCount + 1);
+```
+
+Questo approccio evita problemi legati a:
+
+- Aggiornamenti asincroni
+- Batch di aggiornamenti multipli
+
+---
+
+## State Complesso (Oggetti e Array)
+
+Lo state può contenere strutture dati complesse come oggetti o array. È fondamentale ricordare che lo state deve essere **immutabile**.
+
+### Oggetto
+
+```jsx
+const [user, setUser] = useState({
+  name: "Mario",
+  age: 30,
+});
+
+setUser({
+  ...user,
+  age: 31,
+});
+```
+
+### Array
+
+```jsx
+const [items, setItems] = useState([]);
+
+setItems([...items, "Nuovo elemento"]);
+```
+
+In entrambi i casi viene creata una **nuova copia** dei dati, non una modifica diretta.
+
+---
+
+## State e Rendering
+
+Ogni cambiamento di state provoca un **nuovo render** del componente e dei suoi figli, salvo ottimizzazioni.
+
+È importante:
+
+- Mantenere lo state **minimo e necessario**
+- Evitare di inserire nello state dati derivabili da props o altri state
+
+---
+
+## Dove Posizionare lo State
+
+Una regola chiave in React è il **lifting state up**:
+
+- Lo state dovrebbe vivere nel **componente più alto** che ne ha bisogno
+- Viene poi passato ai componenti figli tramite props
+
+Questo garantisce:
+
+- Coerenza dei dati
+- Migliore controllo del flusso informativo
+- Architetture più prevedibili
+
+---
+
+## State Locale vs State Globale
+
+- **State locale**: riguarda un singolo componente o una piccola porzione dell’applicazione
+- **State globale**: condiviso tra molte parti dell’app (gestito con Context, Redux, Zustand, ecc.)
+
+In React puro, lo state gestito con `useState` è sempre locale al componente.
+
+---
+
+## Differenze tra State e Props
+
+| State                  | Props                  |
+| ---------------------- | ---------------------- |
+| Gestito dal componente | Passato dall’esterno   |
+| Può cambiare nel tempo | È read-only            |
+| Influenza il rendering | Influenza il rendering |
+| Aggiornato con setter  | Non modificabile       |
+
+---
+
+## Considerazioni Architetturali
+
+Uno sviluppatore esperto tende a:
+
+- Evitare state ridondanti
+- Separare lo state di UI da quello di business
+- Mantenere i componenti il più possibile **stateless**, delegando lo state dove ha senso
+
+Uno state ben progettato rende l’applicazione:
+
+- Più semplice da manutenere
+- Più prevedibile
+- Più facile da testare
+
+---
+
+## Conclusione
+
+Lo state è il cuore del comportamento dinamico di un componente React. Comprendere come definirlo, aggiornarlo e strutturarlo correttamente è essenziale per costruire applicazioni scalabili e robuste. Un uso consapevole dello state è una delle principali differenze tra un codice React amatoriale e uno professionale.

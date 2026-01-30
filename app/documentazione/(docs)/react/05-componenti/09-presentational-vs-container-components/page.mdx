@@ -1,3 +1,148 @@
 # Presentational vs Container components
 
-In arrivo
+Nel contesto di React, una distinzione concettuale molto utile per progettare applicazioni manutenibili e scalabili è quella tra **Presentational components** e **Container components**.
+Non si tratta di una regola imposta da React, ma di un pattern architetturale che aiuta a separare **la logica** dalla **presentazione**.
+
+Questa separazione rende il codice più leggibile, testabile e riutilizzabile, specialmente in applicazioni di medie e grandi dimensioni.
+
+---
+
+## Cos’è un Presentational component
+
+Un **Presentational component** (detto anche _UI component_ o _dumb component_) è un componente che si occupa **solo di come le cose appaiono**.
+
+### Caratteristiche principali
+
+- Si concentra sulla **UI**
+- Riceve i dati tramite **props**
+- Non conosce la provenienza dei dati
+- Non gestisce (o gestisce pochissimo) lo **state**
+- Non contiene logica di business
+- È altamente **riutilizzabile**
+- Spesso è scritto come **componente funzionale**
+
+### Esempio
+
+```jsx
+function UserProfile({ name, email }) {
+  return (
+    <div>
+      <h2>{name}</h2>
+      <p>{email}</p>
+    </div>
+  );
+}
+```
+
+In questo esempio:
+
+- Il componente riceve i dati tramite `props`
+- Non sa da dove arrivano `name` ed `email`
+- Si limita a renderizzare l’interfaccia
+
+---
+
+## Cos’è un Container component
+
+Un **Container component** (detto anche _smart component_) si occupa di **come le cose funzionano**.
+
+### Caratteristiche principali
+
+- Gestisce lo **state**
+- Contiene la **logica di business**
+- Recupera o prepara i dati
+- Passa i dati ai Presentational components tramite props
+- È meno riutilizzabile
+- Può interagire con API, context, store globali
+
+### Esempio
+
+```jsx
+import { useState } from "react";
+import UserProfile from "./UserProfile";
+
+function UserProfileContainer() {
+  const [user] = useState({
+    name: "Mario Rossi",
+    email: "mario.rossi@email.com",
+  });
+
+  return <UserProfile name={user.name} email={user.email} />;
+}
+```
+
+In questo caso:
+
+- Il container gestisce lo state
+- Prepara i dati
+- Delega la UI al Presentational component
+
+---
+
+## Separazione delle responsabilità
+
+Il punto chiave di questo pattern è la **separazione delle responsabilità**:
+
+| Presentational | Container              |
+| -------------- | ---------------------- |
+| UI             | Logica                 |
+| Stile          | Stato                  |
+| Layout         | Recupero dati          |
+| Riutilizzabile | Specifico del contesto |
+
+Questa divisione rende ogni componente più semplice e focalizzato su un solo compito.
+
+---
+
+## Vantaggi del pattern
+
+### Maggiore manutenibilità
+
+Modificare la UI non richiede di toccare la logica, e viceversa.
+
+### Riutilizzo dei componenti
+
+I Presentational components possono essere riutilizzati in più contesti con dati diversi.
+
+### Test più semplici
+
+- I Presentational components sono facili da testare perché dipendono solo dalle props
+- I Container components possono essere testati separatamente per la logica
+
+### Codice più leggibile
+
+Ogni file ha una responsabilità chiara.
+
+---
+
+## Quando usare questa distinzione
+
+Questo pattern è particolarmente utile quando:
+
+- L’applicazione cresce di dimensioni
+- La UI è complessa
+- Esistono molte regole di business
+- Si lavora in team
+
+In applicazioni molto piccole può sembrare eccessivo, ma in progetti reali diventa rapidamente un vantaggio.
+
+---
+
+## Evoluzione del pattern
+
+Con l’introduzione degli **Hooks**, la distinzione non è più sempre basata su componenti separati.
+Oggi è comune spostare la logica in **custom hooks**, mantenendo i componenti focalizzati sulla presentazione.
+
+Esempio concettuale:
+
+- Custom hook → logica (ruolo simile al Container)
+- Componente → UI (ruolo Presentational)
+
+Il principio però resta lo stesso: **separare cosa fa l’app da come appare**.
+
+---
+
+## Conclusione
+
+La distinzione tra Presentational e Container components non è una regola rigida, ma una **linea guida architetturale** molto efficace.
+Applicarla correttamente porta a un codice più pulito, modulare e facile da mantenere nel tempo, qualità fondamentali in qualsiasi progetto React professionale.

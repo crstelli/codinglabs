@@ -1,3 +1,126 @@
 # One-way data flow
 
-In arrivo
+Il **one-way data flow** (flusso di dati unidirezionale) è uno dei principi fondamentali di React e influenza profondamente il modo in cui le applicazioni vengono progettate, sviluppate e manutenute. Comprendere questo concetto è essenziale per scrivere componenti prevedibili, riutilizzabili e facili da debuggare.
+
+## Cos’è il one-way data flow
+
+In React, i dati **fluiscono sempre in una sola direzione**:
+dal **componente genitore** verso i **componenti figli**.
+
+Questo significa che:
+
+- Un componente **riceve dati** tramite le `props`
+- Un componente **non può modificare direttamente** le `props` ricevute
+- Le modifiche allo stato avvengono **solo nel componente che possiede quello stato**
+
+Il flusso è quindi:
+
+```
+State (Genitore) → Props → Figlio
+```
+
+Mai il contrario.
+
+## Perché React utilizza un flusso unidirezionale
+
+Il one-way data flow è una scelta progettuale precisa, pensata per risolvere problemi comuni nelle applicazioni complesse.
+
+### Prevedibilità
+
+Ogni cambiamento nello stato ha **un’unica origine chiara**. Se l’interfaccia cambia, sai esattamente quale componente ha causato l’aggiornamento.
+
+### Facilità di debug
+
+Dato che i dati non “rimbalzano” tra componenti, è più semplice tracciare:
+
+- dove nasce un valore
+- come viene trasformato
+- quali componenti ne dipendono
+
+### Manutenibilità
+
+Applicazioni grandi diventano più semplici da mantenere perché le responsabilità sono ben separate.
+
+### Performance
+
+React può ottimizzare il rendering sapendo che i dati seguono un flusso deterministico.
+
+## Stato e proprietà nel flusso unidirezionale
+
+Il concetto di one-way data flow è strettamente legato a `state` e `props`.
+
+### State
+
+- È **locale** a un componente
+- Può essere modificato **solo** tramite i meccanismi di React (`setState`, `useState`)
+- È la **fonte della verità** per quel componente
+
+### Props
+
+- Sono **sola lettura**
+- Servono a **passare dati** dal genitore al figlio
+- Non possono essere modificate dal componente che le riceve
+
+Un componente figlio non deve mai assumersi la responsabilità di cambiare lo stato del genitore.
+
+## Comunicazione dal figlio al genitore
+
+Un errore comune è pensare che il one-way data flow impedisca ai figli di “comunicare” con i genitori. In realtà, la comunicazione avviene tramite **callback**.
+
+Il genitore:
+
+- definisce una funzione
+- la passa al figlio come `prop`
+
+Il figlio:
+
+- invoca quella funzione in risposta a un evento
+
+Tecnicamente, però, il flusso dei dati rimane invariato:
+
+- la funzione è passata dall’alto verso il basso
+- lo stato viene aggiornato solo nel genitore
+
+Questo approccio mantiene il controllo centralizzato e coerente.
+
+## One-way data flow e rendering
+
+Ogni volta che lo stato di un componente cambia:
+
+1. React riesegue il render di quel componente
+2. Le nuove `props` vengono propagate ai figli
+3. I figli vengono aggiornati se necessario
+
+Non esiste un meccanismo implicito in cui un figlio “forza” il rerender del genitore modificandone direttamente i dati.
+
+## Differenza rispetto al two-way data binding
+
+In alcuni framework o approcci (specialmente più datati), esiste il **two-way data binding**, dove:
+
+- una modifica all’interfaccia aggiorna automaticamente il modello
+- una modifica al modello aggiorna automaticamente l’interfaccia
+
+Questo può sembrare comodo, ma spesso porta a:
+
+- dipendenze difficili da tracciare
+- bug complessi
+- stato globale poco chiaro
+
+React evita volutamente questo modello per favorire **chiarezza e controllo**.
+
+## Implicazioni architetturali
+
+Il one-way data flow incoraggia alcune buone pratiche architetturali:
+
+- **State lifting**: spostare lo stato nel componente più alto che ne ha bisogno
+- **Single source of truth**: evitare duplicazioni dello stesso stato
+- **Componenti più semplici**: i figli si concentrano sulla presentazione e sugli eventi
+
+Questi concetti diventano ancora più importanti in applicazioni grandi o quando si usano strumenti di state management esterni.
+
+## Conclusione
+
+Il one-way data flow non è solo una regola di React, ma una filosofia di progettazione.
+Accettare e sfruttare questo principio porta a codice più solido, leggibile e scalabile.
+
+Capire come e perché i dati fluiscono in una sola direzione è un passaggio fondamentale per padroneggiare davvero React, sia come principiante sia come sviluppatore esperto.

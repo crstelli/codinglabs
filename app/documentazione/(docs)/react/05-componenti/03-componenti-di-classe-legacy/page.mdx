@@ -1,3 +1,214 @@
 # Componenti di classe (legacy)
 
-In arrivo
+I **componenti di classe** sono stati per molti anni il modo principale per creare componenti in React. A partire da React 16.8, con l’introduzione degli **Hook**, il loro utilizzo è diventato sempre meno comune, fino a essere considerato **legacy** (cioè mantenuto per retrocompatibilità).
+
+Comprendere i componenti di classe rimane comunque importante, soprattutto per:
+
+- mantenere o aggiornare codebase esistenti;
+- comprendere il lifecycle classico di React;
+- capire l’evoluzione concettuale verso i componenti funzionali.
+
+## Cos’è un componente di classe
+
+Un componente di classe è una classe JavaScript che **estende `React.Component`** (o `Component`) e che implementa obbligatoriamente il metodo `render()`.
+
+Esempio base:
+
+```jsx
+import React from "react";
+
+class HelloWorld extends React.Component {
+  render() {
+    return <h1>Ciao mondo</h1>;
+  }
+}
+
+export default HelloWorld;
+```
+
+Caratteristiche fondamentali:
+
+- è basato su **classi ES6**;
+- ha accesso a **state** e **lifecycle methods**;
+- utilizza `this` per accedere a props, state e metodi.
+
+## Struttura di un componente di classe
+
+Un componente di classe tipicamente include:
+
+- un **costruttore** (opzionale);
+- lo **state interno**;
+- uno o più **metodi personalizzati**;
+- il metodo **render()**;
+- eventuali **metodi del ciclo di vita**.
+
+Esempio più completo:
+
+```jsx
+class Counter extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      count: 0,
+    };
+  }
+
+  increment = () => {
+    this.setState({ count: this.state.count + 1 });
+  };
+
+  render() {
+    return (
+      <div>
+        <p>Valore: {this.state.count}</p>
+        <button onClick={this.increment}>Incrementa</button>
+      </div>
+    );
+  }
+}
+```
+
+## Props nei componenti di classe
+
+Le **props** vengono passate al componente e sono accessibili tramite `this.props`.
+
+```jsx
+class Welcome extends React.Component {
+  render() {
+    return <h2>Ciao, {this.props.name}</h2>;
+  }
+}
+```
+
+Le props:
+
+- sono **read-only**;
+- non devono mai essere modificate dal componente;
+- vengono ricevute nel costruttore come parametro.
+
+## State nei componenti di classe
+
+Lo **state** rappresenta lo stato interno del componente ed è gestito tramite `this.state` e `this.setState()`.
+
+### Inizializzazione dello state
+
+Nel costruttore:
+
+```jsx
+constructor(props) {
+  super(props);
+  this.state = {
+    isLoggedIn: false
+  };
+}
+```
+
+Oppure con class fields (sintassi moderna):
+
+```jsx
+state = {
+  isLoggedIn: false,
+};
+```
+
+### Aggiornamento dello state
+
+Lo state **non va mai modificato direttamente**. Si utilizza sempre `setState`:
+
+```jsx
+this.setState({ isLoggedIn: true });
+```
+
+Oppure usando la forma funzionale (consigliata quando dipende dallo stato precedente):
+
+```jsx
+this.setState((prevState) => ({
+  count: prevState.count + 1,
+}));
+```
+
+## Binding di `this`
+
+Nei componenti di classe, `this` **non è automaticamente legato** ai metodi della classe. Questo è uno dei principali punti di complessità.
+
+Soluzioni comuni:
+
+### Binding nel costruttore
+
+```jsx
+constructor(props) {
+  super(props);
+  this.handleClick = this.handleClick.bind(this);
+}
+```
+
+### Arrow functions (approccio più diffuso)
+
+```jsx
+handleClick = () => {
+  console.log(this);
+};
+```
+
+## Metodo render()
+
+Il metodo `render()`:
+
+- è **obbligatorio**;
+- deve restituire JSX o `null`;
+- deve essere **puro** (nessun effetto collaterale).
+
+```jsx
+render() {
+  if (!this.props.visible) {
+    return null;
+  }
+
+  return <div>Contenuto visibile</div>;
+}
+```
+
+## Lifecycle nei componenti di classe (panoramica)
+
+I componenti di classe espongono una serie di **metodi del ciclo di vita** che permettono di reagire ai vari momenti della vita del componente.
+
+I principali (oggi considerati legacy o raramente usati):
+
+- `componentDidMount()`
+- `componentDidUpdate(prevProps, prevState)`
+- `componentWillUnmount()`
+
+Esempio:
+
+```jsx
+componentDidMount() {
+  console.log("Componente montato");
+}
+```
+
+I lifecycle methods legacy come `componentWillMount`, `componentWillReceiveProps` e `componentWillUpdate` sono stati **deprecati** e non dovrebbero essere usati.
+
+## Perché sono considerati legacy
+
+I componenti di classe presentano diverse criticità:
+
+- maggiore **complessità sintattica**;
+- gestione di `this` spesso fonte di bug;
+- logica distribuita in più lifecycle methods;
+- minore riusabilità della logica rispetto agli Hook.
+
+Con i componenti funzionali e gli Hook:
+
+- lo stesso comportamento è più semplice da esprimere;
+- la logica è più modulare e riutilizzabile;
+- il codice risulta più leggibile e testabile.
+
+## Quando incontrerai ancora i componenti di classe
+
+Nonostante siano legacy, i componenti di classe sono ancora presenti:
+
+- in progetti React più datati;
+- in librerie non ancora migrate;
+- in applicazioni enterprise di grandi dimensioni.
+
+Come sviluppatore web, è fondamentale **saperli leggere, comprendere e manutenere**, anche se per nuovi sviluppi si preferiscono quasi sempre i componenti funzionali.

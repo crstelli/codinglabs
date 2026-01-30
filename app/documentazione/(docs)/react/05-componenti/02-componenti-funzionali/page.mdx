@@ -1,3 +1,207 @@
 # Componenti funzionali
 
-In arrivo
+I **componenti funzionali** sono il tipo di componente più utilizzato in React moderno. Rappresentano una funzione JavaScript che restituisce dell’interfaccia utente (UI) sotto forma di JSX. A partire da React 16.8, con l’introduzione degli **Hook**, i componenti funzionali sono diventati completi quanto i componenti di classe, rendendo questi ultimi di fatto legacy.
+
+Oggi, salvo rari casi di manutenzione di codice esistente, **React viene scritto quasi esclusivamente usando componenti funzionali**.
+
+---
+
+## Cos’è un componente funzionale
+
+Un componente funzionale è una **funzione pura** che:
+
+- Riceve in input delle **props**
+- Restituisce in output del **JSX**
+- Non modifica direttamente ciò che riceve
+- Descrive _come deve apparire l’interfaccia_ in base ai dati forniti
+
+Esempio minimale:
+
+```jsx
+function Welcome() {
+  return <h1>Ciao React</h1>;
+}
+```
+
+Questo componente può essere utilizzato come un normale tag HTML:
+
+```jsx
+<Welcome />
+```
+
+---
+
+## Componenti funzionali con props
+
+Le **props** sono parametri passati al componente e permettono di renderlo dinamico e riutilizzabile.
+
+```jsx
+function Welcome(props) {
+  return <h1>Ciao {props.name}</h1>;
+}
+```
+
+Utilizzo:
+
+```jsx
+<Welcome name="Marco" />
+```
+
+È comune destrutturare le props direttamente nella firma della funzione:
+
+```jsx
+function Welcome({ name }) {
+  return <h1>Ciao {name}</h1>;
+}
+```
+
+Questo approccio migliora la leggibilità e riduce il codice boilerplate.
+
+---
+
+## JSX nei componenti funzionali
+
+I componenti funzionali restituiscono **JSX**, una sintassi che combina JavaScript e markup.
+
+Regole fondamentali:
+
+- Un componente deve restituire **un solo nodo root**
+- È possibile usare `React.Fragment` o la sintassi abbreviata `<> </>`
+
+```jsx
+function UserInfo({ name, age }) {
+  return (
+    <>
+      <p>Nome: {name}</p>
+      <p>Età: {age}</p>
+    </>
+  );
+}
+```
+
+---
+
+## Gestione dello state con gli Hook
+
+In origine, i componenti funzionali erano _stateless_. Oggi, grazie agli **Hook**, possono gestire stato, effetti collaterali e logica complessa.
+
+Lo state viene gestito tramite `useState`:
+
+```jsx
+import { useState } from "react";
+
+function Counter() {
+  const [count, setCount] = useState(0);
+
+  return <button onClick={() => setCount(count + 1)}>Contatore: {count}</button>;
+}
+```
+
+Caratteristiche importanti:
+
+- `useState` restituisce una coppia `[valore, funzioneDiAggiornamento]`
+- Lo state non va mai modificato direttamente
+- Ogni chiamata a `setState` provoca un re-render del componente
+
+---
+
+## Logica ed effetti collaterali
+
+Per gestire operazioni come:
+
+- chiamate API
+- subscribe/unsubscribe
+- accesso al DOM
+- timer
+
+si utilizza l’hook `useEffect`.
+
+Esempio:
+
+```jsx
+import { useEffect } from "react";
+
+function PageTitle({ title }) {
+  useEffect(() => {
+    document.title = title;
+  }, [title]);
+
+  return null;
+}
+```
+
+Il secondo argomento (`[title]`) definisce le **dipendenze** che determinano quando l’effetto viene rieseguito.
+
+---
+
+## Componenti funzionali come funzioni pure
+
+Un buon componente funzionale dovrebbe:
+
+- Essere deterministico: stessi input → stesso output
+- Non produrre effetti collaterali nel render
+- Delegare la logica complessa a hook personalizzati o funzioni esterne
+
+Questo rende il codice:
+
+- più prevedibile
+- più facile da testare
+- più manutenibile
+
+---
+
+## Hook personalizzati e riutilizzo della logica
+
+I componenti funzionali permettono di estrarre logica riutilizzabile tramite **custom hook**.
+
+Esempio:
+
+```jsx
+function useCounter(initialValue = 0) {
+  const [count, setCount] = useState(initialValue);
+
+  const increment = () => setCount((c) => c + 1);
+
+  return { count, increment };
+}
+```
+
+Utilizzo:
+
+```jsx
+function Counter() {
+  const { count, increment } = useCounter();
+
+  return <button onClick={increment}>{count}</button>;
+}
+```
+
+Questo approccio favorisce una forte separazione tra **logica** e **presentazione**.
+
+---
+
+## Perché preferire i componenti funzionali
+
+Vantaggi principali:
+
+- Sintassi più semplice e concisa
+- Meno boilerplate rispetto alle classi
+- Migliore composizione della logica
+- Hook ufficialmente supportati e raccomandati
+- Allineati alle best practice moderne di React
+
+React stesso, nelle documentazioni ufficiali, consiglia l’uso dei componenti funzionali per tutto il nuovo codice.
+
+---
+
+## Convenzioni e best practice
+
+- Il nome del componente deve iniziare con **lettera maiuscola**
+- Un componente dovrebbe fare **una sola cosa**
+- Evitare componenti troppo grandi o con troppa logica interna
+- Preferire hook personalizzati per la logica condivisa
+- Mantenere il render il più semplice possibile
+
+---
+
+I componenti funzionali rappresentano oggi il **cuore di React**. Comprenderli a fondo significa comprendere React stesso, poiché tutto il paradigma moderno del framework ruota attorno a funzioni, hook e composizione.
