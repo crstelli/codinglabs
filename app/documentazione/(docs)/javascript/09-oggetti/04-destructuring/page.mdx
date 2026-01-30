@@ -1,3 +1,173 @@
 # Destructuring
 
-In arrivo
+Il **destructuring** è una funzionalità di JavaScript che permette di estrarre valori da **oggetti** e **array** e assegnarli a variabili in modo semplice, leggibile e dichiarativo.  
+È uno strumento fondamentale nel codice moderno perché riduce il boilerplate, migliora la chiarezza e rende più esplicita l’intenzione dello sviluppatore.
+
+---
+
+## Destructuring di oggetti
+
+Il destructuring di oggetti consente di estrarre proprietà da un oggetto utilizzando una sintassi che rispecchia la sua struttura.
+
+### Sintassi base
+
+```js
+const user = {
+  name: "Marco",
+  age: 30,
+  role: "admin",
+};
+
+const { name, age } = user;
+
+console.log(name); // "Marco"
+console.log(age); // 30
+```
+
+Le variabili create devono avere lo **stesso nome delle proprietà** dell’oggetto.
+
+---
+
+## Assegnazione a nuove variabili
+
+È possibile rinominare le variabili durante l’estrazione:
+
+```js
+const { name: userName, role: userRole } = user;
+
+console.log(userName); // "Marco"
+console.log(userRole); // "admin"
+```
+
+Questa tecnica è utile per evitare conflitti di nomi o per migliorare la semantica del codice.
+
+---
+
+## Valori di default
+
+Se una proprietà non esiste, è possibile fornire un valore di default:
+
+```js
+const { email = "non disponibile" } = user;
+
+console.log(email); // "non disponibile"
+```
+
+Il valore di default viene utilizzato solo se la proprietà è `undefined`.
+
+---
+
+## Destructuring annidato
+
+Il destructuring funziona anche con oggetti annidati:
+
+```js
+const profile = {
+  username: "dev123",
+  settings: {
+    theme: "dark",
+    language: "it",
+  },
+};
+
+const {
+  settings: { theme, language },
+} = profile;
+
+console.log(theme); // "dark"
+console.log(language); // "it"
+```
+
+In questo caso non viene creata una variabile `settings`, ma solo quelle esplicitamente destrutturate.
+
+---
+
+## Destructuring di array
+
+Anche se questa sezione è focalizzata sugli oggetti, è importante conoscere il destructuring degli array per comprenderne l’uso combinato.
+
+```js
+const colors = ["rosso", "verde", "blu"];
+
+const [primary, secondary] = colors;
+
+console.log(primary); // "rosso"
+console.log(secondary); // "verde"
+```
+
+L’estrazione avviene in base alla **posizione**, non al nome.
+
+---
+
+## Saltare elementi e rest operator
+
+È possibile saltare elementi o raccoglierne più di uno con l’operatore `...`:
+
+```js
+const [first, , third] = colors;
+
+console.log(third); // "blu"
+
+const [head, ...tail] = colors;
+
+console.log(tail); // ["verde", "blu"]
+```
+
+---
+
+## Destructuring nei parametri di funzione
+
+Uno degli utilizzi più comuni e potenti del destructuring è nei parametri delle funzioni:
+
+```js
+function printUser({ name, age }) {
+  console.log(`${name} ha ${age} anni`);
+}
+
+printUser(user);
+```
+
+Questo approccio:
+
+- rende la firma della funzione più chiara
+- evita l’accesso ripetuto alle proprietà
+- migliora la manutenzione del codice
+
+### Valori di default nei parametri
+
+```js
+function createUser({ name, role = "user" }) {
+  return { name, role };
+}
+```
+
+---
+
+## Destructuring e variabili già dichiarate
+
+Quando si utilizza il destructuring su variabili già esistenti, è necessario racchiudere l’espressione tra parentesi tonde:
+
+```js
+let name, age;
+
+({ name, age } = user);
+```
+
+Senza parentesi, JavaScript interpreterebbe il blocco come un oggetto letterale.
+
+---
+
+## Buone pratiche
+
+- Usa il destructuring per rendere il codice più esplicito e leggibile
+- Evita destructuring troppo profondi che riducono la chiarezza
+- Preferiscilo nei parametri di funzione per oggetti di configurazione
+- Mantieni un equilibrio tra concisione e comprensibilità
+
+---
+
+## Conclusione
+
+Il destructuring è una funzionalità essenziale di JavaScript moderno.
+Permette di lavorare con oggetti e array in modo più pulito, riducendo codice ripetitivo e aumentando la chiarezza logica.
+Se usato correttamente, migliora la qualità del codice sia nei piccoli script che nelle applicazioni complesse.

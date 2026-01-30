@@ -1,3 +1,228 @@
 # Getter e setter
 
-In arrivo
+In JavaScript, **getter** e **setter** sono metodi speciali che permettono di **controllare l’accesso alle proprietà di un oggetto**. Consentono di leggere o modificare un valore come se fosse una normale proprietà, ma eseguendo in realtà del codice.
+
+Sono molto utili per:
+
+- incapsulare la logica interna di un oggetto
+- validare i dati
+- calcolare valori derivati
+- mantenere un’API semplice e pulita
+
+---
+
+## Concetto di base
+
+Un **getter** viene eseguito quando si **legge** una proprietà.
+Un **setter** viene eseguito quando si **assegna** un valore a una proprietà.
+
+```javascript
+const utente = {
+  nome: "Mario",
+  cognome: "Rossi",
+
+  get nomeCompleto() {
+    return `${this.nome} ${this.cognome}`;
+  },
+};
+
+console.log(utente.nomeCompleto); // "Mario Rossi"
+```
+
+`nomeCompleto` non è una funzione da chiamare, ma una proprietà calcolata.
+
+---
+
+## Getter
+
+Un **getter** si definisce con la parola chiave `get` seguita dal nome della proprietà.
+
+### Caratteristiche principali
+
+- Non accetta parametri
+- Deve restituire un valore
+- Si usa come una normale proprietà
+
+```javascript
+const prodotto = {
+  prezzo: 100,
+  iva: 0.22,
+
+  get prezzoFinale() {
+    return this.prezzo + this.prezzo * this.iva;
+  },
+};
+
+console.log(prodotto.prezzoFinale); // 122
+```
+
+Il valore viene calcolato al momento dell’accesso, non salvato.
+
+---
+
+## Setter
+
+Un **setter** si definisce con la parola chiave `set` e accetta **un solo parametro**: il valore assegnato.
+
+```javascript
+const persona = {
+  nome: "",
+
+  set impostaNome(valore) {
+    this.nome = valore.trim();
+  },
+};
+
+persona.impostaNome = "  Luca  ";
+console.log(persona.nome); // "Luca"
+```
+
+Il setter viene eseguito automaticamente quando si assegna un valore.
+
+---
+
+## Getter e setter insieme
+
+Spesso getter e setter vengono usati insieme per la **stessa proprietà logica**.
+
+```javascript
+const account = {
+  _saldo: 0,
+
+  get saldo() {
+    return this._saldo;
+  },
+
+  set saldo(valore) {
+    if (valore < 0) {
+      throw new Error("Il saldo non può essere negativo");
+    }
+    this._saldo = valore;
+  },
+};
+
+account.saldo = 100;
+console.log(account.saldo); // 100
+```
+
+### Convenzione comune
+
+- Proprietà interne precedute da `_`
+- Getter e setter espongono l’interfaccia pubblica
+
+---
+
+## Incapsulamento e controllo dei dati
+
+Getter e setter permettono di **proteggere lo stato interno** dell’oggetto.
+
+```javascript
+const utente = {
+  _email: "",
+
+  set email(valore) {
+    if (!valore.includes("@")) {
+      throw new Error("Email non valida");
+    }
+    this._email = valore;
+  },
+
+  get email() {
+    return this._email;
+  },
+};
+```
+
+Chi usa l’oggetto non deve conoscere la logica interna, ma solo la proprietà `email`.
+
+---
+
+## Getter e setter nelle classi
+
+Sono molto comuni nelle **classi JavaScript**.
+
+```javascript
+class Rettangolo {
+  constructor(larghezza, altezza) {
+    this.larghezza = larghezza;
+    this.altezza = altezza;
+  }
+
+  get area() {
+    return this.larghezza * this.altezza;
+  }
+}
+
+const r = new Rettangolo(10, 5);
+console.log(r.area); // 50
+```
+
+Il comportamento è identico a quello degli oggetti letterali.
+
+---
+
+## Differenza tra metodo e getter
+
+Metodo:
+
+```javascript
+oggetto.calcolaValore();
+```
+
+Getter:
+
+```javascript
+oggetto.valore;
+```
+
+### Quando usare un getter
+
+- Quando il valore rappresenta uno **stato o una proprietà**
+- Quando vuoi un’API più leggibile
+- Quando il calcolo è veloce e privo di effetti collaterali
+
+---
+
+## Definizione dinamica con Object.defineProperty
+
+È possibile definire getter e setter anche dopo la creazione dell’oggetto.
+
+```javascript
+const obj = {};
+
+Object.defineProperty(obj, "numero", {
+  get() {
+    return 42;
+  },
+  set(valore) {
+    console.log("Valore assegnato:", valore);
+  },
+});
+
+obj.numero = 10;
+console.log(obj.numero); // 42
+```
+
+Questo approccio è più verboso ma utile in contesti avanzati.
+
+---
+
+## Best practice
+
+- Evitare getter con effetti collaterali
+- Non eseguire operazioni costose in un getter
+- Usare nomi chiari e coerenti
+- Non abusare dei setter per logiche complesse
+- Preferire getter/setter quando migliorano la leggibilità
+
+---
+
+## Riepilogo
+
+- I getter leggono una proprietà eseguendo codice
+- I setter intercettano l’assegnazione di un valore
+- Migliorano incapsulamento e controllo dei dati
+- Rendono l’API più espressiva e pulita
+- Funzionano sia negli oggetti che nelle classi
+
+Getter e setter sono uno strumento fondamentale per scrivere codice JavaScript robusto, manutenibile e orientato a buone pratiche di progettazione.

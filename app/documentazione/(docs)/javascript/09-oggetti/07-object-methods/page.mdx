@@ -1,3 +1,310 @@
 # Object methods
 
-In arrivo
+In JavaScript, gli **Object methods** sono metodi statici forniti dall’oggetto globale `Object` che permettono di **creare, ispezionare, manipolare e controllare** gli oggetti.
+Non vanno confusi con i metodi definiti _dentro_ un oggetto: questi metodi operano **sull’oggetto passato come argomento**.
+
+Sono strumenti fondamentali per scrivere codice robusto, leggibile e mantenibile, soprattutto in applicazioni complesse.
+
+---
+
+## Object.keys()
+
+Restituisce un array contenente **le chiavi enumerabili proprie** di un oggetto.
+
+```js
+const user = {
+  name: "Mario",
+  age: 30,
+};
+
+Object.keys(user);
+// ["name", "age"]
+```
+
+### Note importanti
+
+- Include solo proprietà **own** (non ereditate)
+- Include solo proprietà **enumerabili**
+- L’ordine segue quello di inserimento
+
+Uso tipico:
+
+```js
+Object.keys(user).forEach((key) => {
+  console.log(key, user[key]);
+});
+```
+
+---
+
+## Object.values()
+
+Restituisce un array con **i valori** delle proprietà enumerabili proprie.
+
+```js
+Object.values(user);
+// ["Mario", 30]
+```
+
+È utile quando ti interessa lavorare solo sui valori, ad esempio per calcoli o validazioni.
+
+---
+
+## Object.entries()
+
+Restituisce un array di coppie `[chiave, valore]`.
+
+```js
+Object.entries(user);
+// [["name", "Mario"], ["age", 30]]
+```
+
+Molto usato per:
+
+- Iterazioni complete
+- Conversioni
+- Trasformazioni di oggetti
+
+Esempio pratico:
+
+```js
+for (const [key, value] of Object.entries(user)) {
+  console.log(`${key}: ${value}`);
+}
+```
+
+---
+
+## Object.fromEntries()
+
+Operazione inversa di `Object.entries()`.
+Converte un array di coppie chiave/valore in un oggetto.
+
+```js
+const entries = [
+  ["name", "Mario"],
+  ["age", 30],
+];
+
+Object.fromEntries(entries);
+// { name: "Mario", age: 30 }
+```
+
+Molto utile in combinazione con `map`, `filter` o `reduce`.
+
+---
+
+## Object.assign()
+
+Copia le proprietà di uno o più oggetti sorgente in un oggetto target.
+
+```js
+const target = {};
+const source = { a: 1, b: 2 };
+
+Object.assign(target, source);
+// target → { a: 1, b: 2 }
+```
+
+### Unione di oggetti
+
+```js
+const a = { x: 1 };
+const b = { y: 2 };
+
+const result = Object.assign({}, a, b);
+// { x: 1, y: 2 }
+```
+
+### Attenzione
+
+- Effettua una **copia superficiale (shallow copy)**
+- Proprietà con la stessa chiave vengono sovrascritte
+
+---
+
+## Object.freeze()
+
+Rende un oggetto **immutabile**:
+
+- Non è possibile aggiungere proprietà
+- Non è possibile rimuoverle
+- Non è possibile modificarle
+
+```js
+const config = {
+  apiUrl: "/api",
+};
+
+Object.freeze(config);
+
+config.apiUrl = "/test"; // non ha effetto
+```
+
+### Nota
+
+`Object.freeze()` è **shallow**: gli oggetti annidati restano modificabili.
+
+---
+
+## Object.seal()
+
+Sigilla un oggetto:
+
+- Non è possibile aggiungere o rimuovere proprietà
+- È ancora possibile modificare i valori esistenti
+
+```js
+const user = {
+  name: "Mario",
+};
+
+Object.seal(user);
+
+user.name = "Luigi"; // OK
+user.age = 30; // ignorato
+```
+
+---
+
+## Object.preventExtensions()
+
+Impedisce l’aggiunta di nuove proprietà, ma consente:
+
+- Modifica
+- Eliminazione di proprietà esistenti
+
+```js
+const obj = { a: 1 };
+
+Object.preventExtensions(obj);
+
+obj.b = 2; // non viene aggiunta
+```
+
+---
+
+## Object.hasOwn()
+
+Verifica se una proprietà è **direttamente presente** sull’oggetto (non ereditata).
+
+```js
+const user = { name: "Mario" };
+
+Object.hasOwn(user, "name"); // true
+Object.hasOwn(user, "toString"); // false
+```
+
+È l’alternativa moderna e sicura a `hasOwnProperty`.
+
+---
+
+## Object.getOwnPropertyNames()
+
+Restituisce tutte le proprietà proprie, **anche non enumerabili**.
+
+```js
+Object.getOwnPropertyNames(user);
+```
+
+Differenza rispetto a `Object.keys()`:
+
+- Include proprietà non enumerabili
+
+---
+
+## Object.getOwnPropertyDescriptor()
+
+Restituisce la descrizione completa di una proprietà.
+
+```js
+Object.getOwnPropertyDescriptor(user, "name");
+```
+
+Output tipico:
+
+```js
+{
+  value: "Mario",
+  writable: true,
+  enumerable: true,
+  configurable: true
+}
+```
+
+Fondamentale quando si lavora con:
+
+- Getter e setter
+- Proprietà protette
+- Metaprogrammazione
+
+---
+
+## Object.defineProperty()
+
+Permette di definire o modificare una proprietà con pieno controllo sui descriptor.
+
+```js
+Object.defineProperty(user, "id", {
+  value: 1,
+  writable: false,
+  enumerable: false,
+  configurable: false,
+});
+```
+
+Uso avanzato per:
+
+- API interne
+- Librerie
+- Controllo rigoroso degli oggetti
+
+---
+
+## Object.create()
+
+Crea un nuovo oggetto con un prototipo specifico.
+
+```js
+const person = {
+  greet() {
+    return "Ciao";
+  },
+};
+
+const user = Object.create(person);
+```
+
+`user` eredita i metodi di `person`.
+
+È una base importante per comprendere:
+
+- Prototype chain
+- Ereditarietà in JavaScript
+
+---
+
+## Object.is()
+
+Confronta due valori in modo più rigoroso rispetto a `===`.
+
+```js
+Object.is(NaN, NaN); // true
+Object.is(+0, -0); // false
+```
+
+Utile in casi limite dove `===` non è sufficiente.
+
+---
+
+## Conclusione
+
+Gli **Object methods** sono strumenti essenziali per lavorare in modo professionale con gli oggetti in JavaScript.
+Permettono di:
+
+- Ispezionare strutture dati
+- Controllare mutabilità e sicurezza
+- Gestire proprietà in modo avanzato
+- Scrivere codice più prevedibile e manutenibile
+
+Una conoscenza approfondita di questi metodi è fondamentale per qualsiasi sviluppatore JavaScript che voglia padroneggiare il linguaggio a livello avanzato.

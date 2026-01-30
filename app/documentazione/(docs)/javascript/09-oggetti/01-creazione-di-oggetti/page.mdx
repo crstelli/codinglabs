@@ -1,3 +1,208 @@
 # Creazione di oggetti
 
-In arrivo
+In JavaScript gli **oggetti** sono una delle strutture fondamentali del linguaggio. Permettono di rappresentare entità complesse, raggruppando dati e comportamenti in un’unica struttura. Comprendere come creare correttamente gli oggetti è essenziale sia per chi inizia, sia per chi sviluppa applicazioni complesse e scalabili.
+
+Un oggetto è una **collezione di coppie chiave–valore**, dove le chiavi sono stringhe (o Symbol) e i valori possono essere di qualsiasi tipo: primitivi, funzioni, altri oggetti, array.
+
+---
+
+## Oggetti letterali
+
+Il modo più semplice e comune per creare un oggetto è tramite la **notazione letterale**.
+
+```js
+const utente = {
+  nome: "Mario",
+  cognome: "Rossi",
+  età: 30,
+};
+```
+
+Questa sintassi è:
+
+- leggibile
+- immediata
+- ideale per strutture statiche o configurazioni
+
+È il metodo più usato nello sviluppo moderno JavaScript.
+
+---
+
+## Creazione tramite `new Object()`
+
+JavaScript fornisce il costruttore `Object`, che permette di creare un oggetto vuoto.
+
+```js
+const utente = new Object();
+utente.nome = "Mario";
+utente.cognome = "Rossi";
+utente.età = 30;
+```
+
+Dal punto di vista funzionale è equivalente all’oggetto letterale, ma:
+
+- è più verboso
+- meno leggibile
+- raramente usato nello sviluppo reale
+
+L’uso dell’oggetto letterale è sempre preferibile.
+
+---
+
+## Oggetti con proprietà annidate
+
+Un oggetto può contenere altri oggetti al suo interno, permettendo di modellare strutture complesse.
+
+```js
+const utente = {
+  nome: "Mario",
+  indirizzo: {
+    città: "Roma",
+    cap: "00100",
+  },
+};
+```
+
+Questa struttura è molto comune quando si lavora con:
+
+- dati provenienti da API
+- configurazioni
+- modelli di dominio
+
+---
+
+## Creazione di oggetti tramite funzioni factory
+
+Una **factory function** è una funzione che restituisce un nuovo oggetto.
+
+```js
+function creaUtente(nome, cognome, età) {
+  return {
+    nome,
+    cognome,
+    età,
+  };
+}
+
+const utente1 = creaUtente("Mario", "Rossi", 30);
+const utente2 = creaUtente("Luigi", "Verdi", 25);
+```
+
+Vantaggi:
+
+- evita duplicazione di codice
+- migliora la manutenibilità
+- consente di centralizzare la logica di creazione
+
+Questo approccio è molto utilizzato in JavaScript funzionale.
+
+---
+
+## Creazione di oggetti con funzioni costruttore
+
+Prima dell’introduzione delle classi ES6, gli oggetti venivano spesso creati usando **funzioni costruttore**.
+
+```js
+function Utente(nome, cognome, età) {
+  this.nome = nome;
+  this.cognome = cognome;
+  this.età = età;
+}
+
+const utente = new Utente("Mario", "Rossi", 30);
+```
+
+Caratteristiche:
+
+- il nome della funzione inizia per convenzione con una lettera maiuscola
+- l’operatore `new` crea un nuovo oggetto
+- `this` fa riferimento all’istanza creata
+
+Questo approccio è ancora valido, ma oggi è meno utilizzato rispetto alle classi.
+
+---
+
+## Creazione di oggetti con `class`
+
+Le **classi**, introdotte in ES6, forniscono una sintassi più chiara e moderna per creare oggetti basati su modelli.
+
+```js
+class Utente {
+  constructor(nome, cognome, età) {
+    this.nome = nome;
+    this.cognome = cognome;
+    this.età = età;
+  }
+}
+
+const utente = new Utente("Mario", "Rossi", 30);
+```
+
+Le classi in JavaScript:
+
+- sono syntactic sugar sul sistema a prototipi
+- migliorano la leggibilità
+- sono lo standard nello sviluppo moderno
+
+---
+
+## Creazione di oggetti con `Object.create()`
+
+`Object.create()` permette di creare un nuovo oggetto specificando esplicitamente il suo **prototipo**.
+
+```js
+const prototipoUtente = {
+  tipo: "utente",
+};
+
+const utente = Object.create(prototipoUtente);
+utente.nome = "Mario";
+```
+
+Questo metodo è utile quando:
+
+- si vuole un controllo diretto sulla catena dei prototipi
+- si lavora con pattern avanzati
+- si evita l’uso delle classi
+
+È meno comune, ma importante da conoscere.
+
+---
+
+## Oggetti immutabili con `Object.freeze()`
+
+Un oggetto può essere reso **immutabile** usando `Object.freeze()`.
+
+```js
+const configurazione = {
+  apiUrl: "https://api.example.com",
+};
+
+Object.freeze(configurazione);
+```
+
+Dopo il freeze:
+
+- non è possibile aggiungere proprietà
+- non è possibile modificarle
+- non è possibile eliminarle
+
+È utile per:
+
+- costanti di configurazione
+- prevenire modifiche accidentali
+- scrivere codice più sicuro
+
+---
+
+## Buone pratiche nella creazione di oggetti
+
+- Preferire sempre la **notazione letterale**
+- Usare **factory function** o **classi** per oggetti ripetibili
+- Evitare `new Object()`
+- Mantenere gli oggetti **coerenti e prevedibili**
+- Limitare la profondità delle strutture annidate quando possibile
+
+---
+
+La creazione degli oggetti è la base su cui si costruisce gran parte dell’ecosistema JavaScript. Padroneggiare questi approcci permette di scrivere codice più pulito, leggibile e scalabile, indipendentemente dalla complessità dell’applicazione.

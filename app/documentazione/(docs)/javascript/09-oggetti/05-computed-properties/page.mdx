@@ -1,3 +1,218 @@
 # Computed properties
 
-In arrivo
+Le **computed properties** (proprietà calcolate) permettono di definire dinamicamente il nome di una proprietà di un oggetto usando un’espressione JavaScript.  
+Sono state introdotte con **ES6 (ES2015)** e rappresentano un’evoluzione fondamentale nella creazione di oggetti flessibili e dinamici.
+
+## Concetto base
+
+Normalmente, le proprietà di un oggetto hanno un nome statico:
+
+```js
+const user = {
+  name: "Mario",
+  age: 30,
+};
+```
+
+Con le computed properties, il nome della proprietà viene **calcolato a runtime**:
+
+```js
+const key = "name";
+
+const user = {
+  [key]: "Mario",
+};
+```
+
+Il risultato è:
+
+```js
+{
+  name: "Mario";
+}
+```
+
+L’espressione tra parentesi quadre viene valutata e il suo risultato diventa il nome della proprietà.
+
+## Sintassi
+
+La sintassi è valida **solo negli object literal** (e nelle classi):
+
+```js
+const obj = {
+  [espressione]: valore,
+};
+```
+
+L’espressione può essere:
+
+- una variabile
+- una concatenazione
+- una template literal
+- una funzione che restituisce una stringa o un Symbol
+
+## Uso pratico
+
+### Proprietà dinamiche
+
+Caso comune: costruire oggetti basati su input dinamici.
+
+```js
+function createConfig(option, value) {
+  return {
+    [option]: value,
+  };
+}
+
+createConfig("theme", "dark");
+```
+
+Risultato:
+
+```js
+{
+  theme: "dark";
+}
+```
+
+Senza computed properties sarebbe necessario creare l’oggetto e poi assegnare la proprietà separatamente.
+
+### Concatenazione e template literal
+
+```js
+const prefix = "user";
+const id = 42;
+
+const obj = {
+  [`${prefix}_${id}`]: true,
+};
+```
+
+Risultato:
+
+```js
+{
+  user_42: true;
+}
+```
+
+Questo approccio è molto utile per:
+
+- mappe
+- cache
+- strutture dati indicizzate
+
+### Metodi con nome dinamico
+
+Le computed properties funzionano anche con i metodi:
+
+```js
+const action = "save";
+
+const service = {
+  [action]() {
+    return "Dati salvati";
+  },
+};
+```
+
+Equivalente a:
+
+```js
+service.save();
+```
+
+## Computed properties e Symbols
+
+Le computed properties sono l’unico modo per usare i **Symbol** come chiavi in un object literal:
+
+```js
+const ID = Symbol("id");
+
+const obj = {
+  [ID]: 123,
+};
+```
+
+Questo è fondamentale per:
+
+- evitare collisioni di nomi
+- definire proprietà non accessibili accidentalmente
+
+## Differenza tra dot notation e bracket notation
+
+Le computed properties utilizzano internamente la **bracket notation**:
+
+```js
+obj["name"];
+obj[name];
+```
+
+La dot notation **non supporta espressioni**:
+
+```js
+obj.key; // letterale
+obj[key]; // dinamico
+```
+
+Le computed properties portano questo stesso concetto direttamente nella definizione dell’oggetto.
+
+## Sovrascrittura delle proprietà
+
+Se due computed properties producono lo stesso nome, **l’ultima vince**:
+
+```js
+const key = "value";
+
+const obj = {
+  [key]: 1,
+  ["value"]: 2,
+};
+```
+
+Risultato:
+
+```js
+{
+  value: 2;
+}
+```
+
+È importante tenerlo a mente quando si generano chiavi dinamiche.
+
+## Ordine delle proprietà
+
+Le computed properties seguono le **regole standard di ordinamento degli oggetti JavaScript**:
+
+1. chiavi numeriche (in ordine crescente)
+2. chiavi stringa (ordine di inserimento)
+3. Symbol (ordine di inserimento)
+
+Il fatto che una proprietà sia “computed” non cambia il suo comportamento nell’oggetto finale.
+
+## Quando usarle
+
+Le computed properties sono particolarmente indicate quando:
+
+- il nome della proprietà non è noto a priori
+- si lavora con configurazioni dinamiche
+- si costruiscono mappe o lookup table
+- si vogliono evitare if/else ripetitivi
+- si integrano dati provenienti da API o input esterni
+
+## Quando evitarle
+
+È meglio evitarle quando:
+
+- il nome della proprietà è statico
+- riducono la leggibilità del codice
+- nascondono una struttura dati poco chiara
+
+Un codice semplice e dichiarativo è sempre preferibile se non serve dinamismo.
+
+## Conclusione
+
+Le computed properties rendono gli oggetti JavaScript **più espressivi, flessibili e potenti**.
+Usate correttamente, permettono di scrivere codice più pulito, riducendo duplicazioni e migliorando la scalabilità delle strutture dati.
+
+Sono uno strumento essenziale per chi sviluppa applicazioni moderne e lavora con dati dinamici nel web development.

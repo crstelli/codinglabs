@@ -1,3 +1,249 @@
 # this
 
-In arrivo
+In JavaScript, `this` è una parola chiave fondamentale che rappresenta il **contesto di esecuzione** corrente. Il suo valore non è fisso, ma dipende **da come e dove una funzione viene invocata**, non da dove è definita. Questo è uno degli aspetti più importanti (e spesso fraintesi) del linguaggio.
+
+Comprendere `this` è essenziale per lavorare correttamente con oggetti, metodi, classi, funzioni e callback.
+
+---
+
+## Concetto generale
+
+`this` fa riferimento a un oggetto. In particolare, rappresenta l’oggetto che **sta eseguendo il codice in quel momento**.
+
+```js
+this.nome;
+```
+
+Il valore di `this` cambia in base al **contesto di chiamata** (calling context).
+
+---
+
+## this nel contesto globale
+
+Nel **contesto globale**:
+
+- Nel browser, `this` fa riferimento all’oggetto `window`
+- In Node.js, `this` fa riferimento a `global` (o a un oggetto vuoto nei moduli)
+
+```js
+console.log(this); // window (nel browser)
+```
+
+Attenzione: Con `"use strict"` il comportamento cambia:
+
+```js
+"use strict";
+console.log(this); // undefined
+```
+
+---
+
+## this all’interno di un oggetto
+
+Quando una funzione è invocata come **metodo di un oggetto**, `this` fa riferimento all’oggetto stesso.
+
+```js
+const utente = {
+  nome: "Mario",
+  saluta() {
+    console.log(this.nome);
+  },
+};
+
+utente.saluta(); // Mario
+```
+
+Qui:
+
+- `saluta` è chiamato tramite `utente`
+- `this` → `utente`
+
+---
+
+## this e funzioni normali
+
+Una funzione **non associata a un oggetto** perde il contesto.
+
+```js
+function mostraThis() {
+  console.log(this);
+}
+
+mostraThis(); // window o undefined (strict mode)
+```
+
+Se la funzione viene assegnata a una variabile, il contesto non è più l’oggetto originale:
+
+```js
+const utente = {
+  nome: "Mario",
+  saluta() {
+    console.log(this.nome);
+  },
+};
+
+const fn = utente.saluta;
+fn(); // undefined
+```
+
+Il riferimento all’oggetto viene perso.
+
+---
+
+## this nelle arrow function
+
+Le **arrow function non hanno un proprio `this`**. Ereditano il `this` dal contesto esterno (lexical this).
+
+```js
+const utente = {
+  nome: "Mario",
+  saluta: () => {
+    console.log(this.nome);
+  },
+};
+
+utente.saluta(); // undefined
+```
+
+In questo caso:
+
+- `this` non è `utente`
+- `this` è quello del contesto esterno (global scope)
+
+Uso corretto delle arrow function:
+
+```js
+const utente = {
+  nome: "Mario",
+  saluta() {
+    const stampa = () => {
+      console.log(this.nome);
+    };
+    stampa();
+  },
+};
+
+utente.saluta(); // Mario
+```
+
+---
+
+## this nei costruttori e nelle classi
+
+Quando una funzione viene usata come **costruttore** con `new`, `this` fa riferimento alla nuova istanza creata.
+
+```js
+function Utente(nome) {
+  this.nome = nome;
+}
+
+const u = new Utente("Mario");
+console.log(u.nome); // Mario
+```
+
+Con le classi:
+
+```js
+class Utente {
+  constructor(nome) {
+    this.nome = nome;
+  }
+
+  saluta() {
+    console.log(this.nome);
+  }
+}
+
+const u = new Utente("Mario");
+u.saluta(); // Mario
+```
+
+---
+
+## this nei callback
+
+Nei callback, `this` può cambiare contesto in modo inatteso.
+
+```js
+const utente = {
+  nome: "Mario",
+  saluta() {
+    setTimeout(function () {
+      console.log(this.nome);
+    }, 1000);
+  },
+};
+
+utente.saluta(); // undefined
+```
+
+Soluzioni comuni:
+
+### Arrow function
+
+```js
+setTimeout(() => {
+  console.log(this.nome);
+}, 1000);
+```
+
+### Salvataggio del contesto
+
+```js
+const self = this;
+setTimeout(function () {
+  console.log(self.nome);
+}, 1000);
+```
+
+---
+
+## Forzare il valore di this: call, apply, bind
+
+JavaScript mette a disposizione metodi per **impostare manualmente `this`**.
+
+### call
+
+```js
+function saluta() {
+  console.log(this.nome);
+}
+
+saluta.call({ nome: "Mario" }); // Mario
+```
+
+### apply
+
+Simile a `call`, ma accetta argomenti come array.
+
+```js
+saluta.apply({ nome: "Luigi" });
+```
+
+### bind
+
+Restituisce una nuova funzione con `this` fissato.
+
+```js
+const salutaMario = saluta.bind({ nome: "Mario" });
+salutaMario(); // Mario
+```
+
+---
+
+## Regole fondamentali da ricordare
+
+1. `this` dipende da **come** una funzione viene chiamata
+2. I metodi di un oggetto hanno `this` riferito all’oggetto
+3. Le arrow function **non** hanno `this` proprio
+4. `new` crea un nuovo `this`
+5. `call`, `apply` e `bind` permettono di controllare `this`
+6. In strict mode, `this` può essere `undefined`
+
+---
+
+## Conclusione
+
+`this` è uno dei concetti più potenti e delicati di JavaScript. Una comprensione solida del suo funzionamento permette di scrivere codice più prevedibile, manutenibile e robusto, soprattutto quando si lavora con oggetti complessi, classi, callback e architetture avanzate.
+
+Padroneggiare `this` significa padroneggiare il contesto di esecuzione del linguaggio.

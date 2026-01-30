@@ -1,3 +1,241 @@
 # Proprietà e metodi
 
-In arrivo
+In JavaScript, un oggetto è una collezione di **coppie chiave–valore**. Le chiavi sono chiamate **proprietà** e i valori possono essere di qualsiasi tipo: primitivi, array, funzioni o altri oggetti.  
+Quando una proprietà contiene una funzione, prende il nome di **metodo**.
+
+Capire bene come funzionano proprietà e metodi è fondamentale per scrivere codice chiaro, manutenibile e orientato agli oggetti.
+
+---
+
+## Proprietà
+
+Una **proprietà** rappresenta un dato associato a un oggetto.
+
+### Dichiarazione di proprietà
+
+Le proprietà si definiscono assegnando un valore a una chiave:
+
+```js
+const user = {
+  name: "Marco",
+  age: 30,
+  isAdmin: false,
+};
+```
+
+In questo esempio:
+
+- `name`, `age` e `isAdmin` sono proprietà
+- `"Marco"`, `30` e `false` sono i rispettivi valori
+
+---
+
+### Accesso alle proprietà
+
+Esistono due modi principali per accedere alle proprietà di un oggetto.
+
+#### Dot notation (notazione con il punto)
+
+```js
+user.name; // "Marco"
+user.age; // 30
+```
+
+È la forma più comune e leggibile, ma richiede che il nome della proprietà sia noto e valido come identificatore.
+
+#### Bracket notation (notazione con le parentesi)
+
+```js
+user["name"]; // "Marco"
+```
+
+È utile quando:
+
+- il nome della proprietà è dinamico
+- il nome contiene caratteri non validi
+- la proprietà è calcolata a runtime
+
+```js
+const key = "age";
+user[key]; // 30
+```
+
+---
+
+### Aggiunta e modifica di proprietà
+
+Le proprietà possono essere aggiunte o modificate in qualsiasi momento:
+
+```js
+user.email = "marco@example.com"; // aggiunta
+user.age = 31; // modifica
+```
+
+Se la proprietà non esiste, viene creata automaticamente.
+
+---
+
+### Eliminazione di proprietà
+
+Per rimuovere una proprietà si utilizza l’operatore `delete`:
+
+```js
+delete user.isAdmin;
+```
+
+---
+
+### Proprietà annidate
+
+Le proprietà possono essere oggetti a loro volta:
+
+```js
+const user = {
+  name: "Marco",
+  address: {
+    city: "Milano",
+    zip: "20100",
+  },
+};
+
+user.address.city; // "Milano"
+```
+
+---
+
+## Metodi
+
+Un **metodo** è una proprietà che contiene una funzione.
+Serve per descrivere un comportamento dell’oggetto.
+
+### Definizione di un metodo
+
+```js
+const user = {
+  name: "Marco",
+  greet: function () {
+    return "Ciao!";
+  },
+};
+```
+
+A partire da ES6, è possibile usare una sintassi più compatta:
+
+```js
+const user = {
+  name: "Marco",
+  greet() {
+    return "Ciao!";
+  },
+};
+```
+
+Entrambe le forme sono equivalenti.
+
+---
+
+### Chiamata di un metodo
+
+I metodi si chiamano usando la dot notation seguita dalle parentesi:
+
+```js
+user.greet(); // "Ciao!"
+```
+
+---
+
+### Metodi con parametri
+
+Un metodo può ricevere parametri come qualsiasi funzione:
+
+```js
+const calculator = {
+  sum(a, b) {
+    return a + b;
+  },
+};
+
+calculator.sum(2, 3); // 5
+```
+
+---
+
+### Metodi e accesso alle proprietà
+
+I metodi sono spesso utilizzati per leggere o modificare le proprietà dell’oggetto:
+
+```js
+const counter = {
+  value: 0,
+  increment() {
+    this.value++;
+  },
+  decrement() {
+    this.value--;
+  },
+};
+```
+
+In questo contesto, `this` fa riferimento all’oggetto stesso (il comportamento di `this` verrà approfondito in un articolo dedicato).
+
+---
+
+## Differenza concettuale tra proprietà e metodi
+
+- **Proprietà** → rappresentano lo stato (dati)
+- **Metodi** → rappresentano il comportamento (azioni)
+
+Esempio:
+
+```js
+const car = {
+  brand: "Tesla", // proprietà
+  speed: 0, // proprietà
+  accelerate() {
+    // metodo
+    this.speed += 10;
+  },
+};
+```
+
+Questa separazione rende il codice più leggibile e modellato sulla realtà.
+
+---
+
+## Proprietà come funzioni (attenzione)
+
+Tecnicamente, un metodo è solo una proprietà che contiene una funzione:
+
+```js
+const obj = {
+  fn: function () {},
+};
+```
+
+La differenza tra funzione e metodo non è sintattica, ma **concettuale**:
+una funzione diventa un metodo quando è legata a un oggetto e opera sul suo stato.
+
+---
+
+## Buone pratiche
+
+- Usa nomi di proprietà chiari e descrittivi
+- Usa verbi per i metodi (`get`, `set`, `calculate`, `update`)
+- Mantieni i metodi focalizzati su una singola responsabilità
+- Evita di duplicare logica: usa i metodi per centralizzare il comportamento
+
+---
+
+## Riepilogo
+
+- Le proprietà contengono dati
+- I metodi contengono funzioni
+- Entrambi sono chiavi di un oggetto
+- Le proprietà possono essere lette, modificate, aggiunte e rimosse
+- I metodi permettono agli oggetti di avere comportamento
+
+Una comprensione solida di proprietà e metodi è la base per lavorare con oggetti, classi, pattern di progettazione e architetture JavaScript moderne.
+
+```
+
+```

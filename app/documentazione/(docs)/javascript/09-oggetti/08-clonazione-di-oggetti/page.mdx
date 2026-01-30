@@ -1,3 +1,163 @@
 # Clonazione di oggetti
 
-In arrivo
+La **clonazione di oggetti** in JavaScript consiste nel creare una copia di un oggetto esistente. Questo concetto è fondamentale per evitare effetti collaterali indesiderati, soprattutto quando si lavora con strutture dati complesse, stato applicativo, programmazione funzionale o framework moderni come React, Vue o Angular.
+
+In JavaScript gli oggetti sono **tipi di riferimento**: assegnare un oggetto a un’altra variabile non crea una copia, ma un riferimento allo stesso oggetto in memoria.
+
+```js
+const originale = { nome: "Mario" };
+const copia = originale;
+
+copia.nome = "Luigi";
+console.log(originale.nome); // "Luigi"
+```
+
+Per evitare questo comportamento è necessario **clonare** l’oggetto.
+
+---
+
+## Clonazione superficiale (Shallow Copy)
+
+Una clonazione superficiale copia solo il **primo livello** dell’oggetto. Le proprietà che contengono altri oggetti o array continuano a essere condivise come riferimenti.
+
+### Spread operator (`...`)
+
+Metodo moderno, semplice e molto utilizzato.
+
+```js
+const originale = { nome: "Mario", indirizzo: { città: "Roma" } };
+const copia = { ...originale };
+
+copia.nome = "Luigi";
+copia.indirizzo.città = "Milano";
+
+console.log(originale.nome); // "Mario"
+console.log(originale.indirizzo.città); // "Milano"
+```
+
+### `Object.assign()`
+
+Metodo classico per creare una copia superficiale.
+
+```js
+const originale = { a: 1, b: 2 };
+const copia = Object.assign({}, originale);
+```
+
+Entrambi i metodi sono equivalenti in termini di profondità della copia.
+
+---
+
+## Clonazione profonda (Deep Copy)
+
+Una clonazione profonda copia **tutti i livelli** dell’oggetto, creando nuove istanze anche per oggetti e array annidati.
+
+### `structuredClone()`
+
+È il metodo più sicuro e moderno, supportato nei browser recenti e in Node.js.
+
+```js
+const originale = {
+  nome: "Mario",
+  indirizzo: { città: "Roma" },
+  hobbies: ["sport", "musica"],
+};
+
+const copia = structuredClone(originale);
+
+copia.indirizzo.città = "Milano";
+console.log(originale.indirizzo.città); // "Roma"
+```
+
+Supporta:
+
+- oggetti annidati
+- array
+- Date
+- Map, Set
+- riferimenti circolari
+
+Non supporta funzioni.
+
+---
+
+### Clonazione con `JSON.stringify` e `JSON.parse`
+
+Metodo semplice ma con **limitazioni importanti**.
+
+```js
+const originale = { nome: "Mario", età: 30 };
+const copia = JSON.parse(JSON.stringify(originale));
+```
+
+Limiti:
+
+- perde funzioni
+- perde `undefined`
+- perde `Date`, `Map`, `Set`
+- non gestisce riferimenti circolari
+
+Da usare solo per oggetti semplici e dati serializzabili.
+
+---
+
+## Clonazione manuale (Deep Clone personalizzato)
+
+In alcuni casi può essere utile implementare una funzione ricorsiva.
+
+```js
+function deepClone(obj) {
+  if (obj === null || typeof obj !== "object") {
+    return obj;
+  }
+
+  if (Array.isArray(obj)) {
+    return obj.map((item) => deepClone(item));
+  }
+
+  const clone = {};
+  for (const key in obj) {
+    if (obj.hasOwnProperty(key)) {
+      clone[key] = deepClone(obj[key]);
+    }
+  }
+
+  return clone;
+}
+```
+
+Questo approccio:
+
+- funziona su oggetti e array
+- non gestisce tipi speciali (Date, Map, Set)
+- non gestisce riferimenti circolari senza logica aggiuntiva
+
+È utile per comprendere il funzionamento interno, ma raramente consigliato in produzione.
+
+---
+
+## Confronto tra i metodi
+
+| Metodo               | Tipo di copia | Supporto tipi complessi | Sicurezza  |
+| -------------------- | ------------- | ----------------------- | ---------- |
+| Spread operator      | Superficiale  | No                      | Alta       |
+| Object.assign        | Superficiale  | No                      | Alta       |
+| structuredClone      | Profonda      | Sì                      | Molto alta |
+| JSON.parse/stringify | Profonda      | Limitato                | Media      |
+| Funzione custom      | Profonda      | Variabile               | Dipende    |
+
+---
+
+## Buone pratiche
+
+- Usa **spread operator** o `Object.assign` per oggetti semplici e piatti
+- Usa **structuredClone** quando hai strutture complesse
+- Evita `JSON.parse(JSON.stringify())` se non conosci perfettamente i limiti
+- Ricorda che la clonazione ha un costo in termini di performance
+- Non clonare oggetti inutilmente
+
+---
+
+## Conclusione
+
+La clonazione di oggetti è un concetto chiave in JavaScript moderno. Comprendere la differenza tra **copia superficiale** e **copia profonda** permette di scrivere codice più sicuro, prevedibile e manutenibile. Un web developer deve saper scegliere il metodo giusto in base al contesto, alla complessità dei dati e ai requisiti dell’applicazione.
