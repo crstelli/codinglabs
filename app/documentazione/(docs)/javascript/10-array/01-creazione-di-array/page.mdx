@@ -1,3 +1,169 @@
 # Creazione di array
 
-In arrivo
+In JavaScript, un **array** è una struttura dati utilizzata per memorizzare una collezione ordinata di valori. Gli array possono contenere qualsiasi tipo di dato: numeri, stringhe, oggetti, funzioni e persino altri array. Sono uno degli strumenti fondamentali nello sviluppo web e vengono utilizzati in moltissimi contesti, dal trattamento dei dati alle interazioni con il DOM.
+
+---
+
+## Cos’è un array
+
+Un array è un oggetto speciale che mantiene:
+
+- **un ordine** degli elementi (indicizzati a partire da 0)
+- **una lunghezza dinamica**
+- **metodi integrati** per la manipolazione dei dati
+
+Esempio concettuale:
+
+```
+
+Indice: 0 1 2
+Valore: 'a' 'b' 'c'
+
+```
+
+---
+
+## Creazione di un array con la sintassi letterale
+
+Il modo più comune e consigliato per creare un array è utilizzare la **sintassi letterale**, ovvero le parentesi quadre `[]`.
+
+```javascript
+const numeri = [1, 2, 3, 4, 5];
+```
+
+È possibile creare array con qualsiasi tipo di dato:
+
+```javascript
+const stringhe = ["HTML", "CSS", "JavaScript"];
+
+const misto = [42, "test", true, null];
+```
+
+Gli array possono anche contenere oggetti e funzioni:
+
+```javascript
+const utenti = [
+  { nome: "Mario", età: 30 },
+  { nome: "Luigi", età: 28 },
+];
+
+const funzioni = [
+  function () {
+    return "ciao";
+  },
+  () => 42,
+];
+```
+
+---
+
+## Creazione di un array vuoto
+
+Un array può essere inizializzato vuoto e popolato successivamente:
+
+```javascript
+const lista = [];
+```
+
+Questo approccio è comune quando i dati non sono ancora disponibili (ad esempio, risultati di una chiamata API).
+
+---
+
+## Creazione di un array con il costruttore `Array`
+
+JavaScript mette a disposizione il costruttore `Array`, ma il suo utilizzo è generalmente sconsigliato per casi semplici, perché può creare ambiguità.
+
+```javascript
+const numeri = new Array(1, 2, 3);
+```
+
+Se viene passato **un solo numero**, il comportamento cambia:
+
+```javascript
+const arrayVuoto = new Array(5);
+```
+
+In questo caso non viene creato un array con il valore `5`, ma un array con **lunghezza 5** e senza elementi definiti.
+
+Per questo motivo, nella pratica quotidiana si preferisce sempre la sintassi letterale `[]`.
+
+---
+
+## Creazione di array con valori predefiniti
+
+È possibile creare array inizializzati con valori ripetuti utilizzando metodi dedicati.
+
+### `Array.of()`
+
+Crea un array a partire dai valori passati, evitando le ambiguità del costruttore `Array`.
+
+```javascript
+const valori = Array.of(5);
+```
+
+Risultato:
+
+```javascript
+[5];
+```
+
+### `Array.from()`
+
+Crea un array a partire da un oggetto iterabile o array-like.
+
+```javascript
+const lettere = Array.from("ciao");
+```
+
+Risultato:
+
+```javascript
+["c", "i", "a", "o"];
+```
+
+È spesso usato per convertire:
+
+- NodeList
+- arguments
+- stringhe
+- strutture simili ad array
+
+---
+
+## Array con elementi non definiti
+
+È possibile creare array con “buchi” (elementi non inizializzati):
+
+```javascript
+const esempio = [1, , 3];
+```
+
+Questo tipo di struttura è generalmente sconsigliato, perché può causare comportamenti inattesi durante l’iterazione o l’uso dei metodi sugli array.
+
+---
+
+## Considerazioni sulle costanti (`const`)
+
+Un array dichiarato con `const` **può essere modificato**, ma non riassegnato:
+
+```javascript
+const numeri = [1, 2, 3];
+numeri.push(4); // valido
+
+numeri = [5, 6, 7]; // errore
+```
+
+Questo comportamento è importante per comprendere la differenza tra **mutabilità del contenuto** e **immutabilità del riferimento**.
+
+---
+
+## Best practice
+
+- Usa sempre la sintassi letterale `[]` per creare array.
+- Evita array con elementi vuoti o non definiti.
+- Mantieni omogenei i tipi di dato quando possibile.
+- Usa `const` di default e `let` solo se devi riassegnare l’array.
+
+---
+
+La corretta creazione degli array è il primo passo per sfruttare al meglio i potenti metodi di manipolazione che JavaScript mette a disposizione.

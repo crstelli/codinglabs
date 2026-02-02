@@ -1,3 +1,139 @@
 # Destructuring
 
-In arrivo
+Il **destructuring** è una sintassi di JavaScript che permette di estrarre valori da array (o proprietà da oggetti) e assegnarli a variabili in modo chiaro e conciso.
+Nel contesto degli **array**, il destructuring consente di evitare accessi ripetitivi tramite indice e rende il codice più leggibile e mantenibile.
+
+## Sintassi di base
+
+Il destructuring degli array si basa sulla posizione degli elementi.
+
+```javascript
+const numeri = [10, 20, 30];
+
+const [a, b, c] = numeri;
+
+console.log(a); // 10
+console.log(b); // 20
+console.log(c); // 30
+```
+
+Le variabili vengono assegnate seguendo l’ordine degli elementi nell’array.
+
+## Saltare elementi
+
+È possibile ignorare uno o più elementi semplicemente lasciando vuoti gli spazi tra le virgole.
+
+```javascript
+const colori = ["rosso", "verde", "blu"];
+
+const [primo, , terzo] = colori;
+
+console.log(primo); // "rosso"
+console.log(terzo); // "blu"
+```
+
+Questo approccio è utile quando servono solo alcuni valori dell’array.
+
+## Valori di default
+
+Se l’array non contiene un valore in una determinata posizione, è possibile specificare un valore di default.
+
+```javascript
+const coordinate = [5];
+
+const [x, y = 0] = coordinate;
+
+console.log(x); // 5
+console.log(y); // 0
+```
+
+Il valore di default viene utilizzato solo se l’elemento è `undefined`.
+
+## Destructuring parziale
+
+Non è necessario destrutturare l’intero array. È possibile fermarsi agli elementi di interesse.
+
+```javascript
+const utenti = ["Mario", "Luigi", "Peach", "Toad"];
+
+const [admin, moderatore] = utenti;
+
+console.log(admin); // "Mario"
+console.log(moderatore); // "Luigi"
+```
+
+## Operatore rest nel destructuring
+
+L’operatore `...` permette di raccogliere gli elementi rimanenti in un nuovo array.
+
+```javascript
+const numeri = [1, 2, 3, 4, 5];
+
+const [primo, secondo, ...resto] = numeri;
+
+console.log(primo); // 1
+console.log(secondo); // 2
+console.log(resto); // [3, 4, 5]
+```
+
+L’operatore rest deve sempre essere l’ultimo nella destrutturazione.
+
+## Scambio di valori tra variabili
+
+Il destructuring è il modo più semplice e sicuro per scambiare il valore di due variabili.
+
+```javascript
+let a = 1;
+let b = 2;
+
+[a, b] = [b, a];
+
+console.log(a); // 2
+console.log(b); // 1
+```
+
+Questo evita l’uso di variabili temporanee.
+
+## Destructuring con array restituiti da funzioni
+
+Molte funzioni restituiscono array. Il destructuring permette di lavorare direttamente sui valori restituiti.
+
+```javascript
+function getDimensioni() {
+  return [1920, 1080];
+}
+
+const [larghezza, altezza] = getDimensioni();
+
+console.log(larghezza); // 1920
+console.log(altezza); // 1080
+```
+
+## Destructuring di array multidimensionali
+
+È possibile destrutturare anche array annidati.
+
+```javascript
+const matrice = [
+  [1, 2],
+  [3, 4],
+];
+
+const [[a, b], [c, d]] = matrice;
+
+console.log(a); // 1
+console.log(b); // 2
+console.log(c); // 3
+console.log(d); // 4
+```
+
+Questo approccio è utile quando si lavora con strutture dati complesse come matrici o coordinate.
+
+## Buone pratiche
+
+- Usare il destructuring quando migliora la leggibilità del codice.
+- Evitare destrutturazioni troppo complesse in una sola riga.
+- Preferire nomi di variabili chiari e coerenti con il contenuto dell’array.
+- Combinare destructuring e valori di default per scrivere codice più robusto.
+
+Il destructuring degli array è uno strumento potente che, se usato correttamente, rende il codice JavaScript più espressivo, pulito e professionale.

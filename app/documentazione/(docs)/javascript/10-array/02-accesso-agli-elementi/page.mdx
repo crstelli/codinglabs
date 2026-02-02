@@ -1,3 +1,139 @@
 # Accesso agli elementi
 
-In arrivo
+In JavaScript, un **array** è una struttura dati ordinata che consente di memorizzare più valori in un’unica variabile. Ogni elemento dell’array è associato a un **indice numerico**, che permette di accedervi in modo diretto ed efficiente.
+
+---
+
+## Indici degli array
+
+Gli array in JavaScript sono **zero-based**, ovvero l’indice del primo elemento è `0`.
+
+```js
+const linguaggi = ["HTML", "CSS", "JavaScript"];
+
+linguaggi[0]; // "HTML"
+linguaggi[1]; // "CSS"
+linguaggi[2]; // "JavaScript"
+```
+
+L’indice rappresenta la posizione dell’elemento all’interno dell’array.
+
+---
+
+## Accesso in lettura
+
+Per leggere un valore è sufficiente usare la **notazione con parentesi quadre**:
+
+```js
+const numeri = [10, 20, 30];
+
+const primo = numeri[0]; // 10
+const ultimo = numeri[2]; // 30
+```
+
+Se si tenta di accedere a un indice che non esiste, il risultato sarà `undefined`:
+
+```js
+numeri[5]; // undefined
+```
+
+Questo comportamento non genera errori, ma è importante tenerne conto per evitare bug logici.
+
+---
+
+## Accesso in scrittura
+
+È possibile **modificare un elemento esistente** assegnando un nuovo valore all’indice desiderato:
+
+```js
+const colori = ["rosso", "verde", "blu"];
+
+colori[1] = "giallo";
+
+console.log(colori); // ["rosso", "giallo", "blu"]
+```
+
+È anche possibile assegnare un valore a un indice non ancora esistente. In questo caso l’array verrà esteso e gli indici intermedi verranno riempiti con `undefined`:
+
+```js
+const arr = [1, 2];
+
+arr[5] = 10;
+
+console.log(arr);
+// [1, 2, undefined, undefined, undefined, 10]
+```
+
+---
+
+## Accesso all’ultimo elemento
+
+Un’operazione molto comune è ottenere l’ultimo elemento di un array. Poiché la lunghezza dell’array può variare, si utilizza la proprietà `length`:
+
+```js
+const stack = ["a", "b", "c"];
+
+const ultimo = stack[stack.length - 1]; // "c"
+```
+
+Questo approccio è preferibile rispetto all’uso di indici fissi.
+
+---
+
+## Accesso tramite variabili
+
+Gli indici possono essere dinamici, ovvero contenuti in una variabile:
+
+```js
+const giorni = ["Lunedì", "Martedì", "Mercoledì"];
+const indice = 1;
+
+console.log(giorni[indice]); // "Martedì"
+```
+
+Questo è particolarmente utile nei cicli e nelle funzioni.
+
+---
+
+## Controllo dell’esistenza di un indice
+
+Per verificare se un indice esiste realmente nell’array (e non è solo `undefined`), si può usare l’operatore `in`:
+
+```js
+const dati = [10, 20, 30];
+
+0 in dati; // true
+3 in dati; // false
+```
+
+Questo controllo è utile quando si lavora con array sparsi o generati dinamicamente.
+
+---
+
+## Accesso agli elementi di array di oggetti
+
+Quando un array contiene oggetti, l’accesso avviene in due passaggi: prima l’indice, poi la proprietà dell’oggetto.
+
+```js
+const utenti = [
+  { nome: "Marco", età: 30 },
+  { nome: "Laura", età: 28 },
+];
+
+utenti[0].nome; // "Marco"
+utenti[1].età; // 28
+```
+
+Questo schema è molto comune nello sviluppo web, soprattutto nella gestione di dati provenienti da API.
+
+---
+
+## Errori comuni da evitare
+
+- Confondere l’indice con la posizione “umana” (il primo elemento è `0`, non `1`)
+- Accedere a indici non validi senza controlli
+- Dare per scontata la presenza di un valore senza verificare la lunghezza dell’array
+
+---
+
+L’accesso corretto agli elementi di un array è una competenza fondamentale in JavaScript. Comprendere come funzionano indici, lettura e scrittura consente di scrivere codice più sicuro, leggibile e performante, sia in contesti semplici che in applicazioni complesse.

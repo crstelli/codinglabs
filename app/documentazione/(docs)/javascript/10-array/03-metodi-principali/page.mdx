@@ -1,3 +1,227 @@
 # Metodi principali
 
-In arrivo
+Gli array in JavaScript mettono a disposizione numerosi metodi integrati che permettono di leggere, modificare, aggiungere o rimuovere elementi in modo semplice ed efficace. Conoscere bene questi metodi è fondamentale per scrivere codice chiaro, manutenibile e performante.
+
+In questa sezione vediamo i **metodi principali degli array**, concentrandoci sul loro comportamento, sugli effetti collaterali e sui casi d’uso più comuni.
+
+---
+
+## Metodi per aggiungere e rimuovere elementi
+
+### `push()`
+
+Aggiunge uno o più elementi **alla fine** dell’array e restituisce la nuova lunghezza.
+
+```js
+const numeri = [1, 2, 3];
+numeri.push(4, 5);
+// [1, 2, 3, 4, 5]
+```
+
+- Modifica l’array originale
+- Complessità generalmente O(1)
+
+---
+
+### `pop()`
+
+Rimuove **l’ultimo elemento** dell’array e lo restituisce.
+
+```js
+const numeri = [1, 2, 3];
+const ultimo = numeri.pop();
+// ultimo = 3
+// numeri = [1, 2]
+```
+
+- Modifica l’array originale
+
+---
+
+### `unshift()`
+
+Aggiunge uno o più elementi **all’inizio** dell’array.
+
+```js
+const numeri = [2, 3];
+numeri.unshift(0, 1);
+// [0, 1, 2, 3]
+```
+
+- Modifica l’array originale
+- Più costoso di `push()` perché sposta tutti gli indici
+
+---
+
+### `shift()`
+
+Rimuove **il primo elemento** dell’array e lo restituisce.
+
+```js
+const numeri = [1, 2, 3];
+const primo = numeri.shift();
+// primo = 1
+// numeri = [2, 3]
+```
+
+- Modifica l’array originale
+- Operazione costosa su array grandi
+
+---
+
+## Metodi per unire e copiare array
+
+### `concat()`
+
+Unisce due o più array restituendo **un nuovo array**.
+
+```js
+const a = [1, 2];
+const b = [3, 4];
+const risultato = a.concat(b);
+// [1, 2, 3, 4]
+```
+
+- Non modifica gli array originali
+- Alternativa funzionale allo spread operator
+
+---
+
+### `slice()`
+
+Restituisce una **copia di una porzione** dell’array.
+
+```js
+const numeri = [1, 2, 3, 4, 5];
+const sottoArray = numeri.slice(1, 4);
+// [2, 3, 4]
+```
+
+- Non modifica l’array originale
+- Accetta indici negativi
+
+---
+
+## Metodi per modificare il contenuto
+
+### `splice()`
+
+Aggiunge, rimuove o sostituisce elementi in una posizione specifica.
+
+```js
+const numeri = [1, 2, 3, 4];
+numeri.splice(1, 2, 9, 10);
+// [1, 9, 10, 4]
+```
+
+- Modifica l’array originale
+- Molto potente ma va usato con attenzione
+
+---
+
+### `fill()`
+
+Sostituisce gli elementi di un array con un valore specifico.
+
+```js
+const array = [1, 2, 3];
+array.fill(0);
+// [0, 0, 0]
+```
+
+- Modifica l’array originale
+- Utile per inizializzazioni rapide
+
+---
+
+## Metodi di ordinamento e inversione
+
+### `sort()`
+
+Ordina gli elementi dell’array **come stringhe**, a meno di fornire una funzione di confronto.
+
+```js
+const numeri = [10, 2, 5];
+numeri.sort((a, b) => a - b);
+// [2, 5, 10]
+```
+
+- Modifica l’array originale
+- Fondamentale usare una compare function con numeri
+
+---
+
+### `reverse()`
+
+Inverte l’ordine degli elementi.
+
+```js
+const numeri = [1, 2, 3];
+numeri.reverse();
+// [3, 2, 1]
+```
+
+- Modifica l’array originale
+
+---
+
+## Metodi di ricerca e verifica
+
+### `includes()`
+
+Verifica se un valore è presente nell’array.
+
+```js
+const numeri = [1, 2, 3];
+numeri.includes(2); // true
+```
+
+- Restituisce un boolean
+- Confronto basato su `===`
+
+---
+
+### `indexOf()` e `lastIndexOf()`
+
+Restituiscono l’indice di un elemento, o `-1` se non trovato.
+
+```js
+const lettere = ["a", "b", "a"];
+lettere.indexOf("a"); // 0
+lettere.lastIndexOf("a"); // 2
+```
+
+---
+
+## Metodi di conversione
+
+### `join()`
+
+Converte l’array in una stringa.
+
+```js
+const parole = ["JavaScript", "è", "potente"];
+parole.join(" ");
+// "JavaScript è potente"
+```
+
+---
+
+### `toString()`
+
+Converte l’array in stringa separando gli elementi con una virgola.
+
+```js
+[1, 2, 3].toString();
+// "1,2,3"
+```
+
+---
+
+## Considerazioni importanti
+
+- Molti metodi **modificano l’array originale** (`push`, `pop`, `splice`, `sort`)
+- Altri restituiscono **nuovi array**, favorendo uno stile più funzionale (`slice`, `concat`)
+- In contesti moderni (React, Vue, stato immutabile) è preferibile evitare mutazioni dirette
+
+Conoscere a fondo questi metodi permette di scegliere lo strumento giusto in base al contesto, migliorando la qualità del codice e prevenendo bug difficili da individuare.

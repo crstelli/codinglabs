@@ -1,3 +1,193 @@
 # Array multidimensionali
 
-In arrivo
+In JavaScript non esiste un tipo di dato specifico chiamato “array multidimensionale”. Quello che viene comunemente definito così è, in realtà, un array che contiene altri array come elementi. Questa struttura permette di rappresentare dati complessi come tabelle, griglie, matrici o collezioni annidate.
+
+Gli array multidimensionali sono molto usati nello sviluppo web per gestire dati strutturati, come risultati di query, configurazioni, layout o dati provenienti da API.
+
+---
+
+## Cos’è un array multidimensionale
+
+Un array multidimensionale è un array i cui elementi sono a loro volta array.
+
+Esempio di array bidimensionale:
+
+```javascript
+const matrice = [
+  [1, 2, 3],
+  [4, 5, 6],
+  [7, 8, 9],
+];
+```
+
+In questo caso:
+
+- `matrice` è un array
+- ogni elemento di `matrice` è un altro array
+- la struttura rappresenta una matrice 3x3
+
+È possibile creare anche array con più livelli di annidamento (tridimensionali o oltre), anche se nella pratica si tende a limitare la profondità per mantenere il codice leggibile.
+
+---
+
+## Accesso agli elementi
+
+Per accedere a un elemento di un array multidimensionale si usano più indici, uno per ogni livello.
+
+```javascript
+const matrice = [
+  ["a", "b", "c"],
+  ["d", "e", "f"],
+];
+
+console.log(matrice[0][1]); // "b"
+console.log(matrice[1][2]); // "f"
+```
+
+La lettura va da sinistra a destra:
+
+1. `matrice[0]` restituisce il primo array interno
+2. `[1]` accede al secondo elemento di quell’array
+
+È importante verificare sempre che gli indici esistano per evitare errori di tipo `undefined`.
+
+---
+
+## Modifica degli elementi
+
+Gli elementi di un array multidimensionale possono essere modificati come in un array normale.
+
+```javascript
+const griglia = [
+  [0, 0],
+  [0, 0],
+];
+
+griglia[1][0] = 1;
+
+console.log(griglia);
+// [
+//   [0, 0],
+//   [1, 0]
+// ]
+```
+
+La modifica agisce direttamente sull’array originale.
+
+---
+
+## Iterare su array multidimensionali
+
+### Cicli annidati
+
+Il metodo più classico è usare cicli annidati, uno per ogni livello.
+
+```javascript
+const matrice = [
+  [1, 2],
+  [3, 4],
+];
+
+for (let i = 0; i < matrice.length; i++) {
+  for (let j = 0; j < matrice[i].length; j++) {
+    console.log(matrice[i][j]);
+  }
+}
+```
+
+Questo approccio è chiaro e controllabile, soprattutto quando la struttura non è regolare.
+
+---
+
+### forEach annidato
+
+È possibile usare anche `forEach` per rendere il codice più espressivo.
+
+```javascript
+matrice.forEach((riga) => {
+  riga.forEach((valore) => {
+    console.log(valore);
+  });
+});
+```
+
+Questo stile è spesso preferito in contesti funzionali o quando non servono indici numerici.
+
+---
+
+## Array multidimensionali irregolari
+
+Gli array interni non devono necessariamente avere la stessa lunghezza.
+
+```javascript
+const dati = [[1, 2, 3], [4], [5, 6]];
+```
+
+Questa struttura è valida, ma richiede maggiore attenzione durante l’iterazione, perché non tutte le righe hanno lo stesso numero di elementi.
+
+---
+
+## Copia e riferimenti
+
+Un aspetto critico degli array multidimensionali è la gestione dei riferimenti.
+
+```javascript
+const originale = [
+  [1, 2],
+  [3, 4],
+];
+const copia = originale.slice();
+
+copia[0][0] = 99;
+
+console.log(originale[0][0]); // 99
+```
+
+`slice()` crea una copia superficiale: l’array esterno viene copiato, ma gli array interni restano riferimenti agli originali.
+
+Per creare una copia profonda è necessario clonare anche i livelli interni.
+
+Esempio semplice:
+
+```javascript
+const copiaProfonda = originale.map((riga) => [...riga]);
+```
+
+---
+
+## Uso pratico: rappresentare una tabella
+
+Un caso d’uso comune è rappresentare una tabella di dati.
+
+```javascript
+const tabella = [
+  ["Nome", "Età", "Città"],
+  ["Luca", 30, "Milano"],
+  ["Anna", 25, "Roma"],
+];
+```
+
+- ogni array interno rappresenta una riga
+- ogni elemento rappresenta una colonna
+
+Questa struttura è semplice, flessibile e facilmente iterabile.
+
+---
+
+## Quando usare array multidimensionali
+
+Gli array multidimensionali sono adatti quando:
+
+- l’ordine dei dati è importante
+- i dati hanno una struttura ripetitiva
+- non servono chiavi descrittive (in quel caso gli oggetti sono più adatti)
+
+Per strutture molto complesse o dati semantici, una combinazione di array e oggetti può essere più leggibile e manutenibile.
+
+---
+
+## Considerazioni finali
+
+Gli array multidimensionali sono uno strumento potente ma da usare con consapevolezza. Più livelli di annidamento aumentano la complessità del codice e la possibilità di errori. Uno sviluppatore esperto tende a mantenere le strutture il più semplici possibile, scegliendo la soluzione più leggibile in base al contesto applicativo.
+
+Comprendere a fondo come funzionano gli array annidati è fondamentale per gestire dati complessi in JavaScript in modo efficace e professionale.

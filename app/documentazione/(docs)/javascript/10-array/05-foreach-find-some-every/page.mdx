@@ -1,3 +1,177 @@
 # forEach, find, some, every
 
-In arrivo
+In JavaScript, gli array mettono a disposizione diversi metodi di iterazione che permettono di lavorare sui dati in modo dichiarativo, leggibile ed efficiente. In questo articolo analizziamo `forEach`, `find`, `some` ed `every`, concentrandoci sul loro comportamento, sui casi d’uso più comuni e sulle differenze principali tra loro.
+
+---
+
+## forEach
+
+Il metodo `forEach` permette di eseguire una funzione per **ogni elemento** di un array.
+
+### Sintassi
+
+```javascript
+array.forEach((elemento, indice, array) => {
+  // codice da eseguire
+});
+```
+
+### Caratteristiche principali
+
+- Itera su **tutti** gli elementi dell’array
+- Non restituisce alcun valore (`undefined`)
+- Non interrompe l’iterazione (non supporta `break` o `return`)
+- È usato principalmente per **effetti collaterali** (log, modifiche esterne, chiamate a funzioni)
+
+### Esempio
+
+```javascript
+const numeri = [1, 2, 3, 4];
+
+numeri.forEach((numero) => {
+  console.log(numero * 2);
+});
+```
+
+### Quando usarlo
+
+Usa `forEach` quando devi:
+
+- Stampare valori
+- Aggiornare variabili esterne
+- Eseguire operazioni che **non richiedono un valore di ritorno**
+
+Se devi trasformare o filtrare dati, è preferibile usare `map`, `filter` o `reduce`.
+
+---
+
+## find
+
+Il metodo `find` restituisce il **primo elemento** dell’array che soddisfa una determinata condizione.
+
+### Sintassi
+
+```javascript
+const risultato = array.find((elemento, indice, array) => {
+  return condizione;
+});
+```
+
+### Caratteristiche principali
+
+- Restituisce **un singolo elemento**
+- Si ferma alla **prima corrispondenza**
+- Se nessun elemento soddisfa la condizione, restituisce `undefined`
+
+### Esempio
+
+```javascript
+const utenti = [
+  { id: 1, nome: "Mario" },
+  { id: 2, nome: "Luigi" },
+];
+
+const utente = utenti.find((u) => u.id === 2);
+```
+
+### Quando usarlo
+
+Usa `find` quando:
+
+- Devi cercare un elemento specifico
+- Ti interessa **solo il primo risultato**
+- Vuoi evitare di iterare inutilmente su tutto l’array
+
+---
+
+## some
+
+Il metodo `some` verifica se **almeno un elemento** dell’array soddisfa una condizione.
+
+### Sintassi
+
+```javascript
+const risultato = array.some((elemento, indice, array) => {
+  return condizione;
+});
+```
+
+### Caratteristiche principali
+
+- Restituisce un valore booleano (`true` o `false`)
+- Si interrompe appena trova un elemento valido
+- Non modifica l’array originale
+
+### Esempio
+
+```javascript
+const numeri = [3, 7, 12];
+
+const haNumeriGrandi = numeri.some((n) => n > 10);
+```
+
+### Quando usarlo
+
+Usa `some` quando:
+
+- Devi verificare una condizione di **esistenza**
+- Vuoi sapere se **almeno un elemento** rispetta una regola
+- Stai validando dati o controllando stati
+
+---
+
+## every
+
+Il metodo `every` verifica se **tutti gli elementi** dell’array soddisfano una condizione.
+
+### Sintassi
+
+```javascript
+const risultato = array.every((elemento, indice, array) => {
+  return condizione;
+});
+```
+
+### Caratteristiche principali
+
+- Restituisce un valore booleano
+- Si interrompe al **primo elemento non valido**
+- Un array vuoto restituisce sempre `true`
+
+### Esempio
+
+```javascript
+const voti = [7, 8, 6];
+
+const tuttiSufficienti = voti.every((v) => v >= 6);
+```
+
+### Quando usarlo
+
+Usa `every` quando:
+
+- Devi applicare una regola globale
+- Vuoi verificare una **condizione collettiva**
+- Stai validando input o configurazioni
+
+---
+
+## Confronto rapido
+
+| Metodo  | Ritorna   | Si ferma prima | Uso principale               |
+| ------- | --------- | -------------- | ---------------------------- |
+| forEach | undefined | No             | Esecuzione di operazioni     |
+| find    | elemento  | Sì             | Ricerca di un singolo valore |
+| some    | boolean   | Sì             | Verifica parziale            |
+| every   | boolean   | Sì             | Verifica totale              |
+
+---
+
+## Considerazioni da sviluppatore
+
+- Preferisci `find`, `some` ed `every` quando possibile: sono più performanti perché interrompono l’iterazione.
+- Evita `forEach` per logiche complesse o trasformazioni di dati.
+- Questi metodi migliorano la **leggibilità** del codice e riducono l’uso di cicli `for` tradizionali.
+- Scrivere condizioni chiare e funzioni pure rende il codice più manutenibile e testabile.
+
+Questi strumenti sono fondamentali per scrivere JavaScript moderno, espressivo e orientato alla qualità del codice.

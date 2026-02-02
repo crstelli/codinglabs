@@ -1,3 +1,173 @@
 # Spread operator
 
-In arrivo
+Lo **spread operator** (`...`) è una sintassi introdotta in ES6 che permette di **espandere** il contenuto di un array (o di un oggetto, ma qui ci concentriamo sugli array) in un altro contesto.
+È uno strumento fondamentale nello sviluppo JavaScript moderno perché rende il codice più **leggibile**, **immutabile** e **manutenibile**.
+
+---
+
+## Cos’è lo spread operator
+
+Applicato a un array, lo spread operator prende **tutti i suoi elementi** e li “scompone” uno a uno.
+
+```js
+const numeri = [1, 2, 3];
+console.log(...numeri); // 1 2 3
+```
+
+In questo esempio l’array non viene passato come un’unica struttura, ma come singoli valori.
+
+---
+
+## Copiare un array
+
+Uno degli utilizzi più comuni dello spread operator è la **copia di un array**.
+
+```js
+const originale = [1, 2, 3];
+const copia = [...originale];
+```
+
+Questo crea una **nuova istanza** dell’array.
+Modificare `copia` **non influenzerà** `originale`.
+
+```js
+copia.push(4);
+
+console.log(originale); // [1, 2, 3]
+console.log(copia); // [1, 2, 3, 4]
+```
+
+Questo approccio è preferibile rispetto all’assegnazione diretta:
+
+```js
+const copia = originale; // riferimento allo stesso array
+```
+
+---
+
+## Unire array
+
+Lo spread operator permette di **unire più array** in modo semplice e leggibile.
+
+```js
+const a = [1, 2];
+const b = [3, 4];
+const unito = [...a, ...b];
+
+console.log(unito); // [1, 2, 3, 4]
+```
+
+È possibile anche inserire valori aggiuntivi:
+
+```js
+const risultato = [0, ...a, 5];
+```
+
+Questo sostituisce molti casi d’uso di `concat`, con una sintassi più chiara.
+
+---
+
+## Aggiungere elementi a un array senza modificarlo
+
+Nella programmazione moderna (React, Redux, ecc.) è importante **non mutare gli array originali**.
+
+```js
+const numeri = [1, 2, 3];
+const nuoviNumeri = [...numeri, 4];
+```
+
+Oppure per aggiungere all’inizio:
+
+```js
+const nuoviNumeri = [0, ...numeri];
+```
+
+In entrambi i casi, l’array originale rimane invariato.
+
+---
+
+## Rimuovere o sostituire elementi
+
+Combinando lo spread operator con `slice`, è possibile creare nuovi array senza modificare l’originale.
+
+```js
+const numeri = [1, 2, 3, 4];
+
+const senzaDue = [...numeri.slice(0, 1), ...numeri.slice(2)];
+
+// [1, 3, 4]
+```
+
+Questo approccio è utile quando si lavora con stato immutabile.
+
+---
+
+## Passare array come argomenti di funzione
+
+Lo spread operator permette di passare i valori di un array come **argomenti separati**.
+
+```js
+const numeri = [5, 10, 2];
+
+Math.max(...numeri); // 10
+```
+
+Senza spread, la funzione riceverebbe un array invece dei singoli valori.
+
+---
+
+## Spread operator e array nidificati
+
+Lo spread operator effettua una **copia superficiale (shallow copy)**.
+
+```js
+const originale = [
+  [1, 2],
+  [3, 4],
+];
+const copia = [...originale];
+```
+
+L’array esterno è nuovo, ma gli array interni sono ancora riferimenti condivisi.
+
+```js
+copia[0].push(99);
+
+console.log(originale); // [[1, 2, 99], [3, 4]]
+```
+
+Per copiare anche i livelli interni serve una copia più profonda (deep copy).
+
+---
+
+## Differenza tra spread operator e rest parameter
+
+La stessa sintassi `...` ha due significati diversi a seconda del contesto:
+
+- **Spread operator**: espande un array
+- **Rest parameter**: raccoglie valori in un array
+
+```js
+function somma(...numeri) {
+  return numeri.reduce((a, b) => a + b, 0);
+}
+```
+
+Qui `...numeri` è un rest parameter, non uno spread operator.
+
+---
+
+## Buone pratiche
+
+- Usa lo spread operator per lavorare con array **immutabili**
+- Preferiscilo a `concat` per chiarezza e leggibilità
+- Ricorda che non crea copie profonde
+- È ideale per codice moderno, funzionale e dichiarativo
+
+---
+
+## Conclusione
+
+Lo spread operator è uno strumento essenziale per la gestione degli array in JavaScript.
+Permette di scrivere codice più pulito, prevedibile e coerente con le best practice moderne dello sviluppo web.
+Capirlo a fondo è fondamentale sia per chi inizia sia per chi lavora su applicazioni complesse e scalabili.

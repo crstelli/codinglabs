@@ -1,3 +1,179 @@
 # map, filter, reduce
 
-In arrivo
+I metodi `map`, `filter` e `reduce` sono tra i più importanti e utilizzati quando si lavora con gli array in JavaScript. Consentono di **trasformare**, **selezionare** ed **aggregare** i dati in modo dichiarativo, leggibile ed efficiente, senza modificare l’array originale.
+
+Sono fondamentali sia per chi inizia sia per sviluppatori esperti, perché permettono di scrivere codice più pulito, prevedibile e facilmente manutenibile.
+
+---
+
+## map()
+
+Il metodo `map()` serve per **trasformare ogni elemento di un array** e restituire un **nuovo array** con la stessa lunghezza dell’originale.
+
+### Sintassi
+
+```js
+array.map((elemento, indice, array) => {
+  return nuovoElemento;
+});
+```
+
+- **elemento**: valore corrente dell’array
+- **indice** (opzionale): indice dell’elemento
+- **array** (opzionale): array originale
+
+### Caratteristiche principali
+
+- Non modifica l’array originale
+- Restituisce sempre un nuovo array
+- Mantiene la stessa lunghezza dell’array di partenza
+
+### Esempio base
+
+```js
+const numeri = [1, 2, 3, 4];
+
+const quadrati = numeri.map((numero) => numero * numero);
+
+console.log(quadrati); // [1, 4, 9, 16]
+```
+
+### Esempio con oggetti
+
+```js
+const utenti = [
+  { nome: "Mario", eta: 30 },
+  { nome: "Luca", eta: 25 },
+];
+
+const nomi = utenti.map((utente) => utente.nome);
+
+console.log(nomi); // ["Mario", "Luca"]
+```
+
+---
+
+## filter()
+
+Il metodo `filter()` serve per **selezionare solo alcuni elementi** di un array in base a una condizione. Restituisce un **nuovo array** contenente solo gli elementi che soddisfano la condizione.
+
+### Sintassi
+
+```js
+array.filter((elemento, indice, array) => {
+  return condizioneBooleana;
+});
+```
+
+### Caratteristiche principali
+
+- Non modifica l’array originale
+- La lunghezza del nuovo array può essere diversa
+- Gli elementi vengono inclusi solo se la callback restituisce `true`
+
+### Esempio base
+
+```js
+const numeri = [1, 2, 3, 4, 5, 6];
+
+const pari = numeri.filter((numero) => numero % 2 === 0);
+
+console.log(pari); // [2, 4, 6]
+```
+
+### Esempio con oggetti
+
+```js
+const prodotti = [
+  { nome: "Laptop", prezzo: 1200 },
+  { nome: "Mouse", prezzo: 25 },
+  { nome: "Monitor", prezzo: 300 },
+];
+
+const costosi = prodotti.filter((prodotto) => prodotto.prezzo > 100);
+
+console.log(costosi);
+```
+
+---
+
+## reduce()
+
+Il metodo `reduce()` è il più potente e flessibile dei tre. Serve per **ridurre un array a un singolo valore**, che può essere un numero, una stringa, un oggetto o persino un altro array.
+
+### Sintassi
+
+```js
+array.reduce((accumulatore, elemento, indice, array) => {
+  return nuovoValoreAccumulatore;
+}, valoreIniziale);
+```
+
+- **accumulatore**: valore accumulato tra le iterazioni
+- **elemento**: elemento corrente
+- **valoreIniziale**: valore iniziale dell’accumulatore
+
+### Caratteristiche principali
+
+- Non modifica l’array originale
+- Estremamente flessibile
+- Può replicare il comportamento di `map`, `filter` e molto altro
+
+### Somma dei valori di un array
+
+```js
+const numeri = [1, 2, 3, 4];
+
+const somma = numeri.reduce((acc, numero) => acc + numero, 0);
+
+console.log(somma); // 10
+```
+
+### Calcolo di un totale da oggetti
+
+```js
+const ordini = [{ totale: 50 }, { totale: 30 }, { totale: 20 }];
+
+const totaleOrdini = ordini.reduce((acc, ordine) => acc + ordine.totale, 0);
+
+console.log(totaleOrdini); // 100
+```
+
+### Creare un oggetto a partire da un array
+
+```js
+const utenti = [
+  { id: 1, nome: "Mario" },
+  { id: 2, nome: "Luca" },
+];
+
+const utentiPerId = utenti.reduce((acc, utente) => {
+  acc[utente.id] = utente;
+  return acc;
+}, {});
+
+console.log(utentiPerId);
+```
+
+---
+
+## Confronto tra map, filter e reduce
+
+| Metodo | Scopo principale              | Ritorno          |
+| ------ | ----------------------------- | ---------------- |
+| map    | Trasformazione                | Nuovo array      |
+| filter | Selezione                     | Nuovo array      |
+| reduce | Aggregazione / trasformazione | Qualsiasi valore |
+
+---
+
+## Considerazioni da sviluppatore senior
+
+- Usa `map` quando **ogni elemento deve diventare qualcos’altro**
+- Usa `filter` quando **vuoi rimuovere elementi non desiderati**
+- Usa `reduce` quando **devi calcolare o costruire un valore finale**
+- Preferisci `map` e `filter` per chiarezza, anche se `reduce` può fare tutto
+- Mantieni le callback semplici e leggibili
+- Evita side effect all’interno delle callback
+
+Questi tre metodi rappresentano il cuore della programmazione funzionale in JavaScript e sono essenziali per scrivere codice moderno, pulito e professionale.
