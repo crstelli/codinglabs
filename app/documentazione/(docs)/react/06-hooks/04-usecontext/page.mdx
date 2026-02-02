@@ -1,3 +1,235 @@
 # useContext
 
-In arrivo
+`useContext` è un Hook di React che permette di **consumare un contesto** all’interno di un componente funzionale, evitando il passaggio manuale delle props attraverso più livelli dell’albero dei componenti (prop drilling).
+
+È particolarmente utile quando più componenti, anche molto distanti tra loro, devono accedere agli stessi dati globali, come:
+
+- tema grafico (dark/light)
+- lingua dell’applicazione
+- dati dell’utente autenticato
+- configurazioni globali
+- stato condiviso tra molte parti dell’interfaccia
+
+---
+
+## Cos’è il Context in React
+
+Il **Context** fornisce un modo per rendere un valore disponibile a tutti i componenti discendenti, senza doverlo passare esplicitamente come prop a ogni livello.
+
+Un contesto è composto da due elementi principali:
+
+- **Provider**: fornisce il valore
+- **Consumer**: utilizza il valore (con `useContext`)
+
+---
+
+## Creazione di un Context
+
+Un contesto si crea usando `createContext`:
+
+```jsx
+import { createContext } from "react";
+
+const ThemeContext = createContext();
+```
+
+È possibile (e consigliato) passare un **valore di default**, utile in fase di test o se un componente viene renderizzato fuori da un Provider:
+
+```jsx
+const ThemeContext = createContext("light");
+```
+
+---
+
+## Il Provider
+
+Il Provider rende disponibile il valore del contesto a tutti i componenti figli.
+
+```jsx
+function App() {
+  return (
+    <ThemeContext.Provider value="dark">
+      <Layout />
+    </ThemeContext.Provider>
+  );
+}
+```
+
+Tutti i componenti all’interno di `Layout` (e dei suoi figli) potranno accedere al valore `"dark"`.
+
+---
+
+## Utilizzo di useContext
+
+Per leggere il valore del contesto si utilizza l’Hook `useContext`:
+
+```jsx
+import { useContext } from "react";
+
+function Header() {
+  const theme = useContext(ThemeContext);
+
+  return <h1>Tema attuale: {theme}</h1>;
+}
+```
+
+`useContext`:
+
+- accetta **un solo argomento**, il contesto
+- restituisce il **valore corrente** fornito dal Provider più vicino nell’albero
+
+---
+
+## Come funziona la risoluzione del valore
+
+React cerca il Provider **più vicino verso l’alto** nell’albero dei componenti.
+
+```jsx
+<ThemeContext.Provider value="light">
+  <Page>
+    <ThemeContext.Provider value="dark">
+      <Header />
+    </ThemeContext.Provider>
+  </Page>
+</ThemeContext.Provider>
+```
+
+In questo caso `Header` riceverà `"dark"`.
+
+---
+
+## Context con oggetti e stato
+
+Spesso il valore del contesto è un oggetto o uno stato:
+
+```jsx
+const UserContext = createContext(null);
+
+function App() {
+  const [user, setUser] = useState(null);
+
+  return (
+    <UserContext.Provider value={{ user, setUser }}>
+      <Dashboard />
+    </UserContext.Provider>
+  );
+}
+```
+
+Nel componente consumer:
+
+```jsx
+function Profile() {
+  const { user, setUser } = useContext(UserContext);
+
+  if (!user) return <p>Non autenticato</p>;
+
+  return <p>Benvenuto, {user.name}</p>;
+}
+```
+
+---
+
+## useContext e performance
+
+Ogni volta che il valore del Provider cambia, **tutti i componenti che usano quel contesto vengono ri-renderizzati**, anche se usano solo una parte del valore.
+
+### Buone pratiche:
+
+- Evitare contesti troppo grandi o troppo generici
+- Separare i contesti per responsabilità (es. `AuthContext`, `ThemeContext`)
+- Usare `useMemo` per stabilizzare il valore passato al Provider
+
+Esempio:
+
+```jsx
+const value = useMemo(() => ({ user, setUser }), [user]);
+
+<UserContext.Provider value={value}>{children}</UserContext.Provider>;
+```
+
+---
+
+## useContext vs props
+
+### Quando usare le props
+
+- Relazione diretta genitore → figlio
+- Dati specifici e locali
+- Componenti riutilizzabili e isolati
+
+### Quando usare useContext
+
+- Dati globali o condivisi
+- Molti livelli di profondità
+- Stato applicativo trasversale
+
+`useContext` **non sostituisce le props**, le affianca.
+
+---
+
+## useContext non è uno state manager
+
+Il Context:
+
+- non gestisce la logica di aggiornamento
+- non sostituisce Redux, Zustand o simili
+- non è ottimizzato per aggiornamenti frequenti
+
+È ideale per **stato statico o poco dinamico** e per configurazioni globali.
+
+---
+
+## Errori comuni
+
+### Usare useContext fuori da un Provider
+
+Se non esiste un Provider, viene restituito il valore di default:
+
+```jsx
+const value = useContext(MyContext);
+```
+
+Questo può causare bug silenziosi. Una soluzione comune è:
+
+```jsx
+function useMyContext() {
+  const context = useContext(MyContext);
+  if (!context) {
+    throw new Error("useMyContext deve essere usato dentro MyProvider");
+  }
+  return context;
+}
+```
+
+---
+
+## Pattern consigliato: Context + Custom Hook
+
+```jsx
+const ThemeContext = createContext(null);
+
+export function ThemeProvider({ children }) {
+  const [theme, setTheme] = useState("light");
+
+  return <ThemeContext.Provider value={{ theme, setTheme }}>{children}</ThemeContext.Provider>;
+}
+
+export function useTheme() {
+  return useContext(ThemeContext);
+}
+```
+
+Questo approccio:
+
+- migliora la leggibilità
+- centralizza la logica
+- rende il codice più manutenibile
+
+---
+
+## Conclusione
+
+`useContext` è uno strumento potente per la condivisione dello stato in React, ma va usato con criterio. È ideale per dati globali e configurazioni comuni, mentre per stato complesso e molto dinamico è preferibile affiancarlo ad altri strumenti.
+
+Un utilizzo corretto di `useContext`, combinato con una buona struttura dei componenti, contribuisce a creare applicazioni React pulite, scalabili e facilmente manutenibili.

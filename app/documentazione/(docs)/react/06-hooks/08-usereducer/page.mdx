@@ -1,3 +1,185 @@
 # useReducer
 
-In arrivo
+`useReducer` è un Hook di React utilizzato per gestire **stati complessi** o **logiche di aggiornamento articolate**, ed è spesso un’alternativa più strutturata a `useState`. È particolarmente utile quando lo stato dipende da più azioni, quando contiene più valori correlati o quando la logica di aggiornamento deve essere centralizzata e facilmente manutenibile.
+
+## Cos’è useReducer
+
+`useReducer` si ispira direttamente al pattern **Reducer** molto diffuso in JavaScript e in librerie come Redux. L’idea di base è separare:
+
+- **lo stato**
+- **le azioni che descrivono cosa deve succedere**
+- **la logica che decide come lo stato cambia**
+
+In questo modo il codice risulta più prevedibile, testabile e scalabile.
+
+## Sintassi di base
+
+```jsx
+const [state, dispatch] = useReducer(reducer, initialState);
+```
+
+- `state`: lo stato corrente
+- `dispatch`: funzione usata per inviare azioni
+- `reducer`: funzione pura che gestisce gli aggiornamenti dello stato
+- `initialState`: valore iniziale dello stato
+
+## Il reducer
+
+Il **reducer** è una funzione che riceve due argomenti:
+
+```jsx
+function reducer(state, action) {
+  return newState;
+}
+```
+
+- `state`: lo stato attuale
+- `action`: un oggetto che descrive l’azione da eseguire
+
+Il reducer **non deve mai modificare direttamente lo stato**, ma restituire un nuovo stato.
+
+### Esempio di reducer
+
+```jsx
+function counterReducer(state, action) {
+  switch (action.type) {
+    case "increment":
+      return { count: state.count + 1 };
+    case "decrement":
+      return { count: state.count - 1 };
+    case "reset":
+      return { count: 0 };
+    default:
+      return state;
+  }
+}
+```
+
+## Utilizzo di useReducer in un componente
+
+```jsx
+import { useReducer } from "react";
+
+function Counter() {
+  const [state, dispatch] = useReducer(counterReducer, { count: 0 });
+
+  return (
+    <div>
+      <p>Valore: {state.count}</p>
+      <button onClick={() => dispatch({ type: "increment" })}>Incrementa</button>
+      <button onClick={() => dispatch({ type: "decrement" })}>Decrementa</button>
+      <button onClick={() => dispatch({ type: "reset" })}>Reset</button>
+    </div>
+  );
+}
+```
+
+In questo esempio:
+
+- il componente non conosce la logica di aggiornamento dello stato
+- invia solo **azioni descrittive**
+- il reducer decide come aggiornare lo stato
+
+## Struttura delle azioni
+
+Le azioni sono semplici oggetti JavaScript. La proprietà `type` è una convenzione, ma è fortemente consigliata.
+
+```jsx
+dispatch({
+  type: "increment",
+  payload: 5,
+});
+```
+
+Nel reducer:
+
+```jsx
+case "increment":
+  return { count: state.count + action.payload };
+```
+
+Questo approccio rende il codice più estensibile e leggibile.
+
+## Stato complesso con useReducer
+
+`useReducer` è ideale quando lo stato è un oggetto con più proprietà correlate.
+
+```jsx
+const initialState = {
+  loading: false,
+  data: null,
+  error: null,
+};
+```
+
+Reducer:
+
+```jsx
+function dataReducer(state, action) {
+  switch (action.type) {
+    case "fetch_start":
+      return { ...state, loading: true, error: null };
+    case "fetch_success":
+      return { loading: false, data: action.payload, error: null };
+    case "fetch_error":
+      return { loading: false, data: null, error: action.payload };
+    default:
+      return state;
+  }
+}
+```
+
+Questo pattern è molto comune nella gestione di chiamate API.
+
+## useReducer vs useState
+
+### Quando preferire useReducer
+
+- Stato complesso o annidato
+- Molte azioni diverse che modificano lo stato
+- Logica di aggiornamento articolata
+- Necessità di codice più prevedibile e testabile
+- Condivisione della stessa logica di stato tra più componenti
+
+### Quando useState è sufficiente
+
+- Stato semplice
+- Aggiornamenti diretti e poco complessi
+- Componenti piccoli o isolati
+
+## Integrazione con useContext
+
+`useReducer` viene spesso usato insieme a `useContext` per creare una **gestione globale dello stato** senza librerie esterne.
+
+Pattern comune:
+
+- `useReducer` gestisce lo stato
+- `Context` espone `state` e `dispatch`
+
+Questo approccio è adatto a progetti di media complessità.
+
+## Inizializzazione pigra (lazy initialization)
+
+Per stati iniziali costosi da calcolare è possibile usare una funzione di inizializzazione:
+
+```jsx
+const [state, dispatch] = useReducer(reducer, initialArg, init);
+
+function init(initialArg) {
+  return { count: initialArg };
+}
+```
+
+La funzione `init` viene eseguita solo una volta al primo render.
+
+## Best practice
+
+- Mantieni i reducer **puri** (niente effetti collaterali)
+- Usa `switch` o mappe di funzioni per chiarezza
+- Centralizza la logica di aggiornamento nello stesso file
+- Dai nomi chiari alle azioni
+- Evita reducer troppo grandi: suddividi la logica se necessario
+
+## Conclusione
+
+`useReducer` è uno strumento potente per gestire stati complessi in React. Favorisce una separazione chiara delle responsabilità, migliora la leggibilità del codice e rende le applicazioni più scalabili. Anche se può sembrare più verboso rispetto a `useState`, diventa rapidamente indispensabile man mano che la complessità dell’applicazione cresce.

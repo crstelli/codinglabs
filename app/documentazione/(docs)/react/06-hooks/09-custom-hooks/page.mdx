@@ -1,3 +1,257 @@
 # Custom Hooks
 
-In arrivo
+I **Custom Hooks** sono una delle caratteristiche più potenti di React. Permettono di **estrarre e riutilizzare logica di stato** tra più componenti, senza duplicare codice e senza introdurre complessità strutturali come avveniva in passato con HOC o render props.
+
+Un Custom Hook è semplicemente **una funzione JavaScript** che:
+
+- inizia con il prefisso `use`
+- utilizza uno o più Hooks di React al suo interno
+- restituisce valori e/o funzioni utili ai componenti che lo usano
+
+Non introducono nuove funzionalità a React, ma consentono di **organizzare meglio il codice**, rendendolo più leggibile, manutenibile e testabile.
+
+---
+
+## Perché usare i Custom Hooks
+
+I Custom Hooks sono utili quando:
+
+- La stessa logica di stato è presente in più componenti
+- Un componente sta diventando troppo grande e difficile da leggere
+- Vuoi separare la logica dal markup JSX
+- Vuoi creare API interne riutilizzabili all’interno dell’applicazione
+
+In un’ottica da sviluppatore senior, i Custom Hooks sono fondamentali per:
+
+- migliorare la **separazione delle responsabilità**
+- ridurre la **duplicazione del codice**
+- favorire la **scalabilità** del progetto
+
+---
+
+## Struttura di un Custom Hook
+
+La struttura base di un Custom Hook è la seguente:
+
+```jsx
+function useNomeHook() {
+  // logica
+  return qualcosa;
+}
+```
+
+Regole fondamentali:
+
+- Il nome **deve iniziare con `use`**
+- Può usare qualsiasi Hook (`useState`, `useEffect`, ecc.)
+- Può restituire valori primitivi, oggetti, array o funzioni
+
+---
+
+## Esempio base: gestione di uno stato
+
+Un esempio semplice di Custom Hook che incapsula uno stato:
+
+```jsx
+import { useState } from "react";
+
+function useCounter(initialValue = 0) {
+  const [count, setCount] = useState(initialValue);
+
+  const increment = () => setCount((c) => c + 1);
+  const decrement = () => setCount((c) => c - 1);
+  const reset = () => setCount(initialValue);
+
+  return {
+    count,
+    increment,
+    decrement,
+    reset,
+  };
+}
+
+export default useCounter;
+```
+
+Utilizzo nel componente:
+
+```jsx
+function Counter() {
+  const { count, increment, decrement, reset } = useCounter(10);
+
+  return (
+    <>
+      <p>{count}</p>
+      <button onClick={increment}>+</button>
+      <button onClick={decrement}>-</button>
+      <button onClick={reset}>Reset</button>
+    </>
+  );
+}
+```
+
+La logica è completamente separata dal componente.
+
+---
+
+## Custom Hooks e useEffect
+
+I Custom Hooks sono particolarmente utili per astrarre logiche basate su `useEffect`, come fetch di dati, listener o side effects complessi.
+
+```jsx
+import { useState, useEffect } from "react";
+
+function useFetch(url) {
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    setLoading(true);
+
+    fetch(url)
+      .then((res) => res.json())
+      .then((json) => {
+        if (isMounted) {
+          setData(json);
+          setError(null);
+        }
+      })
+      .catch((err) => {
+        if (isMounted) setError(err);
+      })
+      .finally(() => {
+        if (isMounted) setLoading(false);
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, [url]);
+
+  return { data, loading, error };
+}
+
+export default useFetch;
+```
+
+Il componente diventa molto più pulito:
+
+```jsx
+function Users() {
+  const { data, loading, error } = useFetch("/api/users");
+
+  if (loading) return <p>Caricamento...</p>;
+  if (error) return <p>Errore</p>;
+
+  return (
+    <ul>
+      {data.map((user) => (
+        <li key={user.id}>{user.name}</li>
+      ))}
+    </ul>
+  );
+}
+```
+
+---
+
+## Custom Hooks con parametri
+
+Un Custom Hook può ricevere parametri per renderlo flessibile e riutilizzabile.
+
+```jsx
+function useToggle(initialValue = false) {
+  const [value, setValue] = useState(initialValue);
+
+  const toggle = () => setValue((v) => !v);
+
+  return [value, toggle];
+}
+```
+
+Utilizzo:
+
+```jsx
+const [isOpen, toggleOpen] = useToggle();
+```
+
+Restituire un array o un oggetto dipende dallo stile e dalla chiarezza dell’API che vuoi offrire.
+
+---
+
+## Condivisione dello stato
+
+È importante chiarire che **ogni utilizzo di un Custom Hook crea il proprio stato**.
+
+```jsx
+const a = useCounter();
+const b = useCounter();
+```
+
+`a` e `b` non condividono lo stesso stato.
+
+Se serve **stato condiviso**, il Custom Hook deve lavorare insieme a:
+
+- `useContext`
+- librerie di state management
+- pattern come provider
+
+---
+
+## Custom Hooks e Context
+
+Un pattern molto comune è incapsulare l’accesso al Context in un Custom Hook.
+
+```jsx
+import { useContext } from "react";
+import { AuthContext } from "./AuthContext";
+
+function useAuth() {
+  const context = useContext(AuthContext);
+
+  if (!context) {
+    throw new Error("useAuth deve essere usato dentro AuthProvider");
+  }
+
+  return context;
+}
+
+export default useAuth;
+```
+
+Questo migliora:
+
+- sicurezza
+- leggibilità
+- esperienza di sviluppo
+
+---
+
+## Best practice
+
+- Un Custom Hook deve avere **una responsabilità chiara**
+- Il nome deve descrivere cosa fa (`useFetch`, `useAuth`, `useForm`)
+- Evita Custom Hooks troppo generici o troppo complessi
+- Non inserire JSX nei Custom Hooks
+- Documenta cosa restituisce e quali parametri accetta
+
+---
+
+## Quando NON usare un Custom Hook
+
+Non è necessario creare un Custom Hook se:
+
+- La logica è usata una sola volta
+- Il codice è già semplice e leggibile
+- L’astrazione non porta reali benefici
+
+Un buon sviluppatore sa quando astrarre e quando no.
+
+---
+
+## Conclusione
+
+I Custom Hooks sono uno strumento fondamentale per scrivere codice React pulito, modulare e scalabile. Consentono di riutilizzare logica complessa mantenendo i componenti semplici e focalizzati sulla UI. Utilizzati correttamente, rappresentano uno dei pattern più eleganti e potenti dell’ecosistema React.

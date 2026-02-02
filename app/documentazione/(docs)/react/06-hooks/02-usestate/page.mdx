@@ -1,3 +1,222 @@
 # useState
 
-In arrivo
+`useState` è uno degli Hooks fondamentali di React. Permette di gestire lo **stato locale** all’interno dei componenti funzionali, rendendo possibile creare interfacce dinamiche e reattive senza utilizzare le classi.
+
+Prima dell’introduzione degli Hooks, lo stato era disponibile solo nei componenti di classe. Con `useState`, anche i componenti funzionali possono mantenere e aggiornare dati nel tempo.
+
+---
+
+## Cos’è lo stato in React
+
+Lo **stato** rappresenta un insieme di dati che possono cambiare durante il ciclo di vita di un componente. Quando lo stato cambia, React **riesegue il rendering** del componente per riflettere i nuovi valori nell’interfaccia utente.
+
+Esempi tipici di stato:
+
+- valori di input
+- contatori
+- flag booleani (aperto/chiuso, attivo/disattivo)
+- dati recuperati da un’API
+
+---
+
+## Importazione di useState
+
+Per utilizzare `useState`, è necessario importarlo da React:
+
+```javascript
+import { useState } from "react";
+```
+
+---
+
+## Sintassi di base
+
+La sintassi di `useState` è la seguente:
+
+```javascript
+const [state, setState] = useState(valoreIniziale);
+```
+
+- `state`: valore corrente dello stato
+- `setState`: funzione per aggiornare lo stato
+- `valoreIniziale`: valore iniziale dello stato (può essere di qualsiasi tipo)
+
+### Esempio semplice
+
+```javascript
+function Counter() {
+  const [count, setCount] = useState(0);
+
+  return (
+    <div>
+      <p>Conteggio: {count}</p>
+      <button onClick={() => setCount(count + 1)}>Incrementa</button>
+    </div>
+  );
+}
+```
+
+In questo esempio:
+
+- `count` parte da `0`
+- ogni clic sul bottone aggiorna lo stato
+- il componente viene ri-renderizzato mostrando il nuovo valore
+
+---
+
+## Tipi di stato supportati
+
+`useState` non è limitato ai numeri. Può gestire qualsiasi tipo di dato JavaScript.
+
+### Stringhe
+
+```javascript
+const [name, setName] = useState("");
+```
+
+### Booleani
+
+```javascript
+const [isOpen, setIsOpen] = useState(false);
+```
+
+### Array
+
+```javascript
+const [items, setItems] = useState([]);
+```
+
+### Oggetti
+
+```javascript
+const [user, setUser] = useState({
+  name: "",
+  age: 0,
+});
+```
+
+---
+
+## Aggiornare lo stato correttamente
+
+### Stato primitivo
+
+Per tipi primitivi (numero, stringa, booleano) è sufficiente passare il nuovo valore:
+
+```javascript
+setCount(10);
+```
+
+### Stato basato sul valore precedente
+
+Quando il nuovo stato dipende dal valore precedente, è **fortemente consigliato** usare la forma funzionale:
+
+```javascript
+setCount((prevCount) => prevCount + 1);
+```
+
+Questa forma evita problemi legati a render asincroni e aggiornamenti multipli.
+
+---
+
+## Aggiornare oggetti e array
+
+`useState` **non unisce automaticamente** gli oggetti come faceva `setState` nei componenti di classe. È necessario creare una nuova copia dello stato.
+
+### Oggetti
+
+```javascript
+setUser((prevUser) => ({
+  ...prevUser,
+  name: "Mario",
+}));
+```
+
+### Array
+
+```javascript
+setItems((prevItems) => [...prevItems, "Nuovo elemento"]);
+```
+
+È fondamentale **non mutare direttamente** lo stato:
+
+```javascript
+// SBAGLIATO
+items.push("Elemento");
+setItems(items);
+```
+
+---
+
+## Inizializzazione lazy dello stato
+
+Se il valore iniziale richiede un calcolo costoso, è possibile passare una funzione a `useState`. Questa verrà eseguita **solo al primo render**.
+
+```javascript
+const [value, setValue] = useState(() => {
+  return calcoloCostoso();
+});
+```
+
+Questo approccio migliora le prestazioni evitando calcoli inutili ad ogni render.
+
+---
+
+## Stato e rendering
+
+Ogni chiamata a `setState`:
+
+- programma un nuovo render del componente
+- non aggiorna immediatamente il valore (comportamento asincrono)
+- può essere raggruppata con altri aggiornamenti (batching)
+
+```javascript
+setCount(count + 1);
+console.log(count); // valore precedente
+```
+
+Per ottenere il valore aggiornato, bisogna affidarsi al render successivo o a `useEffect`.
+
+---
+
+## Più useState nello stesso componente
+
+È possibile usare `useState` più volte nello stesso componente:
+
+```javascript
+const [name, setName] = useState("");
+const [age, setAge] = useState(0);
+const [isAdmin, setIsAdmin] = useState(false);
+```
+
+Questo approccio è spesso preferibile rispetto a un unico oggetto di stato, perché rende il codice:
+
+- più leggibile
+- più facile da manutenere
+- meno soggetto a errori
+
+---
+
+## Best practice
+
+- Usa uno stato **minimale**: conserva solo ciò che è necessario
+- Evita stati derivabili da props o da altri stati
+- Preferisci più `useState` piccoli invece di un grande oggetto
+- Usa sempre la forma funzionale quando il nuovo stato dipende dal precedente
+- Non mutare mai direttamente lo stato
+
+---
+
+## Quando usare useState
+
+`useState` è ideale per:
+
+- stato locale del componente
+- interazioni UI semplici
+- componenti riutilizzabili e isolati
+
+Per stati complessi, con molte transizioni o logiche articolate, può essere più appropriato usare `useReducer` o uno stato globale tramite `useContext` o librerie dedicate.
+
+---
+
+`useState` rappresenta la base della gestione dello stato in React moderno. Comprenderne a fondo il funzionamento è essenziale per costruire applicazioni robuste, performanti e facili da mantenere.

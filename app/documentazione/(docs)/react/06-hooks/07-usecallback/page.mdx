@@ -1,3 +1,229 @@
 # useCallback
 
-In arrivo
+`useCallback` è un Hook di React che permette di **memorizzare una funzione** tra un rendering e l’altro. Il suo scopo principale è **evitare la ricreazione inutile di funzioni**, migliorando le prestazioni e prevenendo render superflui di componenti figli.
+
+In React, ogni volta che un componente viene renderizzato, **tutte le funzioni definite al suo interno vengono ricreate**. Nella maggior parte dei casi questo comportamento non causa problemi, ma può diventare critico quando:
+
+- una funzione viene passata come `prop` a componenti ottimizzati (es. `React.memo`)
+- una funzione è una dipendenza di `useEffect`, `useMemo` o altri Hook
+- il componente viene renderizzato frequentemente
+
+`useCallback` consente di mantenere **lo stesso riferimento alla funzione** finché le sue dipendenze non cambiano.
+
+---
+
+## Sintassi
+
+```jsx
+const memoizedCallback = useCallback(() => {
+  // logica della funzione
+}, [dipendenze]);
+```
+
+- **Primo argomento**: la funzione da memorizzare
+- **Secondo argomento**: array delle dipendenze
+  - la funzione verrà ricreata solo se una delle dipendenze cambia
+
+---
+
+## Perché usare useCallback
+
+In JavaScript, le funzioni sono oggetti. Anche se due funzioni hanno lo stesso codice, **sono considerate diverse se create in momenti diversi**.
+
+```jsx
+const handleClick = () => {
+  console.log("Click");
+};
+```
+
+Ad ogni render, `handleClick` è una **nuova funzione**.
+
+Questo può causare problemi quando:
+
+- il confronto avviene per riferimento (`===`)
+- un componente figlio dipende dalla stabilità delle `props`
+
+`useCallback` risolve il problema mantenendo **lo stesso riferimento alla funzione**.
+
+---
+
+## Esempio base
+
+```jsx
+import { useCallback } from "react";
+
+function Counter({ onIncrement }) {
+  return <button onClick={onIncrement}>Incrementa</button>;
+}
+
+function App() {
+  const increment = useCallback(() => {
+    console.log("Incremento");
+  }, []);
+
+  return <Counter onIncrement={increment} />;
+}
+```
+
+In questo esempio:
+
+- `increment` **non viene ricreata** ad ogni render di `App`
+- il riferimento rimane stabile finché le dipendenze non cambiano
+
+---
+
+## useCallback e React.memo
+
+`useCallback` è particolarmente utile in combinazione con `React.memo`.
+
+```jsx
+const Button = React.memo(({ onClick }) => {
+  console.log("Render Button");
+  return <button onClick={onClick}>Clicca</button>;
+});
+```
+
+Senza `useCallback`, il componente `Button` verrebbe renderizzato ogni volta, perché `onClick` sarebbe una nuova funzione.
+
+```jsx
+function App() {
+  const handleClick = useCallback(() => {
+    console.log("Click");
+  }, []);
+
+  return <Button onClick={handleClick} />;
+}
+```
+
+In questo caso:
+
+- `Button` viene renderizzato solo se `handleClick` cambia
+- si evita un render inutile
+
+---
+
+## Dipendenze di useCallback
+
+Le dipendenze indicano **da quali valori esterni dipende la funzione**.
+
+```jsx
+const handleSave = useCallback(() => {
+  saveData(userId);
+}, [userId]);
+```
+
+Se `userId` cambia:
+
+- la funzione viene ricreata
+- il riferimento cambia correttamente
+
+Omettere una dipendenza può causare **bug difficili da individuare**, perché la funzione potrebbe usare valori obsoleti.
+
+---
+
+## useCallback vs useMemo
+
+Spesso vengono confusi, ma hanno scopi diversi:
+
+- `useCallback` memorizza **una funzione**
+- `useMemo` memorizza **il risultato di una funzione**
+
+```jsx
+const memoizedCallback = useCallback(() => {
+  doSomething(value);
+}, [value]);
+
+const memoizedValue = useMemo(() => {
+  return computeExpensiveValue(value);
+}, [value]);
+```
+
+Concettualmente:
+
+```jsx
+useCallback(fn, deps);
+// è equivalente a
+useMemo(() => fn, deps);
+```
+
+---
+
+## Quando NON usare useCallback
+
+`useCallback` **non va usato indiscriminatamente**. Ogni Hook ha un costo cognitivo e computazionale.
+
+Evita `useCallback` quando:
+
+- la funzione non viene passata a componenti figli
+- il componente non ha problemi di performance
+- la funzione è semplice e non causa render inutili
+
+In molti casi, React è già sufficientemente veloce senza ottimizzazioni premature.
+
+---
+
+## Esempio con stato
+
+```jsx
+function App() {
+  const [count, setCount] = useState(0);
+
+  const increment = useCallback(() => {
+    setCount((prev) => prev + 1);
+  }, []);
+
+  return <button onClick={increment}>{count}</button>;
+}
+```
+
+Qui:
+
+- si usa la forma funzionale di `setState`
+- non è necessario inserire `count` tra le dipendenze
+- la funzione rimane stabile
+
+---
+
+## useCallback e dipendenze errate
+
+Esempio di errore comune:
+
+```jsx
+const increment = useCallback(() => {
+  setCount(count + 1);
+}, []);
+```
+
+Questo codice:
+
+- usa `count`
+- ma `count` **non è tra le dipendenze**
+- la funzione userà sempre il valore iniziale
+
+Soluzioni corrette:
+
+- aggiungere `count` alle dipendenze
+- oppure usare l’aggiornamento funzionale
+
+---
+
+## Benefici principali
+
+- Stabilità del riferimento delle funzioni
+- Riduzione dei render inutili
+- Migliore integrazione con `React.memo`
+- Controllo preciso delle dipendenze
+
+---
+
+## Conclusione
+
+`useCallback` è uno strumento di ottimizzazione fondamentale in React moderno, ma va usato **con consapevolezza**. Non serve a rendere il codice “più corretto”, ma a **renderlo più efficiente** in contesti specifici.
+
+Un buon sviluppatore React sa:
+
+- quando usarlo
+- quando evitarlo
+- come gestire correttamente le dipendenze
+
+Usato nel modo giusto, `useCallback` contribuisce a creare applicazioni più performanti, scalabili e manutenibili.

@@ -1,3 +1,201 @@
 # Regole degli Hooks
 
-In arrivo
+Gli Hooks sono una delle funzionalità più importanti di React moderno, ma per funzionare correttamente devono essere utilizzati seguendo regole precise. Queste regole non sono semplici convenzioni stilistiche: sono necessarie per garantire che React possa gestire correttamente lo stato e il ciclo di vita dei componenti.
+
+In questa sezione analizziamo in modo chiaro e approfondito le **Regole degli Hooks**, spiegando il perché esistono, cosa succede se vengono violate e come applicarle correttamente nel codice reale.
+
+---
+
+## Perché esistono le Regole degli Hooks
+
+React si basa sull’ordine di esecuzione degli Hooks per associare correttamente stato, effetti e riferimenti a ogni render del componente.  
+Poiché JavaScript non fornisce informazioni statiche sull’ordine delle chiamate a funzione, React impone regole rigide per garantire che l’ordine degli Hooks rimanga **sempre coerente tra un render e l’altro**.
+
+Violando queste regole, React non è più in grado di capire a quale Hook corrisponde uno specifico stato, causando bug difficili da diagnosticare.
+
+---
+
+## Regola 1: Chiama gli Hooks solo al livello superiore
+
+Gli Hooks **devono essere chiamati sempre al livello superiore del componente o del custom hook**.
+
+### Cosa significa
+
+Non è consentito chiamare un Hook:
+
+- all’interno di `if`, `else`, `switch`
+- all’interno di cicli (`for`, `while`, `map`)
+- all’interno di funzioni annidate
+- all’interno di callback o event handler
+
+### Esempio scorretto
+
+```js
+if (isLoggedIn) {
+  const [user, setUser] = useState(null);
+}
+```
+
+### Esempio corretto
+
+```js
+const [user, setUser] = useState(null);
+
+if (isLoggedIn) {
+  // logica che usa lo stato
+}
+```
+
+### Motivo tecnico
+
+React si aspetta che gli Hooks vengano chiamati **nello stesso ordine a ogni render**. Le condizioni alterano questo ordine e rompono il meccanismo interno di React.
+
+---
+
+## Regola 2: Chiama gli Hooks solo da componenti React o Custom Hooks
+
+Gli Hooks **possono essere usati esclusivamente**:
+
+- all’interno di componenti funzionali React
+- all’interno di custom hooks
+
+### Non possono essere usati in:
+
+- funzioni JavaScript normali
+- classi
+- file di utilità generici
+- metodi statici
+
+### Esempio scorretto
+
+```js
+function fetchData() {
+  const [data, setData] = useState(null);
+}
+```
+
+### Esempio corretto
+
+```js
+function useFetchData() {
+  const [data, setData] = useState(null);
+  return data;
+}
+```
+
+### Convenzione di naming
+
+I custom hooks **devono iniziare con `use`**.
+Questo permette a React e agli strumenti di linting di riconoscerli e applicare automaticamente le regole.
+
+---
+
+## Regola 3: Non chiamare Hooks in modo condizionale
+
+Anche se apparentemente simile alla prima regola, questa è così importante da essere considerata a sé stante.
+
+### Esempio errato comune
+
+```js
+if (props.enabled) {
+  useEffect(() => {
+    // effetto
+  }, []);
+}
+```
+
+### Soluzione corretta
+
+```js
+useEffect(() => {
+  if (!props.enabled) return;
+  // effetto
+}, [props.enabled]);
+```
+
+La **condizione deve stare dentro l’Hook**, non attorno alla sua chiamata.
+
+---
+
+## Regola 4: Mantieni stabile l’ordine degli Hooks
+
+Ogni Hook deve essere chiamato **sempre nello stesso ordine**.
+
+### Esempio problematico
+
+```js
+if (condition) {
+  useEffect(() => {}, []);
+}
+
+useState(0);
+```
+
+Se `condition` cambia tra un render e l’altro, l’ordine degli Hooks cambia, causando comportamenti imprevedibili.
+
+### Principio chiave
+
+Se un Hook è necessario, deve essere chiamato **sempre**, indipendentemente dallo stato o dalle props.
+
+---
+
+## Regola 5: Usa correttamente le dipendenze degli Hooks
+
+Alcuni Hooks (`useEffect`, `useCallback`, `useMemo`) accettano una **dependency array**.
+Questa lista indica a React **quando rieseguire l’Hook**.
+
+### Regola fondamentale
+
+Tutte le variabili utilizzate all’interno dell’Hook e provenienti dallo scope esterno **devono essere incluse nelle dipendenze**.
+
+### Esempio
+
+```js
+useEffect(() => {
+  console.log(userId);
+}, [userId]);
+```
+
+Omettere dipendenze porta a:
+
+- valori obsoleti
+- bug silenziosi
+- comportamenti incoerenti
+
+### ESLint
+
+Il plugin ufficiale `eslint-plugin-react-hooks` aiuta a individuare errori nelle dipendenze ed è fortemente consigliato in ogni progetto React.
+
+---
+
+## Regola 6: Non abusare degli Hooks
+
+Anche se non è una regola formale, è una buona pratica fondamentale.
+
+- Usa `useMemo` e `useCallback` solo quando necessario
+- Non ottimizzare prematuramente
+- Mantieni il codice leggibile e prevedibile
+
+Un Hook in più non migliora automaticamente le performance, ma può aumentare la complessità.
+
+---
+
+## Errori comuni da evitare
+
+- Chiamare Hooks dentro `try/catch`
+- Chiamare Hooks dopo un `return`
+- Usare Hooks in componenti condizionali renderizzati manualmente
+- Creare custom hooks che non rispettano le stesse regole
+
+---
+
+## Riepilogo delle Regole degli Hooks
+
+1. Chiama gli Hooks solo al livello superiore
+2. Chiama gli Hooks solo in componenti React o custom hooks
+3. Non chiamare Hooks in modo condizionale
+4. Mantieni sempre lo stesso ordine di chiamata
+5. Specifica correttamente le dipendenze
+6. Usa gli Hooks con criterio e consapevolezza
+
+Seguendo queste regole, il codice React rimane prevedibile, stabile e facile da mantenere, anche in applicazioni complesse e scalabili.

@@ -1,3 +1,253 @@
 # useMemo
 
-In arrivo
+`useMemo` è un Hook di React utilizzato per **memorizzare (memoizzare) il risultato di un calcolo** e riutilizzarlo tra i render, evitando ricalcoli inutili quando le dipendenze non cambiano.
+È uno strumento pensato per **ottimizzare le performance**, non per gestire lo stato o il ciclo di vita del componente.
+
+---
+
+## Cos’è `useMemo`
+
+In React, ogni render di un componente riesegue **tutto il corpo della funzione**. Questo significa che:
+
+- funzioni costose vengono ricalcolate a ogni render
+- anche se i dati di input non sono cambiati
+
+`useMemo` permette di dire a React:
+
+> “Ricalcola questo valore **solo se** cambiano determinate dipendenze, altrimenti riutilizza quello precedente.”
+
+---
+
+## Sintassi
+
+```jsx
+const valoreMemoizzato = useMemo(() => {
+  return calcoloCostoso;
+}, [dipendenze]);
+```
+
+### Parametri
+
+- **Callback**
+  Una funzione che restituisce il valore da memorizzare.
+
+- **Array delle dipendenze**
+  React ricalcolerà il valore **solo quando una o più dipendenze cambiano**.
+
+### Valore di ritorno
+
+- Il valore restituito dalla callback, memorizzato tra i render.
+
+---
+
+## Esempio base
+
+```jsx
+import { useMemo } from "react";
+
+function Somma({ numeri }) {
+  const totale = useMemo(() => {
+    console.log("Calcolo in corso...");
+    return numeri.reduce((acc, n) => acc + n, 0);
+  }, [numeri]);
+
+  return <p>Totale: {totale}</p>;
+}
+```
+
+In questo esempio:
+
+- il calcolo viene eseguito **solo se `numeri` cambia**
+- nei render successivi, React riutilizza il valore già calcolato
+
+---
+
+## Perché `useMemo` migliora le performance
+
+Senza `useMemo`:
+
+```jsx
+const totale = numeri.reduce((acc, n) => acc + n, 0);
+```
+
+- il calcolo viene eseguito **a ogni render**
+- anche se `numeri` è identico
+
+Con `useMemo`:
+
+- il calcolo viene **saltato** se le dipendenze non cambiano
+- si riduce il carico computazionale
+- si evitano render lenti in componenti complessi
+
+---
+
+## Quando usare `useMemo`
+
+Usa `useMemo` quando:
+
+- il calcolo è **costoso** (loop grandi, filtri complessi, trasformazioni pesanti)
+- il valore calcolato viene usato:
+  - nel render
+  - come prop per componenti memoizzati (`React.memo`)
+
+- il componente renderizza spesso
+
+Esempi tipici:
+
+- filtri su grandi array
+- ordinamenti complessi
+- calcoli derivati da stato o props
+- trasformazioni di dati per grafici o tabelle
+
+---
+
+## Quando **non** usare `useMemo`
+
+Non usare `useMemo`:
+
+- per calcoli banali (somma di pochi numeri, semplici condizioni)
+- “preventivamente” senza un problema reale
+- come sostituto dello stato
+
+`useMemo` ha un costo di gestione interno. Usarlo ovunque può **peggiorare** le performance invece di migliorarle.
+
+---
+
+## Dipendenze: concetto fondamentale
+
+L’array delle dipendenze determina **quando il valore viene ricalcolato**.
+
+```jsx
+useMemo(() => calcolo, [a, b]);
+```
+
+- se `a` o `b` cambiano → ricalcolo
+- se restano uguali → valore memorizzato
+
+### Attenzione ai riferimenti
+
+```jsx
+useMemo(() => calcolo, [{ x: 1 }]);
+```
+
+Questo è sbagliato perché:
+
+- l’oggetto viene ricreato a ogni render
+- React lo considera sempre diverso
+- la memoizzazione è inutile
+
+Le dipendenze devono essere **stabili**.
+
+---
+
+## `useMemo` e render
+
+`useMemo` **non impedisce il render del componente**.
+Serve solo a:
+
+- evitare ricalcoli inutili
+- mantenere lo stesso riferimento al valore
+
+Se vuoi evitare il render di un componente figlio, devi usare:
+
+- `React.memo`
+- `useCallback` (per le funzioni)
+- `useMemo` (per i valori)
+
+---
+
+## Differenza tra `useMemo` e `useCallback`
+
+| Hook          | Cosa memoizza    |
+| ------------- | ---------------- |
+| `useMemo`     | Un **valore**    |
+| `useCallback` | Una **funzione** |
+
+Esempio equivalente:
+
+```jsx
+const valore = useMemo(() => calcolo(), [deps]);
+```
+
+```jsx
+const funzione = useCallback(() => {
+  calcolo();
+}, [deps]);
+```
+
+Internamente, `useCallback` è una forma specializzata di `useMemo`.
+
+---
+
+## Uso con componenti memoizzati
+
+```jsx
+const listaFiltrata = useMemo(() => {
+  return items.filter((item) => item.attivo);
+}, [items]);
+
+return <Lista items={listaFiltrata} />;
+```
+
+Se `Lista` è avvolto in `React.memo`:
+
+- il componente figlio non viene ri-renderizzato
+- finché `listaFiltrata` mantiene lo stesso riferimento
+
+---
+
+## Errori comuni
+
+### Usare `useMemo` per side effects
+
+```jsx
+useMemo(() => {
+  fetchDati();
+}, []);
+```
+
+Questo è **sbagliato**.
+`useMemo` non è pensato per effetti collaterali.
+
+Per questo si usa `useEffect`.
+
+---
+
+### Omettere dipendenze
+
+```jsx
+useMemo(() => valore * fattore, []);
+```
+
+Se `fattore` cambia, il valore resta obsoleto.
+Le dipendenze devono includere **tutto ciò che viene usato nella callback**.
+
+---
+
+## `useMemo` non è una garanzia
+
+React **può decidere di scartare** il valore memoizzato in alcune situazioni (es. modalità concurrent).
+`useMemo` è un’ottimizzazione, non una promessa assoluta.
+
+Il codice deve funzionare correttamente **anche senza `useMemo`**.
+
+---
+
+## Best practice
+
+- Introduci `useMemo` **solo dopo aver identificato un problema di performance**
+- Usa strumenti come React DevTools e Profiler
+- Mantieni le dipendenze semplici e stabili
+- Preferisci codice leggibile a micro-ottimizzazioni premature
+
+---
+
+## Riepilogo
+
+- `useMemo` memoizza il **risultato di un calcolo**
+- viene ricalcolato solo se le dipendenze cambiano
+- serve per ottimizzare le performance
+- non gestisce stato né side effects
+- va usato con criterio e consapevolezza
+
+`useMemo` è uno strumento potente nelle mani giuste, ma come ogni ottimizzazione va applicato solo quando necessario.

@@ -1,3 +1,217 @@
 # useEffect
 
-In arrivo
+`useEffect` è uno degli Hooks fondamentali di React e viene utilizzato per gestire gli **effetti collaterali** (side effects) all’interno dei componenti funzionali.  
+Con effetti collaterali si intendono tutte quelle operazioni che esulano dal semplice rendering dell’interfaccia, come:
+
+- Chiamate HTTP / API
+- Manipolazione del DOM
+- Gestione di timer e interval
+- Sottoscrizioni a eventi o stream
+- Sincronizzazione con sistemi esterni (localStorage, WebSocket, ecc.)
+
+Prima degli Hooks, questo tipo di logica veniva gestita tramite i metodi del ciclo di vita dei componenti a classe (`componentDidMount`, `componentDidUpdate`, `componentWillUnmount`).  
+`useEffect` unifica e semplifica questi comportamenti in un’unica API.
+
+---
+
+## Sintassi di base
+
+```jsx
+useEffect(() => {
+  // codice dell'effetto
+}, [dipendenze]);
+```
+
+`useEffect` accetta due argomenti:
+
+1. **Una funzione** che contiene il codice dell’effetto
+2. **Un array di dipendenze** (opzionale) che controlla quando l’effetto deve essere eseguito
+
+---
+
+## Quando viene eseguito useEffect
+
+Il comportamento di `useEffect` dipende dal secondo argomento (array di dipendenze).
+
+### 1. useEffect senza array di dipendenze
+
+```jsx
+useEffect(() => {
+  console.log("Effetto eseguito");
+});
+```
+
+- L’effetto viene eseguito **dopo ogni render**
+- Include sia il render iniziale che quelli successivi
+
+Questo approccio è raramente consigliato, perché può causare problemi di performance o loop di render.
+
+---
+
+### 2. useEffect con array di dipendenze vuoto
+
+```jsx
+useEffect(() => {
+  console.log("Effetto eseguito una sola volta");
+}, []);
+```
+
+- L’effetto viene eseguito **solo dopo il primo render**
+- Comportamento equivalente a `componentDidMount`
+
+È ideale per:
+
+- Fetch iniziali
+- Inizializzazioni
+- Setup di eventi o librerie esterne
+
+---
+
+### 3. useEffect con dipendenze specifiche
+
+```jsx
+useEffect(() => {
+  console.log("count è cambiato");
+}, [count]);
+```
+
+- L’effetto viene eseguito:
+  - Dopo il primo render
+  - Ogni volta che una delle dipendenze cambia valore
+
+React confronta i valori precedenti e successivi delle dipendenze usando un confronto per riferimento.
+
+---
+
+## Cleanup degli effetti
+
+Un effetto può restituire una funzione di **cleanup**, che viene eseguita:
+
+- Prima che l’effetto venga rieseguito
+- Quando il componente viene smontato
+
+```jsx
+useEffect(() => {
+  const interval = setInterval(() => {
+    console.log("Tick");
+  }, 1000);
+
+  return () => {
+    clearInterval(interval);
+  };
+}, []);
+```
+
+Il cleanup è fondamentale per evitare:
+
+- Memory leak
+- Event listener duplicati
+- Timer non cancellati
+
+Questo comportamento sostituisce `componentWillUnmount`.
+
+---
+
+## useEffect e fetch di dati
+
+Un caso d’uso molto comune è il recupero di dati da un’API.
+
+```jsx
+useEffect(() => {
+  fetch("/api/users")
+    .then((response) => response.json())
+    .then((data) => setUsers(data));
+}, []);
+```
+
+Considerazioni importanti:
+
+- Il fetch viene eseguito solo al mount
+- Lo stato viene aggiornato una volta ricevuti i dati
+- È buona pratica gestire anche errori e loading state
+
+---
+
+## Dipendenze e closure
+
+Un errore comune è dimenticare di inserire tutte le dipendenze necessarie nell’array.
+
+```jsx
+useEffect(() => {
+  console.log(value);
+}, []); // value non è una dipendenza
+```
+
+In questo caso:
+
+- `value` verrà “congelato” al valore iniziale
+- L’effetto non reagirà ai suoi cambiamenti
+
+La regola generale è:
+
+> **Tutte le variabili usate dentro l’effetto e dichiarate fuori devono essere incluse tra le dipendenze**
+
+Il plugin `eslint-plugin-react-hooks` aiuta a individuare questi problemi automaticamente.
+
+---
+
+## useEffect e funzioni asincrone
+
+La funzione passata a `useEffect` **non può essere `async`**.
+
+Errato:
+
+```jsx
+useEffect(async () => {
+  const data = await fetchData();
+}, []);
+```
+
+Corretto:
+
+```jsx
+useEffect(() => {
+  const fetchData = async () => {
+    const data = await getData();
+  };
+
+  fetchData();
+}, []);
+```
+
+---
+
+## Ordine di esecuzione
+
+- `useEffect` viene eseguito **dopo** che il browser ha aggiornato il DOM
+- Non blocca il rendering
+- Per effetti che devono essere eseguiti **prima del paint**, si utilizza `useLayoutEffect`
+
+---
+
+## Buone pratiche
+
+- Usa più `useEffect` separati invece di uno solo molto complesso
+- Mantieni ogni effetto focalizzato su una singola responsabilità
+- Evita logiche complesse direttamente dentro l’effetto
+- Pulisci sempre risorse e sottoscrizioni
+- Non abusare di `useEffect` per logiche che possono essere gestite direttamente durante il render
+
+---
+
+## Errori comuni
+
+- Dipendenze mancanti
+- Loop infiniti causati da `setState` non controllati
+- Effetti troppo generici o non necessari
+- Uso improprio per calcoli derivabili dallo stato
+
+---
+
+## Conclusione
+
+`useEffect` è uno strumento potente che consente di sincronizzare il componente React con il mondo esterno.
+Usato correttamente, permette di scrivere componenti funzionali puliti, prevedibili e facili da mantenere.
+Usato in modo improprio, può introdurre bug difficili da individuare.
+
+Comprendere a fondo il meccanismo delle dipendenze e del cleanup è essenziale per sfruttarlo al meglio in applicazioni React moderne.

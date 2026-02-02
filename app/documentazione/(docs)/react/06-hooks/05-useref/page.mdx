@@ -1,3 +1,228 @@
 # useRef
 
-In arrivo
+`useRef` è un Hook di React che consente di creare un riferimento mutabile che persiste per l’intero ciclo di vita del componente, senza causare un nuovo render quando il suo valore cambia. È uno strumento fondamentale per gestire riferimenti a elementi del DOM, valori persistenti e casi in cui è necessario mantenere uno stato “interno” non legato al rendering.
+
+---
+
+## Cos’è useRef
+
+`useRef` restituisce un oggetto con una singola proprietà:
+
+```js
+const ref = useRef(initialValue);
+```
+
+L’oggetto restituito ha la forma:
+
+```js
+{
+  current: initialValue;
+}
+```
+
+La proprietà `current`:
+
+- può essere letta e modificata liberamente
+- mantiene il suo valore tra un render e l’altro
+- **non provoca un re-render** quando viene aggiornata
+
+Questo lo distingue in modo netto da `useState`.
+
+---
+
+## useRef e il ciclo di rendering
+
+Una delle caratteristiche più importanti di `useRef` è che React **non osserva** i cambiamenti di `ref.current` ai fini del rendering.
+
+- `useState` → cambia lo stato → React riesegue il render
+- `useRef` → cambia `current` → **nessun render**
+
+Questo rende `useRef` ideale per:
+
+- memorizzare valori temporanei
+- accedere direttamente al DOM
+- evitare re-render inutili
+- conservare valori tra un render e l’altro
+
+---
+
+## Riferimenti agli elementi del DOM
+
+Il caso d’uso più comune di `useRef` è l’accesso diretto a un elemento del DOM.
+
+### Esempio: focus su un input
+
+```jsx
+import { useRef } from "react";
+
+function Form() {
+  const inputRef = useRef(null);
+
+  const focusInput = () => {
+    inputRef.current.focus();
+  };
+
+  return (
+    <>
+      <input ref={inputRef} type="text" />
+      <button onClick={focusInput}>Focus input</button>
+    </>
+  );
+}
+```
+
+In questo esempio:
+
+- `inputRef` contiene il riferimento all’elemento `<input>`
+- `inputRef.current` è il nodo DOM reale
+- possiamo chiamare metodi nativi come `focus()`
+
+---
+
+## useRef vs document.querySelector
+
+Usare `useRef` è preferibile rispetto a metodi come `document.querySelector` perché:
+
+- rispetta il modello dichiarativo di React
+- evita dipendenze dal DOM globale
+- funziona correttamente con il rendering condizionale
+- è più sicuro e prevedibile
+
+---
+
+## Memorizzare valori persistenti
+
+`useRef` è spesso utilizzato per memorizzare valori che devono sopravvivere ai render ma che non devono causare aggiornamenti dell’interfaccia.
+
+### Esempio: contatore di render
+
+```jsx
+import { useRef } from "react";
+
+function Counter() {
+  const renderCount = useRef(0);
+  renderCount.current++;
+
+  return <p>Render eseguiti: {renderCount.current}</p>;
+}
+```
+
+Anche se il valore viene aggiornato a ogni render, React non ne è influenzato.
+
+---
+
+## Salvare valori precedenti
+
+Un altro utilizzo comune è conservare il valore precedente di una variabile o di una prop.
+
+```jsx
+import { useEffect, useRef } from "react";
+
+function Example({ value }) {
+  const prevValue = useRef(value);
+
+  useEffect(() => {
+    prevValue.current = value;
+  }, [value]);
+
+  return (
+    <p>
+      Valore attuale: {value} <br />
+      Valore precedente: {prevValue.current}
+    </p>
+  );
+}
+```
+
+In questo modo è possibile confrontare il valore attuale con quello precedente senza usare stato aggiuntivo.
+
+---
+
+## useRef e funzioni asincrone
+
+`useRef` è particolarmente utile con funzioni asincrone, timer o listener, dove lo stato potrebbe diventare obsoleto (stale closure).
+
+### Esempio: setInterval
+
+```jsx
+import { useEffect, useRef } from "react";
+
+function Timer() {
+  const countRef = useRef(0);
+
+  useEffect(() => {
+    const id = setInterval(() => {
+      countRef.current++;
+      console.log(countRef.current);
+    }, 1000);
+
+    return () => clearInterval(id);
+  }, []);
+
+  return <p>Controlla la console</p>;
+}
+```
+
+In questo caso:
+
+- `countRef.current` è sempre aggiornato
+- non è necessario inserire dipendenze nell’array di `useEffect`
+
+---
+
+## Differenze tra useRef e useState
+
+| useRef                             | useState                |
+| ---------------------------------- | ----------------------- |
+| Non causa re-render                | Causa re-render         |
+| Valore mutabile                    | Stato immutabile        |
+| Ideale per dati interni            | Ideale per UI           |
+| Accesso diretto tramite `.current` | Aggiornamento asincrono |
+
+Una regola pratica:
+
+- se il valore influisce sull’interfaccia → `useState`
+- se il valore serve solo alla logica → `useRef`
+
+---
+
+## Inizializzazione del valore
+
+Il valore iniziale passato a `useRef` viene usato **solo al primo render**.
+
+```js
+const ref = useRef(calcolaValoreCostoso());
+```
+
+La funzione viene eseguita comunque a ogni render. Se il calcolo è costoso, è consigliabile usare un’inizializzazione pigra manuale:
+
+```js
+const ref = useRef(null);
+
+if (ref.current === null) {
+  ref.current = calcolaValoreCostoso();
+}
+```
+
+---
+
+## Cosa evitare con useRef
+
+- Usare `useRef` per forzare aggiornamenti dell’interfaccia
+- Leggere o scrivere `ref.current` durante il rendering per logiche critiche
+- Sostituire lo stato quando l’UI dipende dal valore
+
+`useRef` è uno strumento potente, ma va usato con consapevolezza.
+
+---
+
+## Conclusione
+
+`useRef` è un Hook essenziale per:
+
+- accedere agli elementi del DOM
+- memorizzare valori persistenti
+- gestire dati mutabili senza re-render
+- risolvere problemi legati a closure e asincronicità
+
+Comprendere `useRef` significa padroneggiare uno dei meccanismi più importanti per scrivere componenti React performanti, puliti e prevedibili.
